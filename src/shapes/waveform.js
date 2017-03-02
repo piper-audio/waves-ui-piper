@@ -56,87 +56,142 @@ export default class Waveform extends BaseShape {
     return this.$el;
   }
 
-  makePeakCache(datum, binSize) {
-        
+  cache(datum) {
+
+    console.log("cache called");
+
+    // The cache is an array of peak caches (holding the min and max
+    // values within each block for a given block size) with each peak
+    // cache represented as an object with blockSize, min array, and
+    // max array properties.
+    //
+    // For example:
+    //    
+    // [ {
+    //     "blockSize": 16,
+    //     "max": [ 0.7,  0.5, 0.25, -0.1 ],
+    //     "min": [ 0.5, -0.1, -0.8, -0.2 ]
+    //   }, {
+    //     "blockSize": 32, 
+    //     "max": [  0.7,  0.25 ],
+    //     "min": [ -0.1, -0.8  ]
+    //   }
+    // ]
+    //
+    // As it happens we are only creating a cache with a single block
+    // size at the moment, but it's useful to record that block size
+    // in the cache rather than have to fix it here in the shape.
+
     const before = performance.now();
 
-    const sliceMethod = datum instanceof Float32Array ? 'subarray' : 'slice';
-
-    let peaks = [], troughs = [];
-
-    const len = datum.length;
+    const peakCacheFor = ((arr, blockSize) => {
     
-    for (let i = 0; i < len; i = i + binSize) {
-      let min = datum[i];
-      let max = datum[i];
-      for (let j = 0; j < binSize; j++) {
-        let sample = datum[i + j];
-        if (sample < min) { min = sample; }
-        if (sample > max) { max = sample; }
+      let peaks = [], troughs = [];
+
+      const len = arr.length;
+    
+      for (let i = 0; i < len; i = i + blockSize) {
+        let min = arr[i];
+        let max = arr[i];
+        for (let j = 0; j < blockSize; j++) {
+          let sample = arr[i + j];
+          if (sample < min) { min = sample; }
+          if (sample > max) { max = sample; }
+        }
+        peaks.push(max);
+        troughs.push(min);
       }
-      peaks.push(max);
-      troughs.push(min);
-    }
 
-    console.log("makePeakCache time = " + Math.round(performance.now() - before) +
-                ", size = " + peaks.length);
+      return [ peaks, troughs ];
+    });
 
-    return [peaks, troughs];
+    // For a single peak cache, experiment suggests smallish block
+    // sizes are better. There's no benefit in having multiple layers
+    // of cache (e.g. 32 and 512) unless update() can take advantage
+    // of both in a single summarise action (e.g. when asked for a
+    // read from 310 to 1050, start by reading single samples from 310
+    // to 320, then from the 32-sample cache from 320 to 512, then
+    // switch to the 512 sample cache, rather than having to read
+    // single samples all the way from 310 to 512)... but at the
+    // moment it can't. And the more complex logic would carry its own
+    // overhead.
+    
+    const blockSize = 32;
+    let [ peaks, troughs ] = peakCacheFor(datum, blockSize);
+    
+    return [
+      { "blockSize": blockSize,
+        "max": peaks,
+        "min": troughs
+      }
+    ];
   }
   
-  summarise(datum, minX, maxX, invert) {
-        
-    const sliceMethod = datum instanceof Float32Array ? 'subarray' : 'slice';
+  summarise(datum, minX, maxX, pixelToSample, cache) {
 
+    console.log("summarise called, cache = " + cache);
+    
     const before = performance.now();
 
+    const px0 = Math.floor(minX);
+    const px1 = Math.floor(maxX);
+    let peakCache = null;
+    let peakCacheBlockSize = 0;
+
+    if (cache && (cache.length > 0)) {
+
+      // Find a suitable peak cache if we have one.
+      
+      // "step" is the distance in samples from one pixel to the next.
+      // We want the largest cache whose block size is no larger than
+      // half this, so as to avoid situations where our step is always
+      // straddling cache block boundaries.
+      const step = pixelToSample(px0 + 1) - pixelToSample(px0);
+
+      for (var i = 0; i < cache.length; ++i) {
+        const blockSize = cache[i].blockSize;
+        if (blockSize > peakCacheBlockSize && blockSize <= step/2) {
+          peakCache = cache[i];
+          peakCacheBlockSize = peakCache.blockSize;
+        }
+      }
+    }
+
+    const sampleRate = this.params.sampleRate;
     let minMax = [];
 
-    const cacheBinSize = 32;
-    if (!this.caches) {
-      this.caches = new Map();
-    }
-    if (!this.caches.has(datum)) {
-      this.caches.set(datum, this.makePeakCache(datum, cacheBinSize));
-    }
+    for (let px = px0; px < px1; px++) {
 
-    let [ peaks, troughs ] = this.caches.get(datum);
-    
-    const sampleRate = this.params.sampleRate;
+      const startSample = pixelToSample(px);
+      if (startSample >= datum.length) break;
 
-    for (let px = Math.floor(minX); px < Math.floor(maxX); px++) {
-
-      const startTime = invert(px);
-      const endTime = invert(px+1);
-      const startSample = Math.floor(startTime * sampleRate);
-      let endSample = Math.floor(endTime * sampleRate);
-
-      if (startSample >= datum.length) {
-        break;
-      }
-      if (endSample >= datum.length) {
-        endSample = datum.length;
-      }
+      let endSample = pixelToSample(px + 1);
+      if (endSample >= datum.length) endSample = datum.length;
       
       let min = datum[startSample];
       let max = min;
       
       let ix = startSample;
 
-      while (ix < endSample && (ix % cacheBinSize) !== 0) {
-        let sample = datum[ix];
-        if (sample < min) { min = sample; }
-        if (sample > max) { max = sample; }
-        ++ix;
-      }
-
-      let cacheIx = ix / cacheBinSize;
+      if (peakCache && (peakCacheBlockSize > 0)) {
       
-      while (ix + cacheBinSize <= endSample) {
-        if (peaks[cacheIx] > max) max = peaks[cacheIx];
-        if (troughs[cacheIx] < min) min = troughs[cacheIx];
-        ++cacheIx;
-        ix = ix + cacheBinSize;
+        while (ix < endSample && (ix % peakCacheBlockSize) !== 0) {
+          let sample = datum[ix];
+          if (sample < min) { min = sample; }
+          if (sample > max) { max = sample; }
+          ++ix;
+        }
+
+        let cacheIx = ix / peakCacheBlockSize;
+        const cacheMax = peakCache.max;
+        const cacheMin = peakCache.min;
+      
+        while (ix + peakCacheBlockSize <= endSample) {
+          if (cacheMax[cacheIx] > max) max = cacheMax[cacheIx];
+          if (cacheMin[cacheIx] < min) min = cacheMin[cacheIx];
+          ++cacheIx;
+          ix = ix + peakCacheBlockSize;
+        }
       }
 
       while (ix < endSample) {
@@ -155,8 +210,12 @@ export default class Waveform extends BaseShape {
     return minMax;
   }
 
-  update(renderingContext, datum) {
+  update(renderingContext, datum, cache) {
+
+    const before = performance.now();
+
     // define nbr of samples per pixels
+
     const nbrSamples = datum.length;
     const duration = nbrSamples / this.params.sampleRate;
     const width = renderingContext.timeToPixel(duration);
@@ -174,11 +233,13 @@ export default class Waveform extends BaseShape {
     maxX += (renderingContext.width - minX < renderingContext.visibleWidth) ?
       renderingContext.width : renderingContext.visibleWidth;
 
-    // get min/max per pixels, clamped to the visible area
-    const invert = renderingContext.timeToPixel.invert;
     const sampleRate = this.params.sampleRate;
+    const pixelToSample = (pixel => {
+      return Math.floor (sampleRate * renderingContext.timeToPixel.invert(pixel));
+    });
 
-    const minMax = this.summarise(datum, minX, maxX, invert);
+    // get min/max per pixels, clamped to the visible area
+    const minMax = this.summarise(datum, minX, maxX, pixelToSample, cache);
     if (!minMax.length) { return; }
 
     const PIXEL = 0;
@@ -199,6 +260,9 @@ export default class Waveform extends BaseShape {
       const d = 'M' + instructions.join('L');
       this.$el.setAttributeNS(null, 'd', d);
 
+    const after = performance.now();
+    console.log("update time = " + Math.round(after - before));
+    
     // } else if (this.params.renderingStrategy === 'canvas') {
 
     //   this._ctx.canvas.width = width;

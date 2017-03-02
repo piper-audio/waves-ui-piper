@@ -153,13 +153,24 @@ export default class BaseShape {
   render(renderingContext) {}
 
   /**
+   * Interface method called by `Layer~update`. Called once for a
+   * given datum, to return any cache information derived from it that
+   * may be used subsequently when rendering.
+   *
+   * @param {Object|Array} datum - A datum that will subsequently be passed to `update`.
+   * @return {Object} - Cache data (opaque to caller) to pass to `update` whenever that datum is passed.
+   */
+  cache(datum) {}
+    
+  /**
    * Interface method called by `Layer~update`. Updates the DOM structure of the shape.
    *
    * @param {Object} renderingContext - The `renderingContext` of the layer
    *    which owns this shape.
    * @param {Object|Array} datum - The datum associated to the shape.
+   * @param {Object} cache - Any cache object previously returned by `cache` when passed this datum.
    */
-  update(renderingContext, datum) {}
+  update(renderingContext, datum, cache) {}
 
   /**
    * Interface method to override called by `Layer~getItemsInArea`. Defines if

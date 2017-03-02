@@ -104,6 +104,7 @@ export default class Layer extends events.EventEmitter {
     this._$itemShapeMap = new Map();
     this._$itemDataMap = new Map();
     this._$itemCommonShapeMap = new Map();
+    this._$itemCacheMap = new Map();
 
     this._isContextEditable = false;
     this._behavior = null;
@@ -134,6 +135,7 @@ export default class Layer extends events.EventEmitter {
     this._$itemShapeMap.clear();
     this._$itemDataMap.clear();
     this._$itemCommonShapeMap.clear();
+    this._$itemCacheMap.clear();
 
     this.removeAllListeners();
   }
@@ -743,6 +745,11 @@ export default class Layer extends events.EventEmitter {
 
       this._$itemDataMap.delete($item);
       this._$itemShapeMap.delete($item);
+
+      // cache could have been added to this map during update()
+      if (this._$itemCacheMap.has($item)) {
+        this._$itemCacheMap.delete($item);
+      }
     }
   }
 
@@ -780,7 +787,7 @@ export default class Layer extends events.EventEmitter {
     // maintain context shape
     this.contextShape.update(this._renderingContext, this.timeContext, 0);
   }
-
+  
   /**
    * Updates the attributes of all the `Shape` instances rendered into the layer.
    *
@@ -788,14 +795,25 @@ export default class Layer extends events.EventEmitter {
    */
   updateShapes() {
     this._updateRenderingContext();
-    // update common shapes
-    this._$itemCommonShapeMap.forEach((shape, $item) => {
-      shape.update(this._renderingContext, this.data);
+
+    const cacheFor = (($item, shape, datum) => {
+      if (!this._$itemCacheMap.has($item)) {
+        this._$itemCacheMap.set($item, shape.cache(datum));
+      }
+      return this._$itemCacheMap.get($item);
     });
 
+    // update common shapes
+    this._$itemCommonShapeMap.forEach((shape, $item) => {
+      const cache = cacheFor($item, shape, datum);
+      shape.update(this._renderingContext, this.data, cache);
+    });
+
+    // update specific shapes
     for (let [$item, datum] of this._$itemDataMap.entries()) {
       const shape = this._$itemShapeMap.get($item);
-      shape.update(this._renderingContext, datum);
+      const cache = cacheFor($item, shape, datum);
+      shape.update(this._renderingContext, datum, cache);
     }
   }
 }
