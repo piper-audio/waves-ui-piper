@@ -56,9 +56,107 @@ export default class Waveform extends BaseShape {
     return this.$el;
   }
 
+  makePeakCache(datum, binSize) {
+        
+    const before = performance.now();
+
+    const sliceMethod = datum instanceof Float32Array ? 'subarray' : 'slice';
+
+    let peaks = [], troughs = [];
+
+    const len = datum.length;
+    
+    for (let i = 0; i < len; i = i + binSize) {
+      let min = datum[i];
+      let max = datum[i];
+      for (let j = 0; j < binSize; j++) {
+        let sample = datum[i + j];
+        if (sample < min) { min = sample; }
+        if (sample > max) { max = sample; }
+      }
+      peaks.push(max);
+      troughs.push(min);
+    }
+
+    console.log("makePeakCache time = " + Math.round(performance.now() - before) +
+                ", size = " + peaks.length);
+
+    return [peaks, troughs];
+  }
+  
+  summarise(datum, minX, maxX, invert) {
+        
+    const sliceMethod = datum instanceof Float32Array ? 'subarray' : 'slice';
+
+    const before = performance.now();
+
+    let minMax = [];
+
+    const cacheBinSize = 32;
+    if (!this.caches) {
+      this.caches = new Map();
+    }
+    if (!this.caches.has(datum)) {
+      this.caches.set(datum, this.makePeakCache(datum, cacheBinSize));
+    }
+
+    let [ peaks, troughs ] = this.caches.get(datum);
+    
+    const sampleRate = this.params.sampleRate;
+
+    for (let px = Math.floor(minX); px < Math.floor(maxX); px++) {
+
+      const startTime = invert(px);
+      const endTime = invert(px+1);
+      const startSample = Math.floor(startTime * sampleRate);
+      let endSample = Math.floor(endTime * sampleRate);
+
+      if (startSample >= datum.length) {
+        break;
+      }
+      if (endSample >= datum.length) {
+        endSample = datum.length;
+      }
+      
+      let min = datum[startSample];
+      let max = min;
+      
+      let ix = startSample;
+
+      while (ix < endSample && (ix % cacheBinSize) !== 0) {
+        let sample = datum[ix];
+        if (sample < min) { min = sample; }
+        if (sample > max) { max = sample; }
+        ++ix;
+      }
+
+      let cacheIx = ix / cacheBinSize;
+      
+      while (ix + cacheBinSize <= endSample) {
+        if (peaks[cacheIx] > max) max = peaks[cacheIx];
+        if (troughs[cacheIx] < min) min = troughs[cacheIx];
+        ++cacheIx;
+        ix = ix + cacheBinSize;
+      }
+
+      while (ix < endSample) {
+        let sample = datum[ix];
+        if (sample < min) { min = sample; }
+        if (sample > max) { max = sample; }
+        ++ix;
+      }
+
+      minMax.push([px, min, max]);
+    }
+
+    const after = performance.now();
+    console.log("summarisation time = " + Math.round(after - before));
+    
+    return minMax;
+  }
+
   update(renderingContext, datum) {
     // define nbr of samples per pixels
-    const sliceMethod = datum instanceof Float32Array ? 'subarray' : 'slice';
     const nbrSamples = datum.length;
     const duration = nbrSamples / this.params.sampleRate;
     const width = renderingContext.timeToPixel(duration);
@@ -79,29 +177,8 @@ export default class Waveform extends BaseShape {
     // get min/max per pixels, clamped to the visible area
     const invert = renderingContext.timeToPixel.invert;
     const sampleRate = this.params.sampleRate;
-    const minMax = [];
 
-    for (let px = minX; px < maxX; px++) {
-      const startTime = invert(px);
-      const startSample = startTime * sampleRate;
-      const extract = datum[sliceMethod](startSample, startSample + samplesPerPixel);
-
-      let min = Infinity;
-      let max = -Infinity;
-
-      for (let j = 0, l = extract.length; j < l; j++) {
-        let sample = extract[j];
-        if (sample < min) { min = sample; }
-        if (sample > max) { max = sample; }
-      }
-      // disallow Infinity
-      min = !isFinite(min) ? 0 : min;
-      max = !isFinite(max) ? 0 : max;
-      if (min === 0 && max === 0) { continue; }
-
-      minMax.push([px, min, max]);
-    }
-
+    const minMax = this.summarise(datum, minX, maxX, invert);
     if (!minMax.length) { return; }
 
     const PIXEL = 0;
