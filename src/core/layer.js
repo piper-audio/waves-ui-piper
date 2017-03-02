@@ -805,7 +805,7 @@ export default class Layer extends events.EventEmitter {
 
     // update common shapes
     this._$itemCommonShapeMap.forEach((shape, $item) => {
-      const cache = cacheFor($item, shape, datum);
+      const cache = cacheFor($item, shape, this.data);
       shape.update(this._renderingContext, this.data, cache);
     });
 
