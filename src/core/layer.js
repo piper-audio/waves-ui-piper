@@ -712,23 +712,25 @@ export default class Layer extends events.EventEmitter {
     const values = this._$itemDataMap.values(); // iterator
 
     // enter
-    this.data.forEach((datum) => {
-      for (let value of values) { if (value === datum) { return; } }
+    if (this._shapeConfiguration !== null) {
+      this.data.forEach((datum) => {
+        for (let value of values) { if (value === datum) { return; } }
 
-      const { ctor, accessors, options } = this._shapeConfiguration;
-      const shape = new ctor(options);
-      shape.install(accessors);
+        const { ctor, accessors, options } = this._shapeConfiguration;
+        const shape = new ctor(options);
+        shape.install(accessors);
 
-      const $el = shape.render(this._renderingContext);
-      $el.classList.add('item', shape.getClassName());
+        const $el = shape.render(this._renderingContext);
+        $el.classList.add('item', shape.getClassName());
 
-      this._$itemShapeMap.set($el, shape);
-      this._$itemDataMap.set($el, datum);
+        this._$itemShapeMap.set($el, shape);
+        this._$itemDataMap.set($el, datum);
 
-      fragment.appendChild($el);
-    });
+        fragment.appendChild($el);
+      });
 
-    this.$offset.appendChild(fragment);
+      this.$offset.appendChild(fragment);
+    }
 
     // remove
     for (let [$item, datum] of this._$itemDataMap.entries()) {
