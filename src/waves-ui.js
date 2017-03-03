@@ -51,6 +51,7 @@ import AnnotatedSegmentLayer from './helpers/annotated-segment-layer';
 import BreakpointLayer from './helpers/breakpoint-layer';
 import CursorLayer from './helpers/cursor-layer';
 import GridAxisLayer from './helpers/grid-axis-layer';
+import LineLayer from './helpers/line-layer';
 import MarkerLayer from './helpers/marker-layer';
 import SegmentLayer from './helpers/segment-layer';
 import TickLayer from './helpers/tick-layer';
@@ -88,7 +89,7 @@ export default {
   },
   helpers: {
     AnnotatedMarkerLayer, AnnotatedSegmentLayer, BreakpointLayer,
-    CursorLayer, GridAxisLayer, MarkerLayer, SegmentLayer, TickLayer,
+    CursorLayer, GridAxisLayer, LineLayer, MarkerLayer, SegmentLayer, TickLayer,
     TimeAxisLayer, TraceLayer, WaveformLayer
   },
   axis: {
