@@ -129,8 +129,6 @@ export default class Waveform extends BaseShape {
   
   summarise(datum, minX, maxX, pixelToSample, cache) {
 
-    console.log("summarise called, cache = " + cache);
-    
     const before = performance.now();
 
     const px0 = Math.floor(minX);
@@ -205,7 +203,7 @@ export default class Waveform extends BaseShape {
     }
 
     const after = performance.now();
-    console.log("summarisation time = " + Math.round(after - before));
+    console.log("waveform summarisation time = " + Math.round(after - before));
     
     return minMax;
   }
@@ -261,7 +259,7 @@ export default class Waveform extends BaseShape {
       this.$el.setAttributeNS(null, 'd', d);
 
     const after = performance.now();
-    console.log("update time = " + Math.round(after - before));
+    console.log("waveform update time = " + Math.round(after - before));
     
     // } else if (this.params.renderingStrategy === 'canvas') {
 

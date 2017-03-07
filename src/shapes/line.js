@@ -27,13 +27,69 @@ export default class Line extends BaseShape {
   }
 
   update(renderingContext, data) {
+    
+    const before = performance.now();
+
     data = data.slice(0);
     data.sort((a, b) => this.cx(a) < this.cx(b) ? -1 : 1);
 
-    this.$el.setAttributeNS(null, 'd', this._buildLine(renderingContext, data));
+    //!!! copied from waveform
+    
+    // @TODO refactor this ununderstandable mess
+    let minX = Math.max(-renderingContext.offsetX, 0);
+    let trackDecay = renderingContext.trackOffsetX + renderingContext.startX;
+    if (trackDecay < 0) { minX = -trackDecay; }
+
+    let maxX = minX;
+    maxX += (renderingContext.width - minX < renderingContext.visibleWidth) ?
+      renderingContext.width : renderingContext.visibleWidth;
+
+    minX = Math.floor(minX);
+    maxX = Math.floor(maxX);
+
+    let instructions = [];
+    const n = data.length;
+
+    if (n > 0) {
+
+      // We want to start with the last element to the left of the
+      // visible region, and end with the first element beyond the
+      // right of it
+      
+      let nextX = renderingContext.timeToPixel(this.cx(data[0]));
+    
+      for (let i = 0; i < n; ++i) {
+
+        const x = nextX;
+
+        if (i + 1 < n) {
+          nextX = renderingContext.timeToPixel(this.cx(data[i+1]));
+        }
+        if (nextX < minX) {
+          continue;
+        }
+
+        const y = renderingContext.valueToPixel(this.cy(data[i])) - 0.5;
+
+        instructions.push(`${x},${y}`);
+        
+        if (x > maxX) {
+          break;
+        }
+      }
+    }          
+
+    console.log("line instructions have " + instructions.length + " elements");
+    
+    this.$el.setAttributeNS(null, 'd', 'M' + instructions.join('L'));
+
     this.$el.style.stroke = this.params.color;
+    this.$el.style.strokeWidth = 2;
     this.$el.style.fill = 'none';
 
+    const after = performance.now();
+    console.log("line update time = " + Math.round(after - before));
+    
     data = null;
   }
 
