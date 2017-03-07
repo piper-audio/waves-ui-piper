@@ -1,27 +1,41 @@
-/**
- * Created by lucast on 04/01/2017.
- */
+
 import BaseShape from './base-shape';
 import TimelineTimeContext from '../core/timeline-time-context';
 import LayerTimeContext from '../core/layer-time-context';
 
 const xhtmlNS = 'http://www.w3.org/1999/xhtml';
 
-export default class Spectrogram extends BaseShape {
+export default class Grid extends BaseShape {
+
   getClassName() {
-    return 'spectrogram';
+    return 'grid';
+  }
+
+  _getAccessorList() {
+    // return { y: 0 };
+    return {};
   }
 
   // TODO determine suitable implementations for _getAccessorList and _getDefaults
   _getDefaults() {
     return {
-      opacity: 1.0
+      sampleRate: 44100,
+      color: '#000000',
+      opacity: 1,
+      // renderingStrategy: 'svg' // canvas is bugged (translation, etc...)
     };
   }
 
   render(renderingCtx) {
+    console.log("grid render called");
+    if (this.$el) { return this.$el; }
+    this.$el = document.createElementNS(this.ns, 'g');
+    console.log("grid render returning");
+    return this.$el;
+    
     // TODO this is pasted straight from the commented out Canvas code in waveform.js, refactor
     // TODO canvas also doesn't work properly when embedded in an SVG element - so this all needs to go anyway
+    /*
     this.$el = document.createElementNS(this.ns, 'foreignObject');
     this.$el.setAttributeNS('', 'width', renderingCtx.width);
     this.$el.setAttributeNS('', 'height', renderingCtx.height);
@@ -45,10 +59,87 @@ export default class Spectrogram extends BaseShape {
     // const canvasElement = document.createElement('canvas');
     // this._ctx = canvasElement.getContext('2d');
     return this.$el;
-
+    */
   }
 
-  update(renderingCtx, datum) {
+  update(renderingContext, datum) {
+
+    const before = performance.now();
+
+    console.log("grid update called");
+
+    while (this.$el.firstChild) {
+      this.$el.removeChild(this.$el.firstChild);
+    }
+
+    const blockSize = 2048;
+    const stepSize = 1024;
+
+    const n = datum.length;
+
+    //!!! this bit from waveform.js
+    // @TODO refactor this ununderstandable mess
+    let minX = Math.max(-renderingContext.offsetX, 0);
+    let trackDecay = renderingContext.trackOffsetX + renderingContext.startX;
+    if (trackDecay < 0) { minX = -trackDecay; }
+
+    let maxX = minX;
+    maxX += (renderingContext.width - minX < renderingContext.visibleWidth) ?
+      renderingContext.width : renderingContext.visibleWidth;
+
+    const sampleRate = this.params.sampleRate;
+    const pixelToSample = (pixel => {
+      return Math.floor (sampleRate * renderingContext.timeToPixel.invert(pixel));
+    });
+
+    const startCol = Math.floor(pixelToSample(minX) / stepSize);
+    const endCol = Math.floor(pixelToSample(maxX) / stepSize);
+
+    let instructions = [];
+    
+    const fragment = document.createDocumentFragment();
+    
+    for (let col = startCol; col <= endCol; ++col) {
+
+      const sample = col * stepSize;
+      const x = renderingContext.timeToPixel(sample / sampleRate);
+
+      if (col * stepSize + blockSize > n) {
+        break;
+      }
+
+      const x1 = x + 1;
+      
+      for (let y = 0; y < blockSize; ++y) {
+        const ix = col * stepSize + y;
+        const value = Math.abs(datum[ix]);
+
+        const cell = document.createElementNS(this.ns, 'line');
+        cell.setAttributeNS(null, 'fill', 'none');
+        cell.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+        cell.setAttributeNS(null, 'd', `M${x},${y}L${x1},${y}`);
+        fragment.appendChild(cell);
+      }
+    }
+
+    this.$el.appendChild(fragment);
+    
+//    const d = 'M' + instructions.join('M');
+
+    /*
+    this.$el.setAttributeNS(null, 'd', d);
+    this.$el.setAttributeNS(null, 'fill', 'none');
+    this.$el.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+    this.$el.setAttributeNS(null, 'stroke', this.params.color);
+    this.$el.style.opacity = this.params.opacity;
+    */
+    
+    const after = performance.now();
+    console.log("grid update time = " + Math.round(after - before));
+    
+        
+    
+    /*
     this._ctx.canvas.width = renderingCtx.width;
     this.$el.setAttribute('width', renderingCtx.width);
     // fix chrome bug with translate
@@ -78,8 +169,9 @@ export default class Spectrogram extends BaseShape {
       Spectrogram.drawSpectrogramColumn(bins, this._ctx, binWidthPx, binHeightPx, renderingCtx.height);
     }
     // this.$el.setAttribute('href', this._ctx.canvas.toDataURL());
+    */
   }
-
+/*
   static drawSpectrogramColumn(bins, ctx, binWidth, binHeight, height) {
     const minDecibels = -100;
     const maxDecibels = -30;
@@ -134,4 +226,5 @@ export default class Spectrogram extends BaseShape {
       end: rightBoundPixels > 0 ? pixelToTime(rightBoundPixels) : 0
     };
   }
+*/
 }
