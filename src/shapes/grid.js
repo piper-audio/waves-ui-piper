@@ -114,11 +114,18 @@ export default class Grid extends BaseShape {
         const ix = col * stepSize + y;
         const value = Math.abs(datum[ix]);
 
-        const cell = document.createElementNS(this.ns, 'line');
+        let scaledValue = 255 * value;
+        if (scaledValue < 0) scaledValue = 0;
+        if (scaledValue > 255) scaledValue = 255;
+        scaledValue = Math.floor(scaledValue);
+
+        const cell = document.createElementNS(this.ns, 'path');
         cell.setAttributeNS(null, 'fill', 'none');
         cell.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+        cell.setAttributeNS(null, 'stroke', 'rgb(c, c, c)'.replace(/c/g, `${255 - scaledValue}`));
         cell.setAttributeNS(null, 'd', `M${x},${y}L${x1},${y}`);
         fragment.appendChild(cell);
+//        this.$el.appendChild(cell);
       }
     }
 
