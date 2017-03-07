@@ -13,6 +13,7 @@ import AnnotatedSegment from './shapes/annotated-segment';
 import BaseShape from './shapes/base-shape';
 import Cursor from './shapes/cursor';
 import Dot from './shapes/dot';
+import Grid from './shapes/grid';
 import Line from './shapes/line';
 import Marker from './shapes/marker';
 import Segment from './shapes/segment';
@@ -51,6 +52,7 @@ import AnnotatedSegmentLayer from './helpers/annotated-segment-layer';
 import BreakpointLayer from './helpers/breakpoint-layer';
 import CursorLayer from './helpers/cursor-layer';
 import GridAxisLayer from './helpers/grid-axis-layer';
+import GridLayer from './helpers/grid-layer';
 import LineLayer from './helpers/line-layer';
 import MarkerLayer from './helpers/marker-layer';
 import SegmentLayer from './helpers/segment-layer';
@@ -76,7 +78,7 @@ export default {
   },
   shapes: {
     AnnotatedMarker, AnnotatedSegment, BaseShape, Cursor,
-    Dot, Line, Marker, Segment, Ticks, TracePath, TraceDots, Waveform
+    Dot, Grid, Line, Marker, Segment, Ticks, TracePath, TraceDots, Waveform
   },
   behaviors: {
     BaseBehavior, BreakpointBehavior, MarkerBehavior, SegmentBehavior,
@@ -89,7 +91,7 @@ export default {
   },
   helpers: {
     AnnotatedMarkerLayer, AnnotatedSegmentLayer, BreakpointLayer,
-    CursorLayer, GridAxisLayer, LineLayer, MarkerLayer, SegmentLayer, TickLayer,
+    CursorLayer, GridLayer, GridAxisLayer, LineLayer, MarkerLayer, SegmentLayer, TickLayer,
     TimeAxisLayer, TraceLayer, WaveformLayer
   },
   axis: {
