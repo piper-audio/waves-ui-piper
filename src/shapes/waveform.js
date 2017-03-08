@@ -68,13 +68,13 @@ export default class Waveform extends BaseShape {
     // For example:
     //    
     // [ {
-    //     "blockSize": 16,
-    //     "max": [ 0.7,  0.5, 0.25, -0.1 ],
-    //     "min": [ 0.5, -0.1, -0.8, -0.2 ]
+    //     blockSize: 16,
+    //     max: [ 0.7,  0.5, 0.25, -0.1 ],
+    //     min: [ 0.5, -0.1, -0.8, -0.2 ]
     //   }, {
-    //     "blockSize": 32, 
-    //     "max": [  0.7,  0.25 ],
-    //     "min": [ -0.1, -0.8  ]
+    //     blockSize: 32, 
+    //     max: [  0.7,  0.25 ],
+    //     min: [ -0.1, -0.8  ]
     //   }
     // ]
     //
@@ -120,9 +120,9 @@ export default class Waveform extends BaseShape {
     let [ peaks, troughs ] = peakCacheFor(datum, blockSize);
     
     return [
-      { "blockSize": blockSize,
-        "max": peaks,
-        "min": troughs
+      { blockSize: blockSize,
+        max: peaks,
+        min: troughs
       }
     ];
   }
