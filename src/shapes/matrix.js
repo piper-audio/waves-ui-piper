@@ -40,8 +40,8 @@ export default class Matrix extends BaseShape {
 
     console.log("matrix cache called");
 
-    const blockSize = 2048;
-    const stepSize = 1024;
+    const blockSize = 2048; //!!! todo: parameterise
+    const stepSize = 1024;  //!!! todo: parameterise
 
     const n = datum.length;
 
