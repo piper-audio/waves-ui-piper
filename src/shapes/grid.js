@@ -63,7 +63,57 @@ export default class Grid extends BaseShape {
     */
   }
 
-  update(renderingContext, datum) {
+  cache(datum) {
+
+    const before = performance.now();
+
+    console.log("grid cache called");
+
+    const blockSize = 2048;
+    const stepSize = 1024;
+
+    const n = datum.length;
+
+    const ncols = Math.floor(n / stepSize); //!!! not always right
+    
+    var p = new PNGEncoder(ncols, blockSize, 256);
+
+    for (let col = 0; col < ncols; ++col) {
+
+      const sample = col * stepSize;
+
+      if (col * stepSize + blockSize > n) {
+        break;
+      }
+
+      for (let y = 0; y < blockSize; ++y) {
+        const ix = col * stepSize + y;
+        const value = Math.abs(datum[ix]);
+
+        let scaledValue = 255 * value;
+        if (scaledValue < 0) scaledValue = 0;
+        if (scaledValue > 255) scaledValue = 255;
+        scaledValue = Math.floor(scaledValue);
+
+	p.buffer[p.index(col, y)] =
+	  p.color(scaledValue, scaledValue, scaledValue, 255);
+      }
+    }
+
+    console.log("drawing complete");
+    
+    let imgResource = 'data:image/png;base64,'+p.getBase64();
+
+    console.log("got my image resource, it has length " + imgResource.length +
+	       " (dimensions " + ncols + " x " + blockSize + ")");
+
+    const after = performance.now();
+    console.log("grid cache time = " + Math.round(after - before));
+    
+    return { resource: imgResource };
+  }
+  
+  update(renderingContext, datum, cache) {
 
     const before = performance.now();
 
@@ -73,40 +123,12 @@ export default class Grid extends BaseShape {
 //      this.$el.removeChild(this.$el.firstChild);
 //    }
 
-    var p = new PNGEncoder(200, 200, 256);
-    var background = p.color(0, 0, 0, 0); // set the background transparent
 
-    var i = 0;
-    var num;
-    
-    for (i = 0, num = 200 / 10; i <= num; i+=0.01) {
-
-      var x = i * 10;
-      var y = Math.sin(i) * Math.sin(i) * 50 + 50;
-
-      p.buffer[p.index(Math.floor(x), Math.floor(y - 10))] = p.color(0x00, 0x44, 0xcc);
-      p.buffer[p.index(Math.floor(x), Math.floor(y))] = p.color(0xcc, 0x00, 0x44);
-      p.buffer[p.index(Math.floor(x), Math.floor(y + 10))] = p.color(0x00, 0xcc, 0x44);
-    }
-
-    for (i = 0; i < 50; i++) {
-      for (var j = 0; j < 50; j++) {
-	p.buffer[p.index(i + 90, j + 135)] = p.color(0xcc, 0x00, 0x44);
-	p.buffer[p.index(i + 80, j + 120)] = p.color(0x00, 0x44, 0xcc);
-	p.buffer[p.index(i + 100, j + 130)] = p.color(0x00, 0xcc, 0x44);
-      }
-    }
-
-    console.log("drawing complete");
-    
-    let imgResource = 'data:image/png;base64,'+p.getBase64();
-
-    console.log("got my image resource, it has length " + imgResource.length);
-    
 //    const img = document.createElementNS(this.ns, 'image');
-    this.$el.setAttributeNS(null, 'width', '200');
+    this.$el.setAttributeNS(null, 'width', '400');
     this.$el.setAttributeNS(null, 'height', '200');
-    this.$el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', imgResource);
+    this.$el.setAttributeNS(null, 'preserveAspectRatio', 'none');
+    this.$el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', cache.resource);
 //    this.$el.appendChild(img);
     
     const after = performance.now();
