@@ -23,7 +23,6 @@ export default class Grid extends BaseShape {
       sampleRate: 44100,
       color: '#000000',
       opacity: 1,
-      // renderingStrategy: 'svg' // canvas is bugged (translation, etc...)
     };
   }
 
@@ -33,34 +32,6 @@ export default class Grid extends BaseShape {
     this.$el = document.createElementNS(this.ns, 'image');
     console.log("grid render returning");
     return this.$el;
-    
-    // TODO this is pasted straight from the commented out Canvas code in waveform.js, refactor
-    // TODO canvas also doesn't work properly when embedded in an SVG element - so this all needs to go anyway
-    /*
-    this.$el = document.createElementNS(this.ns, 'foreignObject');
-    this.$el.setAttributeNS('', 'width', renderingCtx.width);
-    this.$el.setAttributeNS('', 'height', renderingCtx.height);
-
-    const canvas = document.createElementNS(xhtmlNS, 'xhtml:canvas');
-
-    this._ctx = canvas.getContext('2d');
-    this._ctx.canvas.width = renderingCtx.width;
-    this._ctx.canvas.height = renderingCtx.height;
-    this._ctx.globalAlpha = this.params.opacity;
-
-    this.$el.appendChild(canvas);
-    // this.$el = document.createElementNS(this.ns, 'image');
-    // this.$el.setAttribute('xmlns:xlink','http://www.w3.org/1999/xlink');
-    // this.$el.style.opacity = this.params.opacity;
-    // this.$el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '');
-    // this.$el.setAttributeNS(null, 'x', '0');
-    // this.$el.setAttributeNS(null, 'y', '0');
-    // this.$el.setAttributeNS(null, 'height', `${renderingCtx.height}`);
-    // this.$el.setAttributeNS(null, 'width', `${renderingCtx.width}`);
-    // const canvasElement = document.createElement('canvas');
-    // this._ctx = canvasElement.getContext('2d');
-    return this.$el;
-    */
   }
 
   cache(datum) {
@@ -94,6 +65,7 @@ export default class Grid extends BaseShape {
         if (scaledValue < 0) scaledValue = 0;
         if (scaledValue > 255) scaledValue = 255;
         scaledValue = Math.floor(scaledValue);
+	scaledValue = 255 - scaledValue;
 
 	p.buffer[p.index(col, y)] =
 	  p.color(scaledValue, scaledValue, scaledValue, 255);
@@ -118,126 +90,16 @@ export default class Grid extends BaseShape {
     const before = performance.now();
 
     console.log("grid update called");
-    
-//    while (this.$el.firstChild) {
-//      this.$el.removeChild(this.$el.firstChild);
-//    }
 
-
-//    const img = document.createElementNS(this.ns, 'image');
-    this.$el.setAttributeNS(null, 'width', '400');
-    this.$el.setAttributeNS(null, 'height', '200');
+    this.$el.setAttributeNS(null, 'width', renderingContext.width);
+    this.$el.setAttributeNS(null, 'height', renderingContext.height);
     this.$el.setAttributeNS(null, 'preserveAspectRatio', 'none');
     this.$el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', cache.resource);
-//    this.$el.appendChild(img);
     
     const after = performance.now();
     console.log("grid update time = " + Math.round(after - before));
-    
-        
-/*
-    
-    const blockSize = 2048;
-    const stepSize = 1024;
-
-    const n = datum.length;
-
-    //!!! this bit from waveform.js
-    // @TODO refactor this ununderstandable mess
-    let minX = Math.max(-renderingContext.offsetX, 0);
-    let trackDecay = renderingContext.trackOffsetX + renderingContext.startX;
-    if (trackDecay < 0) { minX = -trackDecay; }
-
-    let maxX = minX;
-    maxX += (renderingContext.width - minX < renderingContext.visibleWidth) ?
-      renderingContext.width : renderingContext.visibleWidth;
-
-    const sampleRate = this.params.sampleRate;
-    const pixelToSample = (pixel => {
-      return Math.floor (sampleRate * renderingContext.timeToPixel.invert(pixel));
-    });
-
-    const startCol = Math.floor(pixelToSample(minX) / stepSize);
-    const endCol = Math.floor(pixelToSample(maxX) / stepSize);
-
-    let instructions = [];
-    
-    const fragment = document.createDocumentFragment();
-    
-    for (let col = startCol; col <= endCol; ++col) {
-
-      const sample = col * stepSize;
-      const x = renderingContext.timeToPixel(sample / sampleRate);
-
-      if (col * stepSize + blockSize > n) {
-        break;
-      }
-
-      const x1 = x + 1;
-      
-      for (let y = 0; y < blockSize; ++y) {
-        const ix = col * stepSize + y;
-        const value = Math.abs(datum[ix]);
-
-        let scaledValue = 255 * value;
-        if (scaledValue < 0) scaledValue = 0;
-        if (scaledValue > 255) scaledValue = 255;
-        scaledValue = Math.floor(scaledValue);
-
-        const cell = document.createElementNS(this.ns, 'path');
-        cell.setAttributeNS(null, 'fill', 'none');
-        cell.setAttributeNS(null, 'shape-rendering', 'crispEdges');
-        cell.setAttributeNS(null, 'stroke', 'rgb(c, c, c)'.replace(/c/g, `${255 - scaledValue}`));
-        cell.setAttributeNS(null, 'd', `M${x},${y}L${x1},${y}`);
-        fragment.appendChild(cell);
-//        this.$el.appendChild(cell);
-      }
-    }
-
-    this.$el.appendChild(fragment);
-    
-//    const d = 'M' + instructions.join('M');
-
-    /*
-    this.$el.setAttributeNS(null, 'd', d);
-    this.$el.setAttributeNS(null, 'fill', 'none');
-    this.$el.setAttributeNS(null, 'shape-rendering', 'crispEdges');
-    this.$el.setAttributeNS(null, 'stroke', this.params.color);
-    this.$el.style.opacity = this.params.opacity;
-    */
-    
-    /*
-    this._ctx.canvas.width = renderingCtx.width;
-    this.$el.setAttribute('width', renderingCtx.width);
-    // fix chrome bug with translate
-    this.$el.setAttribute('x', renderingCtx.offsetX);
-    this._ctx.globalAlpha = this.params.opacity;
-    this._ctx.moveTo(renderingCtx.timeToPixel(0), renderingCtx.valueToPixel(0));
-
-    // calculate the visible area, and get a sub-array of the feature data in that duration
-    const timeExtents = this.getCurrentTimeExtents(renderingCtx);
-    const visibleColumns = this.getColumnsInArea(timeExtents, datum);
-    console.log(visibleColumns.length);
-
-    // calculate the number of columns representable in the space available
-    const binWidthPx = renderingCtx.timeToPixel(this.params.stepDuration);
-    const binHeightPx = renderingCtx.height / datum.length;
-
-    // how much time fits in 1 pixel?
-    const pixelToTime = renderingCtx.timeToPixel.invert;
-    const secondsPerPixel = pixelToTime(1);
-
-    // how many columns is that?
-
-
-    // summarise the columns
-
-    for (let bins of visibleColumns) {
-      Spectrogram.drawSpectrogramColumn(bins, this._ctx, binWidthPx, binHeightPx, renderingCtx.height);
-    }
-    // this.$el.setAttribute('href', this._ctx.canvas.toDataURL());
-    */
   }
+  
 /*
   static drawSpectrogramColumn(bins, ctx, binWidth, binHeight, height) {
     const minDecibels = -100;
