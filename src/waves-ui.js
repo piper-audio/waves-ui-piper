@@ -70,6 +70,7 @@ import gridAxisGenerator from './axis/grid-axis-generator';
 import format from './utils/format';
 import OrthogonalData from './utils/orthogonal-data';
 import scales from './utils/scales';
+import PNGEncoder from './utils/png';
 
 export default {
   core: {
@@ -98,6 +99,6 @@ export default {
     AxisLayer, timeAxisGenerator, gridAxisGenerator
   },
   utils: {
-    format, OrthogonalData, scales
+    format, OrthogonalData, scales, PNGEncoder
   }
 };

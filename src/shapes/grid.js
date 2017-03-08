@@ -2,6 +2,7 @@
 import BaseShape from './base-shape';
 import TimelineTimeContext from '../core/timeline-time-context';
 import LayerTimeContext from '../core/layer-time-context';
+import PNGEncoder from '../utils/png.js';
 
 const xhtmlNS = 'http://www.w3.org/1999/xhtml';
 
@@ -29,7 +30,7 @@ export default class Grid extends BaseShape {
   render(renderingCtx) {
     console.log("grid render called");
     if (this.$el) { return this.$el; }
-    this.$el = document.createElementNS(this.ns, 'g');
+    this.$el = document.createElementNS(this.ns, 'image');
     console.log("grid render returning");
     return this.$el;
     
@@ -67,11 +68,53 @@ export default class Grid extends BaseShape {
     const before = performance.now();
 
     console.log("grid update called");
+    
+//    while (this.$el.firstChild) {
+//      this.$el.removeChild(this.$el.firstChild);
+//    }
 
-    while (this.$el.firstChild) {
-      this.$el.removeChild(this.$el.firstChild);
+    var p = new PNGEncoder(200, 200, 256);
+    var background = p.color(0, 0, 0, 0); // set the background transparent
+
+    var i = 0;
+    var num;
+    
+    for (i = 0, num = 200 / 10; i <= num; i+=0.01) {
+
+      var x = i * 10;
+      var y = Math.sin(i) * Math.sin(i) * 50 + 50;
+
+      p.buffer[p.index(Math.floor(x), Math.floor(y - 10))] = p.color(0x00, 0x44, 0xcc);
+      p.buffer[p.index(Math.floor(x), Math.floor(y))] = p.color(0xcc, 0x00, 0x44);
+      p.buffer[p.index(Math.floor(x), Math.floor(y + 10))] = p.color(0x00, 0xcc, 0x44);
     }
 
+    for (i = 0; i < 50; i++) {
+      for (var j = 0; j < 50; j++) {
+	p.buffer[p.index(i + 90, j + 135)] = p.color(0xcc, 0x00, 0x44);
+	p.buffer[p.index(i + 80, j + 120)] = p.color(0x00, 0x44, 0xcc);
+	p.buffer[p.index(i + 100, j + 130)] = p.color(0x00, 0xcc, 0x44);
+      }
+    }
+
+    console.log("drawing complete");
+    
+    let imgResource = 'data:image/png;base64,'+p.getBase64();
+
+    console.log("got my image resource, it has length " + imgResource.length);
+    
+//    const img = document.createElementNS(this.ns, 'image');
+    this.$el.setAttributeNS(null, 'width', '200');
+    this.$el.setAttributeNS(null, 'height', '200');
+    this.$el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', imgResource);
+//    this.$el.appendChild(img);
+    
+    const after = performance.now();
+    console.log("grid update time = " + Math.round(after - before));
+    
+        
+/*
+    
     const blockSize = 2048;
     const stepSize = 1024;
 
@@ -140,11 +183,6 @@ export default class Grid extends BaseShape {
     this.$el.setAttributeNS(null, 'stroke', this.params.color);
     this.$el.style.opacity = this.params.opacity;
     */
-    
-    const after = performance.now();
-    console.log("grid update time = " + Math.round(after - before));
-    
-        
     
     /*
     this._ctx.canvas.width = renderingCtx.width;
