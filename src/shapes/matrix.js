@@ -6,10 +6,10 @@ import PNGEncoder from '../utils/png.js';
 
 const xhtmlNS = 'http://www.w3.org/1999/xhtml';
 
-export default class Grid extends BaseShape {
+export default class Matrix extends BaseShape {
 
   getClassName() {
-    return 'grid';
+    return 'matrix';
   }
 
   _getAccessorList() {
@@ -27,10 +27,10 @@ export default class Grid extends BaseShape {
   }
 
   render(renderingCtx) {
-    console.log("grid render called");
+    console.log("matrix render called");
     if (this.$el) { return this.$el; }
     this.$el = document.createElementNS(this.ns, 'image');
-    console.log("grid render returning");
+    console.log("matrix render returning");
     return this.$el;
   }
 
@@ -38,7 +38,7 @@ export default class Grid extends BaseShape {
 
     const before = performance.now();
 
-    console.log("grid cache called");
+    console.log("matrix cache called");
 
     const blockSize = 2048;
     const stepSize = 1024;
@@ -80,7 +80,7 @@ export default class Grid extends BaseShape {
 	       " (dimensions " + ncols + " x " + blockSize + ")");
 
     const after = performance.now();
-    console.log("grid cache time = " + Math.round(after - before));
+    console.log("matrix cache time = " + Math.round(after - before));
     
     return { resource: imgResource };
   }
@@ -89,15 +89,17 @@ export default class Grid extends BaseShape {
 
     const before = performance.now();
 
-    console.log("grid update called");
+    console.log("matrix update called");
 
+    //!!! not necessarily right:
+    
     this.$el.setAttributeNS(null, 'width', renderingContext.width);
     this.$el.setAttributeNS(null, 'height', renderingContext.height);
     this.$el.setAttributeNS(null, 'preserveAspectRatio', 'none');
     this.$el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', cache.resource);
     
     const after = performance.now();
-    console.log("grid update time = " + Math.round(after - before));
+    console.log("matrix update time = " + Math.round(after - before));
   }
   
 /*

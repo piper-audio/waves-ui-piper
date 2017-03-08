@@ -1,5 +1,5 @@
 import Layer from '../core/layer';
-import Grid from '../shapes/grid';
+import Matrix from '../shapes/matrix';
 
 
 const defaults = {
@@ -14,7 +14,7 @@ const defaults = {
  *
  * [example usage](./examples/layer-waveform.html)
  */
-export default class GridLayer extends Layer {
+export default class MatrixLayer extends Layer {
   /**
    * @param {AudioBuffer} buffer - The audio buffer to display.
    * @param {Object} options - An object to configure the layer.
@@ -24,7 +24,7 @@ export default class GridLayer extends Layer {
 
     super('entity', buffer.getChannelData(options.channel), options);
 
-    this.configureShape(Grid, {}, {
+    this.configureShape(Matrix, {}, {
       sampleRate: buffer.sampleRate,
       color: options.color,
       renderingStrategy: options.renderingStrategy
