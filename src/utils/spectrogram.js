@@ -20,21 +20,39 @@ export default class Spectrogram {
     return this.ncols; 
   }
 
+  getColumnHeight() {
+    return Math.floor(this.fftSize / 2) + 1;
+  }
+
   getColumn(n) {
-    const sliceMethod = this.samples instanceof Float32Array ? 'subarray' : 'slice';
+
     const startSample = n * this.stepSize;
     const sz = this.fftSize;
-    const slice = this.samples[sliceMethod](startSample, startSample + sz);
-    if (slice.length < sz) return [];
-    
-    this.real.set(slice);
+
+    this.real.fill(0);
     this.imag.fill(0);
-    this.fft.forward(this.real, this.imag);
+
+    let available = sz;
+    if (startSample + sz >= this.samples.length) {
+      available = this.samples.length - startSample;
+    }
+
+    for (let i = 0; i < available; ++i) {
+      this.real[i] = this.samples[startSample + i];
+    }
+
+    //!!! + window
     
-    const col = new Float32Array(sz);
-    for (let i = 0; i < sz; ++i) {
-      col[i] = Math.sqrt(this.real[i] * this.real[i] + this.imag[i] * this.imag[i]);
+    this.fft.forward(this.real, this.imag);
+
+    const h = this.getColumnHeight();
+    const col = new Float32Array(h);
+    for (let i = 0; i < h; ++i) {
+      const mag = Math.sqrt(this.real[i] * this.real[i] +
+                            this.imag[i] * this.imag[i]);
+      col[i] = mag;
     }
     return col;
+
   }
 }
