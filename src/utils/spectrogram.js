@@ -5,6 +5,7 @@ export default class Spectrogram {
   constructor(samples, options) {
 
     this.samples = samples;
+
     //!!! check existence and type of options
     this.stepSize = options.stepSize;
     this.fftSize = options.fftSize;
@@ -14,6 +15,11 @@ export default class Spectrogram {
     this.ncols = Math.floor(this.samples.length / this.stepSize); //!!! not correct
     this.real = new Float32Array(sz);
     this.imag = new Float32Array(sz);
+
+    this.window = new Float32Array(sz);
+    for (let i = 0; i < sz; ++i) {
+      this.window[i] = 0.5 - 0.5 * Math.cos((2 * Math.PI * i) / sz); // Hann
+    }
   }
 
   getColumnCount() {
@@ -41,7 +47,9 @@ export default class Spectrogram {
       this.real[i] = this.samples[startSample + i];
     }
 
-    //!!! + window
+    for (let i = 0; i < sz; ++i) {
+      this.real[i] *= this.window[i];
+    }
     
     this.fft.forward(this.real, this.imag);
 
