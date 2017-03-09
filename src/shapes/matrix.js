@@ -34,7 +34,7 @@ export default class Matrix extends BaseShape {
     return this.$el;
   }
 
-  cache(datum) { //!!! rename datum to whatever it actually is, here and in waveform
+  encache(datum) { //!!! rename datum to whatever it actually is, here and in waveform
 
     const before = performance.now();
 

@@ -799,10 +799,14 @@ export default class Layer extends events.EventEmitter {
     this._updateRenderingContext();
 
     const cacheFor = (($item, shape, datum) => {
-      if (!this._$itemCacheMap.has($item)) {
-        this._$itemCacheMap.set($item, shape.cache(datum));
+      if (this.dataType === 'entity') {
+        if (!this._$itemCacheMap.has($item)) {
+          this._$itemCacheMap.set($item, shape.encache(datum));
+        }
+        return this._$itemCacheMap.get($item);
+      } else {
+        return null;
       }
-      return this._$itemCacheMap.get($item);
     });
 
     // update common shapes

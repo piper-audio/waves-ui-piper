@@ -32,6 +32,7 @@ import ns from '../core/namespace';
  * - Tick (for axis)
  * - Waveform
  * - TracePath
+ * - Matrix
  */
 export default class BaseShape {
   /**
@@ -155,12 +156,13 @@ export default class BaseShape {
   /**
    * Interface method called by `Layer~update`. Called once for a
    * given datum, to return any cache information derived from it that
-   * may be used subsequently when rendering.
+   * may be used subsequently when rendering. Only called for shapes with
+   * entity type.
    *
-   * @param {Object|Array} datum - A datum that will subsequently be passed to `update`.
+   * @param {Object|Array} datum - An entity that will subsequently be passed to `update`.
    * @return {Object} - Cache data (opaque to caller) to pass to `update` whenever that datum is passed.
    */
-  cache(datum) {}
+  encache(datum) {}
     
   /**
    * Interface method called by `Layer~update`. Updates the DOM structure of the shape.
@@ -168,7 +170,7 @@ export default class BaseShape {
    * @param {Object} renderingContext - The `renderingContext` of the layer
    *    which owns this shape.
    * @param {Object|Array} datum - The datum associated to the shape.
-   * @param {Object} cache - Any cache object previously returned by `cache` when passed this datum.
+   * @param {Object} cache - Any cache object previously returned by `cache` when passed this datum. Only supplied for shapes with entity type.
    */
   update(renderingContext, datum, cache) {}
 

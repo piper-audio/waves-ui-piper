@@ -38,7 +38,7 @@ export default class Waveform extends BaseShape {
     return this.$el;
   }
 
-  cache(datum) {
+  encache(datum) {
 
     console.log("cache called");
 
