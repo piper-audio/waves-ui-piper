@@ -91,7 +91,11 @@ export default class Matrix extends BaseShape {
     this.$el.setAttributeNS(null, 'width', renderingContext.width);
     this.$el.setAttributeNS(null, 'height', renderingContext.height);
     this.$el.setAttributeNS(null, 'preserveAspectRatio', 'none');
-    this.$el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', cache.resource);
+
+    if (!cache.addedToElement) {
+      this.$el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', cache.resource);
+      cache.addedToElement = true;
+    }
     
     const after = performance.now();
     console.log("matrix update time = " + Math.round(after - before));
