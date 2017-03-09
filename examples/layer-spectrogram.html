@@ -32,7 +32,9 @@
       var timeline = new wavesUI.core.Timeline(pixelsPerSecond, width);
       var track = new wavesUI.core.Track($track, height);
 
-      var matrixLayer = new wavesUI.core.Layer('entity', buffer.getChannelData(0), {
+      var matrixLayer = new wavesUI.helpers.SpectrogramLayer(buffer, {
+        stepSize: 512,
+        fftSize: 1024,
         height: height,
         yDomain: [-1, 1]
       });

@@ -23,35 +23,17 @@ export default class Waveform extends BaseShape {
       sampleRate: 44100,
       color: '#000000',
       opacity: 1,
-      // renderingStrategy: 'svg' // canvas is bugged (translation, etc...)
     };
   }
 
   render(renderingContext) {
     if (this.$el) { return this.$el; }
 
-    // if (this.params.renderingStrategy === 'svg') {
-
-      this.$el = document.createElementNS(this.ns, 'path');
-      this.$el.setAttributeNS(null, 'fill', 'none');
-      this.$el.setAttributeNS(null, 'shape-rendering', 'crispEdges');
-      this.$el.setAttributeNS(null, 'stroke', this.params.color);
-      this.$el.style.opacity = this.params.opacity;
-
-    // } else if (this.params.renderingStrategy === 'canvas') {
-
-    //   this.$el = document.createElementNS(this.ns, 'foreignObject');
-    //   this.$el.setAttributeNS(null, 'width', renderingContext.width);
-    //   this.$el.setAttributeNS(null, 'height', renderingContext.height);
-
-    //   const canvas = document.createElementNS(xhtmlNS, 'xhtml:canvas');
-
-    //   this._ctx = canvas.getContext('2d');
-    //   this._ctx.canvas.width = renderingContext.width;
-    //   this._ctx.canvas.height = renderingContext.height;
-
-    //   this.$el.appendChild(canvas);
-    // }
+    this.$el = document.createElementNS(this.ns, 'path');
+    this.$el.setAttributeNS(null, 'fill', 'none');
+    this.$el.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+    this.$el.setAttributeNS(null, 'stroke', this.params.color);
+    this.$el.style.opacity = this.params.opacity;
 
     return this.$el;
   }
@@ -244,46 +226,18 @@ export default class Waveform extends BaseShape {
     const MIN   = 1;
     const MAX   = 2;
     const ZERO  = renderingContext.valueToPixel(0);
-    // rendering strategies
-    // if (this.params.renderingStrategy === 'svg') {
 
-      let instructions = minMax.map((datum, index) => {
-        const x  = datum[PIXEL];
-        let y1 = Math.round(renderingContext.valueToPixel(datum[MIN]));
-        let y2 = Math.round(renderingContext.valueToPixel(datum[MAX]));
-        // return `${x},${ZERO}L${x},${y1}L${x},${y2}L${x},${ZERO}`;
-        return `${x},${y1}L${x},${y2}`;
-      });
+    let instructions = minMax.map((datum, index) => {
+      const x  = datum[PIXEL];
+      let y1 = Math.round(renderingContext.valueToPixel(datum[MIN]));
+      let y2 = Math.round(renderingContext.valueToPixel(datum[MAX]));
+      return `${x},${y1}L${x},${y2}`;
+    });
 
-      const d = 'M' + instructions.join('L');
-      this.$el.setAttributeNS(null, 'd', d);
+    const d = 'M' + instructions.join('L');
+    this.$el.setAttributeNS(null, 'd', d);
 
     const after = performance.now();
     console.log("waveform update time = " + Math.round(after - before));
-    
-    // } else if (this.params.renderingStrategy === 'canvas') {
-
-    //   this._ctx.canvas.width = width;
-    //   this.$el.setAttribute('width', width);
-    //   // fix chrome bug with translate
-    //   if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
-    //     this.$el.setAttribute('x', renderingContext.offsetX);
-    //   }
-
-    //   this._ctx.strokeStyle = this.params.color;
-    //   this._ctx.globalAlpha = this.params.opacity;
-    //   this._ctx.moveTo(renderingContext.timeToPixel(0), renderingContext.valueToPixel(0));
-
-    //   minMax.forEach((datum) => {
-    //     const x  = datum[PIXEL];
-    //     let y1 = Math.round(renderingContext.valueToPixel(datum[MIN]));
-    //     let y2 = Math.round(renderingContext.valueToPixel(datum[MAX]));
-
-    //     this._ctx.moveTo(x, y1);
-    //     this._ctx.lineTo(x, y2);
-    //   });
-
-    //   this._ctx.stroke();
-    // }
   }
 }

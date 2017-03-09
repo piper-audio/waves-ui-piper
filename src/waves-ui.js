@@ -56,6 +56,7 @@ import LineLayer from './helpers/line-layer';
 import MarkerLayer from './helpers/marker-layer';
 import MatrixLayer from './helpers/matrix-layer';
 import SegmentLayer from './helpers/segment-layer';
+import SpectrogramLayer from './helpers/spectrogram-layer';
 import TickLayer from './helpers/tick-layer';
 import TimeAxisLayer from './helpers/time-axis-layer';
 import TraceLayer from './helpers/trace-layer';
@@ -67,10 +68,11 @@ import timeAxisGenerator from './axis/time-axis-generator';
 import gridAxisGenerator from './axis/grid-axis-generator';
 
 // utils
+import FFT from './utils/fft';
 import format from './utils/format';
 import OrthogonalData from './utils/orthogonal-data';
-import scales from './utils/scales';
 import PNGEncoder from './utils/png';
+import scales from './utils/scales';
 
 export default {
   core: {
@@ -93,12 +95,12 @@ export default {
   helpers: {
     AnnotatedMarkerLayer, AnnotatedSegmentLayer, BreakpointLayer,
     CursorLayer, GridAxisLayer, LineLayer, MarkerLayer, MatrixLayer, SegmentLayer,
-    TickLayer, TimeAxisLayer, TraceLayer, WaveformLayer
+    SpectrogramLayer, TickLayer, TimeAxisLayer, TraceLayer, WaveformLayer
   },
   axis: {
     AxisLayer, timeAxisGenerator, gridAxisGenerator
   },
   utils: {
-    format, OrthogonalData, scales, PNGEncoder
+    FFT, format, OrthogonalData, PNGEncoder, scales
   }
 };

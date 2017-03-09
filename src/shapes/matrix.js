@@ -34,7 +34,7 @@ export default class Matrix extends BaseShape {
     return this.$el;
   }
 
-  cache(datum) {
+  cache(datum) { //!!! rename datum to whatever it actually is, here and in waveform
 
     const before = performance.now();
 
@@ -43,23 +43,23 @@ export default class Matrix extends BaseShape {
     const blockSize = 2048; //!!! todo: parameterise
     const stepSize = 1024;  //!!! todo: parameterise
 
-    const n = datum.length;
+    const ncols = datum.getColumnCount();
 
-    const ncols = Math.floor(n / stepSize); //!!! not always right
+//    const ncols = Math.floor(n / stepSize); //!!! not always right
+
+    console.log("ncols = " + ncols);
     
     var p = new PNGEncoder(ncols, blockSize, 256);
 
-    for (let col = 0; col < ncols; ++col) {
+    for (let x = 0; x < ncols; ++x) {
 
-      const sample = col * stepSize;
-
-      if (col * stepSize + blockSize > n) {
-        break;
-      }
-
+      console.log("col " + x);
+      
+      const col = datum.getColumn(x);
+      
       for (let y = 0; y < blockSize; ++y) {
-        const ix = col * stepSize + y;
-        const value = Math.abs(datum[ix]);
+
+        const value = Math.abs(col[y]);
 
         let scaledValue = 255 * value;
         if (scaledValue < 0) scaledValue = 0;
