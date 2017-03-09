@@ -204,7 +204,7 @@ function uglify() {
 
 // transpile all files in `srcDir`
 function transpileAll() {
-  var cmd = 'find ' + srcDir + ' -type f';
+  var cmd = 'find ' + srcDir + ' \\( -type f -a -name \\*.js \\) -print';
 
   childProcess.exec(cmd , function(err, stdout, stderr) {
     if (err) { console.error(err); }
