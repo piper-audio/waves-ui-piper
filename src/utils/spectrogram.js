@@ -1,12 +1,13 @@
 import FFT from './fft';
+import MatrixEntity from './matrix-entity.js';
 
-export default class Spectrogram {
+export default class Spectrogram extends MatrixEntity {
 
   constructor(samples, options) {
 
+    super();
+    
     this.samples = samples;
-
-    //!!! check existence and type of options
     this.stepSize = options.stepSize;
     this.fftSize = options.fftSize;
 
@@ -44,11 +45,7 @@ export default class Spectrogram {
     }
 
     for (let i = 0; i < available; ++i) {
-      this.real[i] = this.samples[startSample + i];
-    }
-
-    for (let i = 0; i < sz; ++i) {
-      this.real[i] *= this.window[i];
+      this.real[i] = this.samples[startSample + i] * this.window[i];
     }
     
     this.fft.forward(this.real, this.imag);

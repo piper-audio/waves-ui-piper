@@ -68,10 +68,11 @@ import timeAxisGenerator from './axis/time-axis-generator';
 import gridAxisGenerator from './axis/grid-axis-generator';
 
 // utils
-import FFT from './utils/fft';
 import format from './utils/format';
+import MatrixEntity from './utils/matrix-entity';
 import OrthogonalData from './utils/orthogonal-data';
-import PNGEncoder from './utils/png';
+import PrefilledMatrixEntity from './utils/prefilled-matrix-entity';
+import Spectrogram from './utils/spectrogram';
 import scales from './utils/scales';
 
 export default {
@@ -101,6 +102,7 @@ export default {
     AxisLayer, timeAxisGenerator, gridAxisGenerator
   },
   utils: {
-    FFT, format, OrthogonalData, PNGEncoder, scales
+    format, MatrixEntity, OrthogonalData, PrefilledMatrixEntity,
+    scales, Spectrogram
   }
 };

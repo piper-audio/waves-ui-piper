@@ -17,13 +17,13 @@ export default class MatrixLayer extends Layer {
    * @param {AudioBuffer} buffer - The audio buffer to display.
    * @param {Object} options - An object to configure the layer.
    */
-  constructor(buffer, options) {
+  constructor(matrixEntity, options) {
     options = Object.assign({}, defaults, options);
 
-    super('entity', buffer.getChannelData(options.channel), options);
+    super('entity', matrixEntity, options);
 
     this.configureShape(Matrix, {}, {
-      sampleRate: buffer.sampleRate,
+      sampleRate: options.sampleRate,
       color: options.color,
       renderingStrategy: options.renderingStrategy
     });

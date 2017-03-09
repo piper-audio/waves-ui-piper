@@ -53,7 +53,7 @@ export default class Ticks extends BaseShape {
 
       tick.setAttributeNS(null, 'fill', 'none');
       tick.setAttributeNS(null, 'stroke', this.params.color);
-      tick.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+      tick.setAttributeNS(null, 'stroke-width', 2);
       tick.setAttributeNS(null, 'transform', `translate(${x}, 0)`);
       tick.setAttributeNS(null, 'opacity', opacity);
 

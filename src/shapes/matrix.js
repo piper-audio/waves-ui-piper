@@ -30,6 +30,7 @@ export default class Matrix extends BaseShape {
     console.log("matrix render called");
     if (this.$el) { return this.$el; }
     this.$el = document.createElementNS(this.ns, 'image');
+    this.$el.addEventListener('dragstart', e => { e.preventDefault(); }, false);
     console.log("matrix render returning");
     return this.$el;
   }
@@ -74,6 +75,8 @@ export default class Matrix extends BaseShape {
     console.log("got my image resource, it has length " + imgResource.length +
 	       " (dimensions " + ncols + " x " + height + ")");
 
+    datum.finished();
+    
     const after = performance.now();
     console.log("matrix cache time = " + Math.round(after - before));
     
@@ -93,8 +96,11 @@ export default class Matrix extends BaseShape {
     this.$el.setAttributeNS(null, 'preserveAspectRatio', 'none');
 
     if (!cache.addedToElement) {
-      this.$el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', cache.resource);
+      console.log("About to add image resource to SVG...");
+      this.$el.setAttributeNS('http://www.w3.org/1999/xlink', 'href',
+                              cache.resource);
       cache.addedToElement = true;
+      console.log("Done that");
     }
     
     const after = performance.now();
