@@ -29,8 +29,7 @@ export default class Matrix extends BaseShape {
   render(renderingCtx) {
     console.log("matrix render called");
     if (this.$el) { return this.$el; }
-    this.$el = document.createElementNS(this.ns, 'image');
-    this.$el.addEventListener('dragstart', e => { e.preventDefault(); }, false);
+    this.$el = document.createElementNS(this.ns, 'g');
     console.log("matrix render returning");
     return this.$el;
   }
@@ -41,46 +40,70 @@ export default class Matrix extends BaseShape {
 
     console.log("matrix cache called");
 
-    const ncols = datum.getColumnCount();
     const height = datum.getColumnHeight();
+    const totalWidth = datum.getColumnCount();
+    let tileWidth = 100;
+    if (totalWidth < tileWidth * 3) {
+      tileWidth = totalWidth;
+    }
 
-    console.log("ncols = " + ncols);
+    console.log("totalWidth = " + totalWidth + ", tileWidth = " + tileWidth);
+
+    let resources = [];
+    let widths = [];
     
-    let p = new PNGEncoder(ncols, height, 256);
+    for (let x0 = 0; x0 < totalWidth; x0 += tileWidth) {
 
-    for (let x = 0; x < ncols; ++x) {
-
-      const col = datum.getColumn(x);
-      
-      for (let y = 0; y < height; ++y) {
-
-        const value = Math.abs(col[y]);
-
-        let scaledValue = 255 * value;
-        if (scaledValue < 0) scaledValue = 0;
-        if (scaledValue > 255) scaledValue = 255;
-        scaledValue = Math.floor(scaledValue);
-	scaledValue = 255 - scaledValue;
-
-        const colour = p.color(scaledValue, scaledValue, scaledValue, 255);
-        const index = p.index(x, y);
-	p.buffer[index] = colour;
+      let w = tileWidth;
+      if (totalWidth - x0 < tileWidth) {
+	w = totalWidth - x0;
       }
+      
+      let p = new PNGEncoder(w, height, 256);
+
+      for (let i = 0; i < w; ++i) {
+
+	const x = x0 + i;
+	const col = datum.getColumn(x);
+      
+	for (let y = 0; y < height; ++y) {
+
+          const value = Math.abs(col[y]);
+
+          let scaledValue = 255 * value;
+          if (scaledValue < 0) scaledValue = 0;
+          if (scaledValue > 255) scaledValue = 255;
+          scaledValue = Math.floor(scaledValue);
+	  scaledValue = 255 - scaledValue;
+
+          const colour = p.color(scaledValue, scaledValue, scaledValue, 255);
+          const index = p.index(x, y);
+	  p.buffer[index] = colour;
+	}
+      }
+
+      const resource = 'data:image/png;base64,' + p.getBase64();
+      resources.push(resource);
+      widths.push(w);
+
+      console.log("image " + resources.length + ": length " + resource.length +
+		  " (dimensions " + w + " x " + height + ")");
     }
 
     console.log("drawing complete");
-    
-    let imgResource = 'data:image/png;base64,'+p.getBase64();
-
-    console.log("got my image resource, it has length " + imgResource.length +
-	       " (dimensions " + ncols + " x " + height + ")");
 
     datum.finished();
     
     const after = performance.now();
     console.log("matrix cache time = " + Math.round(after - before));
     
-    return { resource: imgResource };
+    return {
+      resources: resources,
+      tileWidths: widths,
+      totalWidth: totalWidth,
+      height: height,
+      elements: [] // will be installed in first call to update
+    };
   }
   
   update(renderingContext, datum, cache) {
@@ -89,20 +112,41 @@ export default class Matrix extends BaseShape {
 
     console.log("matrix update called");
 
-    //!!! not necessarily right:
-    
-    this.$el.setAttributeNS(null, 'width', renderingContext.width);
-    this.$el.setAttributeNS(null, 'height', renderingContext.height);
-    this.$el.setAttributeNS(null, 'preserveAspectRatio', 'none');
-
-    if (!cache.addedToElement) {
-      console.log("About to add image resource to SVG...");
-      this.$el.setAttributeNS('http://www.w3.org/1999/xlink', 'href',
-                              cache.resource);
-      cache.addedToElement = true;
-      console.log("Done that");
+    if (!cache.totalWidth || !cache.height ||
+	!renderingContext.width || !renderingContext.height) {
+      console.log("nothing to update");
+      return;
     }
     
+    if (cache.elements.length === 0) {
+      console.log("About to add " + cache.resources.length +
+		  " image resources to SVG...");
+      for (let i = 0; i < cache.resources.length; ++i) {
+	const resource = cache.resources[i];
+	const elt = document.createElementNS(this.ns, 'image');
+	elt.setAttributeNS('http://www.w3.org/1999/xlink', 'href', resource);
+	elt.setAttributeNS(null, 'preserveAspectRatio', 'none');
+	elt.addEventListener('dragstart', e => { e.preventDefault(); }, false);
+	this.$el.appendChild(elt);
+	cache.elements.push(elt);
+      }
+      console.log("Done that");
+    }
+
+    const widthScaleFactor = renderingContext.width / cache.totalWidth;
+    let widthAccumulated = 0;
+    
+    for (let i = 0; i < cache.elements.length; ++i) {
+      const elt = cache.elements[i];
+      const tileWidth = cache.tileWidths[i];
+      elt.setAttributeNS(null, 'width', tileWidth * widthScaleFactor);
+      elt.setAttributeNS(null, 'height', renderingContext.height);
+      const x = widthAccumulated * widthScaleFactor;
+      console.log("setting x coord of image " + i + " to " + x);
+      elt.setAttributeNS(null, 'x', x);
+      widthAccumulated += tileWidth;
+    }
+      
     const after = performance.now();
     console.log("matrix update time = " + Math.round(after - before));
   }
