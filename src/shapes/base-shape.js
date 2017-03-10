@@ -154,25 +154,36 @@ export default class BaseShape {
   render(renderingContext) {}
 
   /**
-   * Interface method called by `Layer~update`. Called once for a
-   * given datum, to return any cache information derived from it that
-   * may be used subsequently when rendering. Only called for shapes with
-   * entity type.
+   * Interface method called by `Layer~update`, only for shapes with
+   * `entity` type.
    *
-   * @param {Object|Array} datum - An entity that will subsequently be passed to `update`.
-   * @return {Object} - Cache data (opaque to caller) to pass to `update` whenever that datum is passed.
+   * Called once for a given entity, to return any information derived
+   * from it that will be used subsequently when rendering. If this
+   * method returns a non-null object, then that object will be passed
+   * to the update method subsequently instead of the original entity
+   * datum. (If you want to retain access to the original entity,
+   * stash it in your cache object as well. Otherwise it may be GC'd
+   * if nobody else needs it.)
+   *
+   * @param {Object|Array} datum - Entity associated with this shape.
+   * @return {Object} - Cache data (opaque to caller) to pass to
+   *     `update` subsequently in place of the original entity datum.
    */
-  encache(datum) {}
+  encache(datum) { return null; }
     
   /**
    * Interface method called by `Layer~update`. Updates the DOM structure of the shape.
    *
-   * @param {Object} renderingContext - The `renderingContext` of the layer
-   *    which owns this shape.
-   * @param {Object|Array} datum - The datum associated to the shape.
-   * @param {Object} cache - Any cache object previously returned by `cache` when passed this datum. Only supplied for shapes with entity type.
+   * @param {Object} renderingContext - The `renderingContext` of the
+   *    layer which owns this shape.
+   * @param {Object|Array} datum - The datum or cache associated with
+   *    the shape. If the shape has collection type, this will be the
+   *    single item from the dataset that the shape is dedicated to
+   *    displaying. If it has entity type, then this will be the
+   *    object previously returned from the shape's `encache` method
+   *    (if any), or else the entity object itself.
    */
-  update(renderingContext, datum, cache) {}
+  update(renderingContext, datumOrCache) {}
 
   /**
    * Interface method to override called by `Layer~getItemsInArea`. Defines if

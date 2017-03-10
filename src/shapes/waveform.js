@@ -38,9 +38,9 @@ export default class Waveform extends BaseShape {
     return this.$el;
   }
 
-  encache(datum) {
+  encache(samples) {
 
-    console.log("cache called");
+    console.log("waveform encache called");
 
     // The cache is an array of peak caches (holding the min and max
     // values within each block for a given block size) with each peak
@@ -99,26 +99,33 @@ export default class Waveform extends BaseShape {
     // overhead.
     
     const blockSize = 32;
-    let [ peaks, troughs ] = peakCacheFor(datum, blockSize);
+    let [ peaks, troughs ] = peakCacheFor(samples, blockSize);
     
-    return [
-      { blockSize: blockSize,
-        max: peaks,
-        min: troughs
-      }
-    ];
+    return {
+      samples: samples,
+      peakCaches: [
+        { samples: samples,
+          blockSize: blockSize,
+          max: peaks,
+          min: troughs
+        }
+      ]
+    };
   }
   
-  summarise(datum, minX, maxX, pixelToSample, cache) {
+  summarise(cache, minX, maxX, pixelToSample) {
 
     const before = performance.now();
 
+    const samples = cache.samples;
+    
     const px0 = Math.floor(minX);
     const px1 = Math.floor(maxX);
+
     let peakCache = null;
     let peakCacheBlockSize = 0;
 
-    if (cache && (cache.length > 0)) {
+    if (cache && (cache.peakCaches.length > 0)) {
 
       // Find a suitable peak cache if we have one.
       
@@ -128,10 +135,10 @@ export default class Waveform extends BaseShape {
       // straddling cache block boundaries.
       const step = pixelToSample(px0 + 1) - pixelToSample(px0);
 
-      for (var i = 0; i < cache.length; ++i) {
-        const blockSize = cache[i].blockSize;
+      for (var i = 0; i < cache.peakCaches.length; ++i) {
+        const blockSize = cache.peakCaches[i].blockSize;
         if (blockSize > peakCacheBlockSize && blockSize <= step/2) {
-          peakCache = cache[i];
+          peakCache = cache.peakCaches[i];
           peakCacheBlockSize = peakCache.blockSize;
         }
       }
@@ -143,12 +150,12 @@ export default class Waveform extends BaseShape {
     for (let px = px0; px < px1; px++) {
 
       const startSample = pixelToSample(px);
-      if (startSample >= datum.length) break;
+      if (startSample >= samples.length) break;
 
       let endSample = pixelToSample(px + 1);
-      if (endSample >= datum.length) endSample = datum.length;
+      if (endSample >= samples.length) endSample = samples.length;
       
-      let min = datum[startSample];
+      let min = samples[startSample];
       let max = min;
       
       let ix = startSample;
@@ -156,7 +163,7 @@ export default class Waveform extends BaseShape {
       if (peakCache && (peakCacheBlockSize > 0)) {
       
         while (ix < endSample && (ix % peakCacheBlockSize) !== 0) {
-          let sample = datum[ix];
+          let sample = samples[ix];
           if (sample < min) { min = sample; }
           if (sample > max) { max = sample; }
           ++ix;
@@ -175,7 +182,7 @@ export default class Waveform extends BaseShape {
       }
 
       while (ix < endSample) {
-        let sample = datum[ix];
+        let sample = samples[ix];
         if (sample < min) { min = sample; }
         if (sample > max) { max = sample; }
         ++ix;
@@ -190,18 +197,20 @@ export default class Waveform extends BaseShape {
     return minMax;
   }
 
-  update(renderingContext, datum, cache) {
+  update(renderingContext, cache) {
 
     const before = performance.now();
 
+    const samples = cache.samples;
+    
     // define nbr of samples per pixels
 
-    const nbrSamples = datum.length;
+    const nbrSamples = samples.length;
     const duration = nbrSamples / this.params.sampleRate;
     const width = renderingContext.timeToPixel(duration);
     const samplesPerPixel = nbrSamples / width;
 
-    if (!samplesPerPixel || datum.length < samplesPerPixel) { return; }
+    if (!samplesPerPixel || samples.length < samplesPerPixel) { return; }
 
     // compute/draw visible area only
     // @TODO refactor this ununderstandable mess
@@ -219,7 +228,7 @@ export default class Waveform extends BaseShape {
     });
 
     // get min/max per pixels, clamped to the visible area
-    const minMax = this.summarise(datum, minX, maxX, pixelToSample, cache);
+    const minMax = this.summarise(cache, minX, maxX, pixelToSample);
     if (!minMax.length) { return; }
 
     const PIXEL = 0;

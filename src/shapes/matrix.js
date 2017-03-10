@@ -35,14 +35,14 @@ export default class Matrix extends BaseShape {
     return this.$el;
   }
 
-  encache(datum) { //!!! rename datum to whatever it actually is, here and in waveform
+  encache(matrixEntity) {
 
     const before = performance.now();
 
     console.log("matrix cache called");
 
-    const ncols = datum.getColumnCount();
-    const height = datum.getColumnHeight();
+    const ncols = matrixEntity.getColumnCount();
+    const height = matrixEntity.getColumnHeight();
 
     console.log("ncols = " + ncols);
     
@@ -50,7 +50,7 @@ export default class Matrix extends BaseShape {
 
     for (let x = 0; x < ncols; ++x) {
 
-      const col = datum.getColumn(x);
+      const col = matrixEntity.getColumn(x);
       
       for (let y = 0; y < height; ++y) {
 
@@ -75,15 +75,13 @@ export default class Matrix extends BaseShape {
     console.log("got my image resource, it has length " + imgResource.length +
 	       " (dimensions " + ncols + " x " + height + ")");
 
-    datum.finished();
-    
     const after = performance.now();
     console.log("matrix cache time = " + Math.round(after - before));
     
     return { resource: imgResource };
   }
   
-  update(renderingContext, datum, cache) {
+  update(renderingContext, cache) {
 
     const before = performance.now();
 
