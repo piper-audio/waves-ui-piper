@@ -28,9 +28,7 @@ export default class SpectrogramLayer extends Layer {
 	  options);
 
     this.configureShape(Matrix, {}, {
-      sampleRate: buffer.sampleRate,
-      color: options.color,
-      renderingStrategy: options.renderingStrategy
+      mapper: options.mapper
     });
   }
 }

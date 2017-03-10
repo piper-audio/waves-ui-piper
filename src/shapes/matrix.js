@@ -20,13 +20,12 @@ export default class Matrix extends BaseShape {
   // TODO determine suitable implementations for _getAccessorList and _getDefaults
   _getDefaults() {
     return {
-      mapColor: (value => {
-        let scaledValue = 255 * Math.abs(value);
-        if (scaledValue < 0) scaledValue = 0;
-        if (scaledValue > 255) scaledValue = 255;
-        scaledValue = Math.floor(scaledValue);
-	scaledValue = 255 - scaledValue;
-        return [scaledValue, scaledValue, scaledValue, 255];
+      mapper: (value => {
+        let v = 255 * Math.abs(value);
+        if (v < 0) v = 0;
+        if (v > 255) v = 255;
+        v = 255 - Math.floor(v);
+        return [v, v, v, 255];
       }),
     };
   }
@@ -59,7 +58,7 @@ export default class Matrix extends BaseShape {
       
       for (let y = 0; y < height; ++y) {
         const value = col[y];
-        const [ r, g, b, a ] = this.params.mapColor(value);
+        const [ r, g, b, a ] = this.params.mapper(value);
         const colour = p.color(r, g, b, a);
         const index = p.index(x, y);
 	p.buffer[index] = colour;

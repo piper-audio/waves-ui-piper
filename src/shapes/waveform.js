@@ -102,10 +102,9 @@ export default class Waveform extends BaseShape {
     let [ peaks, troughs ] = peakCacheFor(samples, blockSize);
     
     return {
-      samples: samples,
+      samples,
       peakCaches: [
-        { samples: samples,
-          blockSize: blockSize,
+        { blockSize,
           max: peaks,
           min: troughs
         }
