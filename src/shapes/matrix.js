@@ -84,6 +84,17 @@ export default class Matrix extends BaseShape {
     });
   }      
   
+  _noNormalise(gain) {
+    return (col => {
+      let n = [];
+      for (let i = 0; i < col.length; ++i) {
+        let value = col[i];
+        n.push(value * gain);
+      }
+      return n;
+    });
+  }      
+  
   encache(matrixEntity) {
 
     const before = performance.now();
@@ -92,8 +103,8 @@ export default class Matrix extends BaseShape {
 
     const height = matrixEntity.getColumnHeight();
     const totalWidth = matrixEntity.getColumnCount();
-    let tileWidth = 1000;
-    if (totalWidth < tileWidth * 3) {
+    let tileWidth = 100;
+    if (totalWidth < tileWidth * 2) {
       tileWidth = totalWidth;
     }
 
@@ -102,7 +113,7 @@ export default class Matrix extends BaseShape {
     let resources = [];
     let widths = [];
 
-    let normalise = (col => { return col; });
+    let normalise = null;
 
     switch (this.params.normalise) {
     case 'hybrid':
@@ -111,8 +122,20 @@ export default class Matrix extends BaseShape {
     case 'column':
       normalise = this._columnNormalise(this.params.gain);
       break;
+    default:
+      normalise = this._noNormalise(this.params.gain);
+      break;
     }
-    
+
+    const condition = (col => {
+      let n = [];
+      for (let i = 0; i < col.length; ++i) {
+        if (col[i] === Infinity || isNaN(col[i])) n.push(0.0);
+        else n.push(col[i]);
+      }
+      return n;
+    });
+
     for (let x0 = 0; x0 < totalWidth; x0 += tileWidth) {
 
       let w = tileWidth;
@@ -125,8 +148,9 @@ export default class Matrix extends BaseShape {
       for (let i = 0; i < w; ++i) {
 
 	const x = x0 + i;
-        const col = normalise(matrixEntity.getColumn(x));
-      
+        let col = matrixEntity.getColumn(x);
+        col = normalise(condition(col));
+        
 	for (let y = 0; y < height; ++y) {
           const value = col[y];
           const [ r, g, b, a ] = this.params.mapper(value);
@@ -195,11 +219,11 @@ export default class Matrix extends BaseShape {
       const tileWidth = cache.tileWidths[i];
       const x = widthAccumulated * widthScaleFactor;
       const w = tileWidth * widthScaleFactor;
-      elt.setAttributeNS(null, 'x', x);
+      elt.setAttributeNS(null, 'x', Math.floor(x));
+      elt.setAttributeNS(null, 'width', Math.ceil(x + w) - Math.floor(x));
       elt.setAttributeNS(null, 'y', 0);
-      elt.setAttributeNS(null, 'width', w);
       elt.setAttributeNS(null, 'height', renderingContext.height);
-      console.log("setting x coord of image " + i + " to " + x);
+//      console.log("setting x coord of image " + i + " to " + x);
       widthAccumulated += tileWidth;
     }
       
