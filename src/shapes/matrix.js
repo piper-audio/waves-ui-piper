@@ -42,7 +42,7 @@ export default class Matrix extends BaseShape {
 
     const height = datum.getColumnHeight();
     const totalWidth = datum.getColumnCount();
-    let tileWidth = 100;
+    let tileWidth = 1000;
     if (totalWidth < tileWidth * 3) {
       tileWidth = totalWidth;
     }
@@ -77,7 +77,7 @@ export default class Matrix extends BaseShape {
 	  scaledValue = 255 - scaledValue;
 
           const colour = p.color(scaledValue, scaledValue, scaledValue, 255);
-          const index = p.index(x, y);
+          const index = p.index(i, y);
 	  p.buffer[index] = colour;
 	}
       }
@@ -133,17 +133,21 @@ export default class Matrix extends BaseShape {
       console.log("Done that");
     }
 
+    console.log("Render width = " + renderingContext.width);
+    
     const widthScaleFactor = renderingContext.width / cache.totalWidth;
     let widthAccumulated = 0;
     
     for (let i = 0; i < cache.elements.length; ++i) {
       const elt = cache.elements[i];
       const tileWidth = cache.tileWidths[i];
-      elt.setAttributeNS(null, 'width', tileWidth * widthScaleFactor);
-      elt.setAttributeNS(null, 'height', renderingContext.height);
       const x = widthAccumulated * widthScaleFactor;
-      console.log("setting x coord of image " + i + " to " + x);
+      const w = tileWidth * widthScaleFactor;
       elt.setAttributeNS(null, 'x', x);
+      elt.setAttributeNS(null, 'y', 0);
+      elt.setAttributeNS(null, 'width', w);
+      elt.setAttributeNS(null, 'height', renderingContext.height);
+      console.log("setting x coord of image " + i + " to " + x);
       widthAccumulated += tileWidth;
     }
       
