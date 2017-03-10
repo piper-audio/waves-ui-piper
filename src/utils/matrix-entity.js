@@ -12,8 +12,5 @@ export default class MatrixEntity {
   getColumn(n) {
     return [];
   }
-
-  finished() {
-  }
 }
 

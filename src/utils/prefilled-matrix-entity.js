@@ -24,10 +24,5 @@ export default class PrefilledMatrixEntity extends MatrixEntity {
   getColumn(n) {
     return this.data[n];
   }
-
-  finished() {
-    console.log("relinquishing prefilled matrix data");
-    this.data = null;
-  }
 }
 

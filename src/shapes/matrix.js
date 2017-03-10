@@ -34,14 +34,14 @@ export default class Matrix extends BaseShape {
     return this.$el;
   }
 
-  encache(datum) { //!!! rename datum to whatever it actually is, here and in waveform
+  encache(matrixEntity) {
 
     const before = performance.now();
 
     console.log("matrix cache called");
 
-    const height = datum.getColumnHeight();
-    const totalWidth = datum.getColumnCount();
+    const height = matrixEntity.getColumnHeight();
+    const totalWidth = matrixEntity.getColumnCount();
     let tileWidth = 1000;
     if (totalWidth < tileWidth * 3) {
       tileWidth = totalWidth;
@@ -64,7 +64,7 @@ export default class Matrix extends BaseShape {
       for (let i = 0; i < w; ++i) {
 
 	const x = x0 + i;
-	const col = datum.getColumn(x);
+	const col = matrixEntity.getColumn(x);
       
 	for (let y = 0; y < height; ++y) {
 
@@ -92,8 +92,6 @@ export default class Matrix extends BaseShape {
 
     console.log("drawing complete");
 
-    datum.finished();
-    
     const after = performance.now();
     console.log("matrix cache time = " + Math.round(after - before));
     
@@ -106,7 +104,7 @@ export default class Matrix extends BaseShape {
     };
   }
   
-  update(renderingContext, datum, cache) {
+  update(renderingContext, cache) {
 
     const before = performance.now();
 

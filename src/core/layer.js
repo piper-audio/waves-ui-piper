@@ -798,28 +798,37 @@ export default class Layer extends events.EventEmitter {
   updateShapes() {
     this._updateRenderingContext();
 
-    const cacheFor = (($item, shape, datum) => {
+    const datumOrCacheFor = (($item, shape, datum) => {
       if (this.dataType === 'entity') {
-        if (!this._$itemCacheMap.has($item)) {
-          this._$itemCacheMap.set($item, shape.encache(datum));
+        let cache = null;
+        if (this._$itemCacheMap.has($item)) {
+          cache = this._$itemCacheMap.get($item);
+        } else {
+          cache = shape.encache(datum);
+          this._$itemCacheMap.set($item, cache);
         }
-        return this._$itemCacheMap.get($item);
+        if (cache) {
+          return cache;
+        } else {
+          return datum;
+        }
       } else {
-        return null;
+        // not an entity
+        return datum;
       }
     });
 
     // update common shapes
     this._$itemCommonShapeMap.forEach((shape, $item) => {
-      const cache = cacheFor($item, shape, this.data);
-      shape.update(this._renderingContext, this.data, cache);
+      const arg = datumOrCacheFor($item, shape, this.data);
+      shape.update(this._renderingContext, arg);
     });
 
     // update specific shapes
     for (let [$item, datum] of this._$itemDataMap.entries()) {
       const shape = this._$itemShapeMap.get($item);
-      const cache = cacheFor($item, shape, datum);
-      shape.update(this._renderingContext, datum, cache);
+      const arg = datumOrCacheFor($item, shape, datum);
+      shape.update(this._renderingContext, arg);
     }
   }
 }
