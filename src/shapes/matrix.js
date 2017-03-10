@@ -20,9 +20,15 @@ export default class Matrix extends BaseShape {
   // TODO determine suitable implementations for _getAccessorList and _getDefaults
   _getDefaults() {
     return {
-      sampleRate: 44100,
-      color: '#000000',
-      opacity: 1,
+      normalise: 'none',
+      mapper: (value => {
+        let v = 255 * Math.abs(value);
+        if (v < 0) v = 0;
+        if (v > 255) v = 255;
+        v = 255 - Math.floor(v);
+        return [v, v, v, 255];
+      }),
+      gain: 1.0
     };
   }
 
@@ -34,6 +40,50 @@ export default class Matrix extends BaseShape {
     return this.$el;
   }
 
+  _hybridNormalise(gain) {
+    return (col => {
+      let max = 0.0;
+      for (let i = 0; i < col.length; ++i) {
+        let value = Math.abs(col[i]);
+        if (value > max) {
+          max = value;
+        }
+      }
+      let scale = gain;
+      if (max > 0.0) {
+        scale = scale * (Math.log10(max + 1.0) / max);
+      }
+      let n = [];
+      for (let i = 0; i < col.length; ++i) {
+        let value = col[i];
+        n.push(value * scale);
+      }
+      return n;
+    });
+  }
+
+  _columnNormalise(gain) {
+    return (col => {
+      let max = 0.0;
+      for (let i = 0; i < col.length; ++i) {
+        let value = Math.abs(col[i]);
+        if (value > max) {
+          max = value;
+        }
+      }
+      let scale = gain;
+      if (max > 0.0) {
+        scale = scale * (1.0 / max);
+      }
+      let n = [];
+      for (let i = 0; i < col.length; ++i) {
+        let value = col[i];
+        n.push(value * scale);
+      }
+      return n;
+    });
+  }      
+  
   encache(matrixEntity) {
 
     const before = performance.now();
@@ -51,6 +101,17 @@ export default class Matrix extends BaseShape {
 
     let resources = [];
     let widths = [];
+
+    let normalise = (col => { return col; });
+
+    switch (this.params.normalise) {
+    case 'hybrid':
+      normalise = this._hybridNormalise(this.params.gain);
+      break;
+    case 'column':
+      normalise = this._columnNormalise(this.params.gain);
+      break;
+    }
     
     for (let x0 = 0; x0 < totalWidth; x0 += tileWidth) {
 
@@ -64,19 +125,12 @@ export default class Matrix extends BaseShape {
       for (let i = 0; i < w; ++i) {
 
 	const x = x0 + i;
-	const col = matrixEntity.getColumn(x);
+        const col = normalise(matrixEntity.getColumn(x));
       
 	for (let y = 0; y < height; ++y) {
-
-          const value = Math.abs(col[y]);
-
-          let scaledValue = 255 * value;
-          if (scaledValue < 0) scaledValue = 0;
-          if (scaledValue > 255) scaledValue = 255;
-          scaledValue = Math.floor(scaledValue);
-	  scaledValue = 255 - scaledValue;
-
-          const colour = p.color(scaledValue, scaledValue, scaledValue, 255);
+          const value = col[y];
+          const [ r, g, b, a ] = this.params.mapper(value);
+          const colour = p.color(r, g, b, a);
           const index = p.index(i, y);
 	  p.buffer[index] = colour;
 	}

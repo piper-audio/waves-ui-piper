@@ -40,19 +40,22 @@
       var matrixLayer = new wavesUI.helpers.SpectrogramLayer(buffer, {
         stepSize: 512,
         fftSize: 1024,
-        height: height
+        height: height,
+        mapper: (value => {
+          let v = 255 * Math.abs(value);
+          if (v < 0) v = 0;
+          if (v > 255) v = 255;
+          v = Math.floor(v);
+          return [ v, v, 0, 255 ];
+        })  
       });
 
       var timeContext = new wavesUI.core.LayerTimeContext(timeline.timeContext);
       timeContext.duration = buffer.duration;
       timeContext.start = 1;
 
-      matrixLayer.setTimeContext(timeContext);
-      matrixLayer.configureShape(wavesUI.shapes.Matrix, {
-        y: function(d) { return d; },
-      }, {
-        color: 'steelblue'
-      });
+    matrixLayer.setTimeContext(timeContext);
+    
       // as the matrix is an `entity` layer, we have to edit the context directly
       matrixLayer.setContextEditable(true);
 

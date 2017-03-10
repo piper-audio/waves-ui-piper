@@ -52,12 +52,14 @@ export default class Spectrogram extends MatrixEntity {
 
     const h = this.getColumnHeight();
     const col = new Float32Array(h);
+    const scale = 1.0 / Math.sqrt(sz);
     for (let i = 0; i < h; ++i) {
-      const mag = Math.sqrt(this.real[i] * this.real[i] +
-                            this.imag[i] * this.imag[i]);
+      const re = this.real[i] * scale;
+      const im = this.imag[i] * scale;
+      const mag = Math.sqrt(re * re + im * im);
       col[i] = mag;
     }
+    
     return col;
-
   }
 }

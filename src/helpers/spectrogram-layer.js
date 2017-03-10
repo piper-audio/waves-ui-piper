@@ -3,10 +3,9 @@ import Matrix from '../shapes/matrix';
 import Spectrogram from '../utils/spectrogram';
 
 const defaults = {
-  yDomain: [-1, 1],
-  channel: 0,
-  color: 'steelblue',
-  renderingStrategy: 'svg'
+  normalise: 'hybrid',
+  gain: 40.0,
+  channel: 0
 };
 
 /**
@@ -27,10 +26,6 @@ export default class SpectrogramLayer extends Layer {
 	  new Spectrogram(buffer.getChannelData(options.channel), options),
 	  options);
 
-    this.configureShape(Matrix, {}, {
-      sampleRate: buffer.sampleRate,
-      color: options.color,
-      renderingStrategy: options.renderingStrategy
-    });
+    this.configureShape(Matrix, {}, options);
   }
 }
