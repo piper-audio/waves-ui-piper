@@ -20,6 +20,7 @@ export default class Matrix extends BaseShape {
   // TODO determine suitable implementations for _getAccessorList and _getDefaults
   _getDefaults() {
     return {
+      normalise: 'none',
       mapper: (value => {
         let v = 255 * Math.abs(value);
         if (v < 0) v = 0;
@@ -27,6 +28,7 @@ export default class Matrix extends BaseShape {
         v = 255 - Math.floor(v);
         return [v, v, v, 255];
       }),
+      gain: 1.0
     };
   }
 
@@ -39,6 +41,50 @@ export default class Matrix extends BaseShape {
     return this.$el;
   }
 
+  _hybridNormalise(gain) {
+    return (col => {
+      let max = 0.0;
+      for (let i = 0; i < col.length; ++i) {
+        let value = Math.abs(col[i]);
+        if (value > max) {
+          max = value;
+        }
+      }
+      let scale = gain;
+      if (max > 0.0) {
+        scale = scale * (Math.log10(max + 1.0) / max);
+      }
+      let n = [];
+      for (let i = 0; i < col.length; ++i) {
+        let value = col[i];
+        n.push(value * scale);
+      }
+      return n;
+    });
+  }
+
+  _columnNormalise(gain) {
+    return (col => {
+      let max = 0.0;
+      for (let i = 0; i < col.length; ++i) {
+        let value = Math.abs(col[i]);
+        if (value > max) {
+          max = value;
+        }
+      }
+      let scale = gain;
+      if (max > 0.0) {
+        scale = scale * (1.0 / max);
+      }
+      let n = [];
+      for (let i = 0; i < col.length; ++i) {
+        let value = col[i];
+        n.push(value * scale);
+      }
+      return n;
+    });
+  }      
+  
   encache(matrixEntity) {
 
     const before = performance.now();
@@ -49,12 +95,23 @@ export default class Matrix extends BaseShape {
     const height = matrixEntity.getColumnHeight();
 
     console.log("ncols = " + ncols);
+
+    let normalise = (col => { return col; });
+
+    switch (this.params.normalise) {
+    case 'hybrid':
+      normalise = this._hybridNormalise(this.params.gain);
+      break;
+    case 'column':
+      normalise = this._columnNormalise(this.params.gain);
+      break;
+    }
     
     let p = new PNGEncoder(ncols, height, 256);
 
     for (let x = 0; x < ncols; ++x) {
 
-      const col = matrixEntity.getColumn(x);
+      const col = normalise(matrixEntity.getColumn(x));
       
       for (let y = 0; y < height; ++y) {
         const value = col[y];
