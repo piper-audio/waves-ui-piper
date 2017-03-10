@@ -130,6 +130,9 @@ export default class PNGEncoder {
       this.buffer[this.trns_offs+8+this.pindex] = String.fromCharCode(alpha);
       
       this.palette[color] = String.fromCharCode(this.pindex++);
+
+//      console.log("Added colour [" + red + "," + green + "," + blue +
+//                  "], palette now has " + this.pindex + " colour(s)");
     }
     return this.palette[color];
   }
