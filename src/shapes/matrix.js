@@ -201,7 +201,8 @@ export default class Matrix extends BaseShape {
 	const resource = cache.resources[i];
 	const elt = document.createElementNS(this.ns, 'image');
 	elt.setAttributeNS('http://www.w3.org/1999/xlink', 'href', resource);
-	elt.setAttributeNS(null, 'preserveAspectRatio', 'none');
+        elt.setAttributeNS(null, 'preserveAspectRatio', 'none');
+	elt.setAttributeNS(null, 'image-rendering', 'optimizeSpeed');
 	elt.addEventListener('dragstart', e => { e.preventDefault(); }, false);
 	this.$el.appendChild(elt);
 	cache.elements.push(elt);
