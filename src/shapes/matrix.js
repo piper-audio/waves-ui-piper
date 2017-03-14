@@ -22,11 +22,12 @@ export default class Matrix extends BaseShape {
     return {
       normalise: 'none',
       mapper: (value => {
-        let v = 255 * Math.abs(value);
-        if (v < 0) v = 0;
-        if (v > 255) v = 255;
-        v = 255 - Math.floor(v);
-        return [v, v, v, 255];
+        // The mapper accepts a value, which is guaranteed to be in
+        // the range [0,1], and returns r, g, b components which are
+        // also in the range [0,1]. This example mapper just returns a
+        // grey level.
+        let level = 1.0 - value;
+        return [ level, level, level ];
       }),
       gain: 1.0
     };
@@ -152,9 +153,24 @@ export default class Matrix extends BaseShape {
         col = normalise(condition(col));
         
 	for (let y = 0; y < height; ++y) {
-          const value = col[y];
-          const [ r, g, b, a ] = this.params.mapper(value);
-          const colour = p.color(r, g, b, a);
+          let value = col[y];
+          // The value must be in the range [0,1] to pass to the
+          // mapper. We also quantize the range, as the PNG encoder
+          // uses a 256-level palette.
+          if (value < 0) value = 0;
+          if (value > 1) value = 1;
+          value = Math.round(value * 255) / 255;
+          let [ r, g, b ] = this.params.mapper(value);
+          if (r < 0) r = 0;
+          if (r > 1) r = 1;
+          if (g < 0) g = 0;
+          if (g > 1) g = 1;
+          if (b < 0) b = 0;
+          if (b > 1) b = 1;
+          const colour = p.color(Math.round(r * 255),
+                                 Math.round(g * 255),
+                                 Math.round(b * 255),
+                                 255);
           const index = p.index(i, y);
 	  p.buffer[index] = colour;
 	}
