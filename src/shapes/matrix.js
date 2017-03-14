@@ -194,6 +194,8 @@ export default class Matrix extends BaseShape {
       tileWidths: widths,
       totalWidth: totalWidth,
       height: height,
+      startTime: matrixEntity.getStartTime(),
+      stepDuration: matrixEntity.getStepDuration(),
       elements: [] // will be installed in first call to update
     };
   }
@@ -227,14 +229,23 @@ export default class Matrix extends BaseShape {
     }
 
     console.log("Render width = " + renderingContext.width);
+
+    let startX = renderingContext.timeToPixel(cache.startTime);
+    const drawnWidth = renderingContext.width - startX;
+    let widthScaleFactor = drawnWidth / cache.totalWidth;
+
+    if (cache.stepDuration > 0) {
+      let totalDuration = cache.stepDuration * cache.totalWidth;
+      let endX = renderingContext.timeToPixel(cache.startTime + totalDuration);
+      widthScaleFactor = (endX - startX) / cache.totalWidth;
+    }
     
-    const widthScaleFactor = renderingContext.width / cache.totalWidth;
     let widthAccumulated = 0;
     
     for (let i = 0; i < cache.elements.length; ++i) {
       const elt = cache.elements[i];
       const tileWidth = cache.tileWidths[i];
-      const x = widthAccumulated * widthScaleFactor;
+      const x = startX + widthAccumulated * widthScaleFactor;
       const w = tileWidth * widthScaleFactor;
       elt.setAttributeNS(null, 'x', Math.floor(x));
       elt.setAttributeNS(null, 'width', Math.ceil(x + w) - Math.floor(x));
