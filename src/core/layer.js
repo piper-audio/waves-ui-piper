@@ -104,7 +104,6 @@ export default class Layer extends events.EventEmitter {
     this._$itemShapeMap = new Map();
     this._$itemDataMap = new Map();
     this._$itemCommonShapeMap = new Map();
-    this._$itemCacheMap = new Map();
 
     this._isContextEditable = false;
     this._behavior = null;
@@ -135,7 +134,6 @@ export default class Layer extends events.EventEmitter {
     this._$itemShapeMap.clear();
     this._$itemDataMap.clear();
     this._$itemCommonShapeMap.clear();
-    this._$itemCacheMap.clear();
 
     this.removeAllListeners();
   }
@@ -299,17 +297,18 @@ export default class Layer extends events.EventEmitter {
    */
   set data(data) {
     switch (this.dataType) {
-      case 'entity':
-        if (this._data) {  // if data already exists, reuse the reference
-          this._data[0] = data;
-        } else {
-          this._data = [data];
-        }
-        break;
-      case 'collection':
-        this._data = data;
-        break;
+    case 'entity':
+      if (this._data) {  // if data already exists, reuse the reference
+        this._data[0] = data;
+      } else {
+        this._data = [data];
+      }
+      break;
+    case 'collection':
+      this._data = data;
+      break;
     }
+    this._cached = false;
   }
 
   // --------------------------------------
@@ -747,11 +746,6 @@ export default class Layer extends events.EventEmitter {
 
       this._$itemDataMap.delete($item);
       this._$itemShapeMap.delete($item);
-
-      // cache could have been added to this map during update()
-      if (this._$itemCacheMap.has($item)) {
-        this._$itemCacheMap.delete($item);
-      }
     }
   }
 
@@ -798,37 +792,28 @@ export default class Layer extends events.EventEmitter {
   updateShapes() {
     this._updateRenderingContext();
 
-    const datumOrCacheFor = (($item, shape, datum) => {
-      if (this.dataType === 'entity') {
-        let cache = null;
-        if (this._$itemCacheMap.has($item)) {
-          cache = this._$itemCacheMap.get($item);
-        } else {
-          cache = shape.encache(datum);
-          this._$itemCacheMap.set($item, cache);
+    if (this.dataType === 'entity') {
+      if (!this._cached) {
+        this._data = [];
+        for (let [$item, datum] of this._$itemDataMap.entries()) {
+          const shape = this._$itemShapeMap.get($item);
+          const cache = shape.encache(datum);
+          this._$itemDataMap.set($item, cache);
+          this._data.push(cache);
         }
-        if (cache) {
-          return cache;
-        } else {
-          return datum;
-        }
-      } else {
-        // not an entity
-        return datum;
+        this._cached = true;
       }
-    });
-
+    }
+    
     // update common shapes
     this._$itemCommonShapeMap.forEach((shape, $item) => {
-      const arg = datumOrCacheFor($item, shape, this.data);
-      shape.update(this._renderingContext, arg);
+      shape.update(this._renderingContext, this.data);
     });
 
     // update specific shapes
     for (let [$item, datum] of this._$itemDataMap.entries()) {
       const shape = this._$itemShapeMap.get($item);
-      const arg = datumOrCacheFor($item, shape, datum);
-      shape.update(this._renderingContext, arg);
+      shape.update(this._renderingContext, datum);
     }
   }
 }
