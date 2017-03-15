@@ -794,25 +794,36 @@ export default class Layer extends events.EventEmitter {
 
     if (this.dataType === 'entity') {
       if (!this._cached) {
-        this._data = [];
-        for (let [$item, datum] of this._$itemDataMap.entries()) {
-          const shape = this._$itemShapeMap.get($item);
-          const cache = shape.encache(datum);
-          this._$itemDataMap.set($item, cache);
-          this._data.push(cache);
+	if (this._data !== []) {
+	  let origData = this._data[0];
+          for (let [$item, datum] of this._$itemDataMap.entries()) {
+	    if (datum === origData) {
+              const shape = this._$itemShapeMap.get($item);
+	      console.log("calling shape.encache() on " + shape);
+              const cache = shape.encache(datum);
+	      console.log("it returned " + cache);
+	      if (cache) {
+		console.log("replacing our entity data with cached value");
+		this._$itemDataMap.set($item, cache);
+		this.data = cache;
+	      }
+	    }
+	  }
+          this._cached = true;
         }
-        this._cached = true;
       }
     }
     
     // update common shapes
     this._$itemCommonShapeMap.forEach((shape, $item) => {
+      console.log("calling shape.update() on common shape " + shape);
       shape.update(this._renderingContext, this.data);
     });
 
     // update specific shapes
     for (let [$item, datum] of this._$itemDataMap.entries()) {
       const shape = this._$itemShapeMap.get($item);
+      console.log("calling shape.update() on " + shape);
       shape.update(this._renderingContext, datum);
     }
   }
