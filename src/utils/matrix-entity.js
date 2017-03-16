@@ -30,5 +30,9 @@ export default class MatrixEntity {
     // Return the location in time of the first column in seconds.
     return 0;
   }
+
+  dispose() {
+    // Called when this object is no longer going to be used.
+  }
 }
 

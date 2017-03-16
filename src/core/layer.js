@@ -827,6 +827,10 @@ export default class Layer extends events.EventEmitter {
 	      if (cache) {
 		console.log("replacing our entity data with cached value");
 		this._$itemDataMap.set($item, cache);
+                if (typeof(origData.dispose) !== 'undefined') {
+                  console.log("and calling dispose on entity data");
+                  origData.dispose();
+                }
 		this.data = cache;
 	      }
 	    }
