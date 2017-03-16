@@ -26,6 +26,8 @@ export default class Marker extends BaseShape {
   render(renderingContext) {
     if (this.$el) { return this.$el; }
 
+    console.log("marker render");
+    
     const height = renderingContext.height;
 
     this.$el = document.createElementNS(this.ns, 'g');
@@ -57,14 +59,30 @@ export default class Marker extends BaseShape {
   }
 
   update(renderingContext, datum) {
+
+    console.log("marker update");
+    
     const x = renderingContext.timeToPixel(this.x(datum)) - 0.5;
-    const color = this.color(datum);
 
-    this.$el.setAttributeNS(null, 'transform', `translate(${x}, 0)`);
-    this.$line.style.stroke = color;
+    const minX = renderingContext.minX;
+    const maxX = renderingContext.maxX;
 
-    if (this.params.displayHandlers) {
-      this.$handler.style.fill = color;
+    if (x < minX || x > maxX) {
+
+      this.$el.style.visibility = 'hidden';
+
+    } else {
+
+      this.$el.style.visibility = 'visible';
+    
+      const color = this.color(datum);
+      
+      this.$el.setAttributeNS(null, 'transform', `translate(${x}, 0)`);
+      this.$line.style.stroke = color;
+
+      if (this.params.displayHandlers) {
+        this.$handler.style.fill = color;
+      }
     }
   }
 
