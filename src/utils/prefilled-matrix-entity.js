@@ -42,5 +42,9 @@ export default class PrefilledMatrixEntity extends MatrixEntity {
   getStartTime() {
     return this.startTime;
   }
+
+  dispose() {
+    this.data = [];
+  }
 }
 
