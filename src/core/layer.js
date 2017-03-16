@@ -416,6 +416,7 @@ export default class Layer extends events.EventEmitter {
    * for rendering and updating.
    */
   _updateRenderingContext() {
+    
     this._renderingContext.timeToPixel = this.timeContext.timeToPixel;
     this._renderingContext.valueToPixel = this._valueToPixel;
 
@@ -425,11 +426,27 @@ export default class Layer extends events.EventEmitter {
     this._renderingContext.offsetX = this.timeContext.timeToPixel(this.timeContext.offset);
     this._renderingContext.startX = this.timeContext.parent.timeToPixel(this.timeContext.start);
 
-    // @todo replace with `minX` and `maxX` representing the visible pixels in which
-    // the shapes should be rendered, could allow to not update the DOM of shapes
-    // who are not in this area.
     this._renderingContext.trackOffsetX = this.timeContext.parent.timeToPixel(this.timeContext.parent.offset);
     this._renderingContext.visibleWidth = this.timeContext.parent.visibleWidth;
+
+    // and calculate the visible area, storing it so shapes can
+    // determine which bits they need to redraw
+    // @TODO refactor this ununderstandable mess
+    
+    let minX = Math.max(-this._renderingContext.offsetX, 0);
+
+    let trackDecay =
+        this._renderingContext.trackOffsetX +
+        this._renderingContext.startX;
+    if (trackDecay < 0) { minX = -trackDecay; }
+
+    let maxX = minX;
+    maxX += (this._renderingContext.width - minX <
+             this._renderingContext.visibleWidth) ?
+      this._renderingContext.width : this._renderingContext.visibleWidth;
+
+    this._renderingContext.minX = minX;
+    this._renderingContext.maxX = maxX;
   }
 
   // --------------------------------------

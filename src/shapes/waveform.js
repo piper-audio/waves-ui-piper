@@ -200,26 +200,8 @@ export default class Waveform extends BaseShape {
 
     const before = performance.now();
 
-    const samples = cache.samples;
-    
-    // define nbr of samples per pixels
-
-    const nbrSamples = samples.length;
-    const duration = nbrSamples / this.params.sampleRate;
-    const width = renderingContext.timeToPixel(duration);
-    const samplesPerPixel = nbrSamples / width;
-
-    if (!samplesPerPixel || samples.length < samplesPerPixel) { return; }
-
-    // compute/draw visible area only
-    // @TODO refactor this ununderstandable mess
-    let minX = Math.max(-renderingContext.offsetX, 0);
-    let trackDecay = renderingContext.trackOffsetX + renderingContext.startX;
-    if (trackDecay < 0) { minX = -trackDecay; }
-
-    let maxX = minX;
-    maxX += (renderingContext.width - minX < renderingContext.visibleWidth) ?
-      renderingContext.width : renderingContext.visibleWidth;
+    const minX = renderingContext.minX;
+    const maxX = renderingContext.maxX;
 
     const sampleRate = this.params.sampleRate;
     const pixelToSample = (pixel => {

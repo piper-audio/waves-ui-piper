@@ -33,19 +33,8 @@ export default class Line extends BaseShape {
     data = data.slice(0);
     data.sort((a, b) => this.cx(a) < this.cx(b) ? -1 : 1);
 
-    //!!! copied from waveform
-    
-    // @TODO refactor this ununderstandable mess
-    let minX = Math.max(-renderingContext.offsetX, 0);
-    let trackDecay = renderingContext.trackOffsetX + renderingContext.startX;
-    if (trackDecay < 0) { minX = -trackDecay; }
-
-    let maxX = minX;
-    maxX += (renderingContext.width - minX < renderingContext.visibleWidth) ?
-      renderingContext.width : renderingContext.visibleWidth;
-
-    minX = Math.floor(minX);
-    maxX = Math.floor(maxX);
+    const minX = Math.floor(renderingContext.minX);
+    const maxX = Math.floor(renderingContext.maxX);
 
     let instructions = [];
     const n = data.length;
