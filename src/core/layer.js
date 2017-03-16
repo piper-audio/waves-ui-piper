@@ -126,6 +126,13 @@ export default class Layer extends events.EventEmitter {
    * Destroy the layer, clear all references.
    */
   destroy() {
+
+    if (this.dataType == 'entity') {
+      if (typeof(this.data.dispose) !== 'undefined') {
+        this.data.dispose();
+      }
+    }
+    
     this.timeContext = null;
     this.data = null;
     this.params = null;
