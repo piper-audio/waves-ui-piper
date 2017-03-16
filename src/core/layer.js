@@ -706,6 +706,9 @@ export default class Layer extends events.EventEmitter {
    * attributes and thus place them where they should.
    */
   render() {
+
+    const before = performance.now();
+    
     // render `commonShape` only once
     if (
       this._commonShapeConfiguration !== null &&
@@ -764,6 +767,9 @@ export default class Layer extends events.EventEmitter {
       this._$itemDataMap.delete($item);
       this._$itemShapeMap.delete($item);
     }
+
+    const after = performance.now();
+    console.log("layer render time = " + Math.round(after - before));
   }
 
   /**
@@ -803,10 +809,11 @@ export default class Layer extends events.EventEmitter {
   
   /**
    * Updates the attributes of all the `Shape` instances rendered into the layer.
-   *
-   * @todo - allow to filter which shape(s) should be updated.
    */
   updateShapes() {
+
+    const before = performance.now();
+    
     this._updateRenderingContext();
 
     if (this.dataType === 'entity') {
@@ -816,9 +823,7 @@ export default class Layer extends events.EventEmitter {
           for (let [$item, datum] of this._$itemDataMap.entries()) {
 	    if (datum === origData) {
               const shape = this._$itemShapeMap.get($item);
-	      console.log("calling shape.encache() on " + shape);
               const cache = shape.encache(datum);
-	      console.log("it returned " + cache);
 	      if (cache) {
 		console.log("replacing our entity data with cached value");
 		this._$itemDataMap.set($item, cache);
@@ -831,17 +836,20 @@ export default class Layer extends events.EventEmitter {
       }
     }
     
-    // update common shapes
+    // Update common shape, if any
     this._$itemCommonShapeMap.forEach((shape, $item) => {
-      console.log("calling shape.update() on common shape " + shape);
       shape.update(this._renderingContext, this.data);
     });
 
-    // update specific shapes
+    console.log("item data map contains " + this._$itemDataMap.size + " entries");
+    
+    // Update specific shapes
     for (let [$item, datum] of this._$itemDataMap.entries()) {
       const shape = this._$itemShapeMap.get($item);
-      console.log("calling shape.update() on " + shape);
       shape.update(this._renderingContext, datum);
     }
+
+    const after = performance.now();
+    console.log("layer update time = " + Math.round(after - before));
   }
 }
