@@ -38,8 +38,17 @@ export default class CenteredZoomState extends BaseState {
   }
 
   onMouseDown(e) {
-    this.initialZoom = this.timeline.timeContext.zoom;
+
+    this.initialX = e.x;
+    this.initialOffset = this.timeline.timeContext.offset;
+    this.initialCenterTime =
+      this.timeline.timeContext.timeToPixel.invert(e.x) - this.initialOffset;
+
+    console.log("initial X = " + e.x + " and offset = " + this.initialOffset);
+    console.log("that is time = " + this.initialCenterTime);
+    
     this.initialY = e.y;
+    this.initialZoom = this.timeline.timeContext.zoom;
 
     this._pixelToExponent = scales.linear()
       .domain([0, 100]) // 100px => factor 2
@@ -57,12 +66,34 @@ export default class CenteredZoomState extends BaseState {
 
     timeContext.zoom = Math.min(Math.max(targetZoom, this.minZoom), this.maxZoom);
 
+    // we want to keep the same time under the mouse as we originally
+    // had (this.initialCenterTime)
+    const timeMovedTo = timeContext.timeToPixel(this.initialCenterTime +
+                                                timeContext.offset);
+    
+    console.log("our initial time " + this.initialCenterTime + " would be at " +
+                timeMovedTo + " under new zoom regime");
+    
+    const delta = e.x - timeMovedTo;
+    const deltaTime = timeContext.timeToPixel.invert(delta);
+
+    console.log("mouse is now at " + e.x + " so that's a delta of " + delta + " pixels = time " + deltaTime);
+    
+    console.log("shifting the offset from " + timeContext.offset +
+                " to " + timeContext.offset + deltaTime);
+    
+    timeContext.offset += deltaTime;
+
+    console.log("cross-check: our initial time " + this.initialCenterTime +
+                " now translates to mouse " + timeContext.timeToPixel(this.initialCenterTime));
+    
+/*    
     const newCenterTime = timeContext.timeToPixel.invert(e.x);
     const delta = newCenterTime - lastCenterTime;
 
     // Apply new offset to keep it centered to the mouse
     timeContext.offset += (delta + timeContext.timeToPixel.invert(e.dx));
-
+*/
     // Other possible experiments with centered-zoom-state
     //
     // Example 1: Prevent timeline.offset to be negative
