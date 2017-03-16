@@ -37,6 +37,7 @@ export default class Matrix extends BaseShape {
     console.log("matrix render called");
     if (this.$el) { return this.$el; }
     this.$el = document.createElementNS(this.ns, 'g');
+    this.lastUpdateHop = 0;
     console.log("matrix render returning");
     return this.$el;
   }
@@ -211,6 +212,14 @@ export default class Matrix extends BaseShape {
       console.log("nothing to update");
       return;
     }
+
+    const hop = renderingContext.timeToPixel(1) - renderingContext.timeToPixel(0);
+    if (hop === this.lastUpdateHop) {
+      console.log("zoom level unchanged, still a hop of " + hop + " pps");
+      return;
+    } else {
+      this.lastUpdateHop = hop;
+    }
     
     if (cache.elements.length === 0) {
       console.log("About to add " + cache.resources.length +
@@ -251,10 +260,9 @@ export default class Matrix extends BaseShape {
       elt.setAttributeNS(null, 'width', Math.ceil(x + w) - Math.floor(x));
       elt.setAttributeNS(null, 'y', 0);
       elt.setAttributeNS(null, 'height', renderingContext.height);
-//      console.log("setting x coord of image " + i + " to " + x);
       widthAccumulated += tileWidth;
     }
-      
+    
     const after = performance.now();
     console.log("matrix update time = " + Math.round(after - before));
   }
