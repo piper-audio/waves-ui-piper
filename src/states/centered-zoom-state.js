@@ -47,31 +47,81 @@ export default class CenteredZoomState extends BaseState {
     this.initialY = e.y;
     this.initialZoom = this.timeline.timeContext.zoom;
 
+    this.dragMode = 'unresolved';
+
     this._pixelToExponent = scales.linear()
       .domain([0, 100]) // 100px => factor 2
       .range([0, 1]);
+  }
+
+  updateDragMode(e) {
+    
+    const dx = Math.abs(e.x - this.initialX);
+    const dy = Math.abs(e.y - this.initialY);
+
+    const smallThreshold = 10, bigThreshold = 50;
+    
+    if (this.dragMode === 'unresolved') {
+      if (dy > smallThreshold && dy > dx * 2) {
+        this.dragMode = 'vertical';
+      } else if (dx > smallThreshold && dx > dy * 2) {
+        this.dragMode = 'horizontal';
+      } else if (dx > smallThreshold && dy > smallThreshold) {
+        this.dragMode = 'free';
+      }
+    }
+
+    if (this.dragMode === 'vertical' && dx > bigThreshold) {
+      this.dragMode = 'free';
+    }
+    if (this.dragMode === 'horizontal' && dy > bigThreshold) {
+      this.dragMode = 'free';
+    }
   }
 
   onMouseMove(e) {
     // prevent annoying text selection when dragging
     e.originalEvent.preventDefault();
 
+    this.updateDragMode(e);
+    
     const timeContext = this.timeline.timeContext;
-    const lastCenterTime = timeContext.timeToPixel.invert(e.x);
-    const exponent = this._pixelToExponent(e.y - this.initialY);
-    const targetZoom = this.initialZoom * Math.pow(2, exponent); // -1...1 -> 1/2...2
 
-    timeContext.zoom = Math.min(Math.max(targetZoom, this.minZoom), this.maxZoom);
+    let changed = false;
+    
+    if (this.dragMode === 'vertical' ||
+        this.dragMode === 'free') {
+      
+      const exponent = this._pixelToExponent(e.y - this.initialY);
 
-    // we want to keep the same time under the mouse as we originally
-    // had (this.initialCenterTime)
-    const timeMovedTo = timeContext.timeToPixel(this.initialCenterTime +
-                                                timeContext.offset);
+      // -1...1 -> 1/2...2 :
+      const targetZoom = this.initialZoom * Math.pow(2, exponent);
+
+      const clampedZoom = Math.min(Math.max(targetZoom, this.minZoom),
+                                   this.maxZoom);
+
+      if (timeContext.zoom !== clampedZoom) {
+        timeContext.zoom = clampedZoom;
+        changed = true;
+      }
+    }
+
+    // We want to keep the same time under the mouse as we originally
+    // had (this.initialCenterTime). We actually need to do this
+    // regardless of drag mode -- even if we're only intending to drag
+    // vertically (i.e. zooming), we still want to ensure the point
+    // under the mouse doesn't wander off
+    const timeMovedTo =
+          timeContext.timeToPixel(this.initialCenterTime +
+                                  timeContext.offset);
     
     const delta = e.x - timeMovedTo;
     const deltaTime = timeContext.timeToPixel.invert(delta);
-    
-    timeContext.offset += deltaTime;
+
+    if (deltaTime !== 0) {
+      timeContext.offset += deltaTime;
+      changed = true;
+    }
 
     // Other possible experiments with centered-zoom-state
     //
@@ -86,7 +136,9 @@ export default class CenteredZoomState extends BaseState {
     //   timeContext.offset = Math.min(timeContext.offset, maxOffset);
     // }
 
-    this.timeline.tracks.update();
+    if (changed) {
+      this.timeline.tracks.update();
+    }
   }
 
   onMouseUp(e) {}
