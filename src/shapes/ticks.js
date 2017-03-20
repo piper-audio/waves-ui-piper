@@ -1,7 +1,7 @@
 import BaseShape from './base-shape';
 
 /**
- * Kind of Marker for entity oriented data. Usefull to display a grid.
+ * Kind of Marker for entity oriented data. Useful to display a grid.
  */
 export default class Ticks extends BaseShape {
   _getClassName() {
@@ -21,11 +21,22 @@ export default class Ticks extends BaseShape {
   }
 
   render(renderingContext) {
+    if (this.$el) { return this.$el; }
+    
     this.$el = document.createElementNS(this.ns, 'g');
+    
     return this.$el;
   }
 
   update(renderingContext, data) {
+
+    const hop = renderingContext.timeToPixel(1) - renderingContext.timeToPixel(0);
+    if (hop === this.lastUpdateHop) {
+      console.log("zoom level unchanged, still a hop of " + hop + " pps");
+      return;
+    } else {
+      this.lastUpdateHop = hop;
+    }
     
     const before = performance.now();
 
@@ -33,9 +44,19 @@ export default class Ticks extends BaseShape {
       this.$el.removeChild(this.$el.firstChild);
     }
 
-    const fragment = document.createDocumentFragment();
+    const ticks = document.createElementNS(this.ns, 'path');
+    ticks.setAttributeNS(null, 'fill', 'none');
+    ticks.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+    ticks.setAttributeNS(null, 'stroke', this.params.color);
+    ticks.setAttributeNS(null, 'stroke-width', 2);
+    ticks.style.opacity = this.params.opacity;
+
+    this.$el.appendChild(ticks);
+
     const layerHeight = renderingContext.height; // valueToPixel(1);
 
+    let instructions = [];
+    
     data.forEach((datum) => {
       const x = renderingContext.timeToPixel(this.time(datum));
       const opacity = this.focused(datum) ?
@@ -43,21 +64,7 @@ export default class Ticks extends BaseShape {
 
       const height = layerHeight;
 
-      const tick = document.createElementNS(this.ns, 'line');
-      tick.classList.add('tick');
-
-      tick.setAttributeNS(null, 'x1', 0);
-      tick.setAttributeNS(null, 'x2', 0);
-      tick.setAttributeNS(null, 'y1', 0);
-      tick.setAttributeNS(null, 'y2', height);
-
-      tick.setAttributeNS(null, 'fill', 'none');
-      tick.setAttributeNS(null, 'stroke', this.params.color);
-      tick.setAttributeNS(null, 'stroke-width', 2);
-      tick.setAttributeNS(null, 'transform', `translate(${x}, 0)`);
-      tick.setAttributeNS(null, 'opacity', opacity);
-
-      this.$el.appendChild(tick);
+      instructions.push(`M${x},0L${x},${height}`);
 
       const label = this.label(datum);
       if (label) {
@@ -89,9 +96,10 @@ export default class Ticks extends BaseShape {
       }
     });
 
-    this.$el.appendChild(fragment);
+    const d = instructions.join('');
+    ticks.setAttributeNS(null, 'd', d);
 
     const after = performance.now();
-    console.log("ticks update time = " + Math.round(after - before));
+    console.log("ticks update time = " + Math.round(after - before) + "ms");
   }
 }
