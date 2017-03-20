@@ -56,7 +56,6 @@ import LineLayer from './helpers/line-layer';
 import MarkerLayer from './helpers/marker-layer';
 import MatrixLayer from './helpers/matrix-layer';
 import SegmentLayer from './helpers/segment-layer';
-import SpectrogramLayer from './helpers/spectrogram-layer';
 import TickLayer from './helpers/tick-layer';
 import TimeAxisLayer from './helpers/time-axis-layer';
 import TraceLayer from './helpers/trace-layer';
@@ -72,7 +71,6 @@ import format from './utils/format';
 import MatrixEntity from './utils/matrix-entity';
 import OrthogonalData from './utils/orthogonal-data';
 import PrefilledMatrixEntity from './utils/prefilled-matrix-entity';
-import Spectrogram from './utils/spectrogram';
 import scales from './utils/scales';
 
 export default {
@@ -96,13 +94,12 @@ export default {
   helpers: {
     AnnotatedMarkerLayer, AnnotatedSegmentLayer, BreakpointLayer,
     CursorLayer, GridAxisLayer, LineLayer, MarkerLayer, MatrixLayer, SegmentLayer,
-    SpectrogramLayer, TickLayer, TimeAxisLayer, TraceLayer, WaveformLayer
+    TickLayer, TimeAxisLayer, TraceLayer, WaveformLayer
   },
   axis: {
     AxisLayer, timeAxisGenerator, gridAxisGenerator
   },
   utils: {
-    format, MatrixEntity, OrthogonalData, PrefilledMatrixEntity,
-    scales, Spectrogram
+    format, MatrixEntity, OrthogonalData, PrefilledMatrixEntity, scales
   }
 };
