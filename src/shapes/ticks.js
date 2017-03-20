@@ -30,14 +30,6 @@ export default class Ticks extends BaseShape {
 
   update(renderingContext, data) {
 
-    const hop = renderingContext.timeToPixel(1) - renderingContext.timeToPixel(0);
-    if (hop === this.lastUpdateHop) {
-      console.log("zoom level unchanged, still a hop of " + hop + " pps");
-      return;
-    } else {
-      this.lastUpdateHop = hop;
-    }
-    
     const before = performance.now();
 
     while (this.$el.firstChild) {
@@ -59,6 +51,10 @@ export default class Ticks extends BaseShape {
     
     data.forEach((datum) => {
       const x = renderingContext.timeToPixel(this.time(datum));
+
+      if (x < renderingContext.minX) return;
+      if (x > renderingContext.maxX) return;
+      
       const opacity = this.focused(datum) ?
         this.params.focusedOpacity : this.params.defaultOpacity;
 
