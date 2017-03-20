@@ -15,6 +15,7 @@ import Cursor from './shapes/cursor';
 import Dot from './shapes/dot';
 import Line from './shapes/line';
 import Marker from './shapes/marker';
+import Matrix from './shapes/matrix';
 import Segment from './shapes/segment';
 import Ticks from './shapes/ticks';
 import TracePath from './shapes/trace-path';
@@ -51,8 +52,11 @@ import AnnotatedSegmentLayer from './helpers/annotated-segment-layer';
 import BreakpointLayer from './helpers/breakpoint-layer';
 import CursorLayer from './helpers/cursor-layer';
 import GridAxisLayer from './helpers/grid-axis-layer';
+import LineLayer from './helpers/line-layer';
 import MarkerLayer from './helpers/marker-layer';
+import MatrixLayer from './helpers/matrix-layer';
 import SegmentLayer from './helpers/segment-layer';
+import SpectrogramLayer from './helpers/spectrogram-layer';
 import TickLayer from './helpers/tick-layer';
 import TimeAxisLayer from './helpers/time-axis-layer';
 import TraceLayer from './helpers/trace-layer';
@@ -65,7 +69,10 @@ import gridAxisGenerator from './axis/grid-axis-generator';
 
 // utils
 import format from './utils/format';
+import MatrixEntity from './utils/matrix-entity';
 import OrthogonalData from './utils/orthogonal-data';
+import PrefilledMatrixEntity from './utils/prefilled-matrix-entity';
+import Spectrogram from './utils/spectrogram';
 import scales from './utils/scales';
 
 export default {
@@ -75,7 +82,7 @@ export default {
   },
   shapes: {
     AnnotatedMarker, AnnotatedSegment, BaseShape, Cursor,
-    Dot, Line, Marker, Segment, Ticks, TracePath, TraceDots, Waveform
+    Dot, Line, Marker, Matrix, Segment, Ticks, TracePath, TraceDots, Waveform
   },
   behaviors: {
     BaseBehavior, BreakpointBehavior, MarkerBehavior, SegmentBehavior,
@@ -88,13 +95,14 @@ export default {
   },
   helpers: {
     AnnotatedMarkerLayer, AnnotatedSegmentLayer, BreakpointLayer,
-    CursorLayer, GridAxisLayer, MarkerLayer, SegmentLayer, TickLayer,
-    TimeAxisLayer, TraceLayer, WaveformLayer
+    CursorLayer, GridAxisLayer, LineLayer, MarkerLayer, MatrixLayer, SegmentLayer,
+    SpectrogramLayer, TickLayer, TimeAxisLayer, TraceLayer, WaveformLayer
   },
   axis: {
     AxisLayer, timeAxisGenerator, gridAxisGenerator
   },
   utils: {
-    format, OrthogonalData, scales
+    format, MatrixEntity, OrthogonalData, PrefilledMatrixEntity,
+    scales, Spectrogram
   }
 };

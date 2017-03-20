@@ -126,6 +126,13 @@ export default class Layer extends events.EventEmitter {
    * Destroy the layer, clear all references.
    */
   destroy() {
+
+    if (this.dataType == 'entity') {
+      if (typeof(this.data.dispose) !== 'undefined') {
+        this.data.dispose();
+      }
+    }
+    
     this.timeContext = null;
     this.data = null;
     this.params = null;
@@ -297,17 +304,18 @@ export default class Layer extends events.EventEmitter {
    */
   set data(data) {
     switch (this.dataType) {
-      case 'entity':
-        if (this._data) {  // if data already exists, reuse the reference
-          this._data[0] = data;
-        } else {
-          this._data = [data];
-        }
-        break;
-      case 'collection':
-        this._data = data;
-        break;
+    case 'entity':
+      if (this._data) {  // if data already exists, reuse the reference
+        this._data[0] = data;
+      } else {
+        this._data = [data];
+      }
+      break;
+    case 'collection':
+      this._data = data;
+      break;
     }
+    this._cached = false;
   }
 
   // --------------------------------------
@@ -415,6 +423,7 @@ export default class Layer extends events.EventEmitter {
    * for rendering and updating.
    */
   _updateRenderingContext() {
+    
     this._renderingContext.timeToPixel = this.timeContext.timeToPixel;
     this._renderingContext.valueToPixel = this._valueToPixel;
 
@@ -424,11 +433,27 @@ export default class Layer extends events.EventEmitter {
     this._renderingContext.offsetX = this.timeContext.timeToPixel(this.timeContext.offset);
     this._renderingContext.startX = this.timeContext.parent.timeToPixel(this.timeContext.start);
 
-    // @todo replace with `minX` and `maxX` representing the visible pixels in which
-    // the shapes should be rendered, could allow to not update the DOM of shapes
-    // who are not in this area.
     this._renderingContext.trackOffsetX = this.timeContext.parent.timeToPixel(this.timeContext.parent.offset);
     this._renderingContext.visibleWidth = this.timeContext.parent.visibleWidth;
+
+    // and calculate the visible area, storing it so shapes can
+    // determine which bits they need to redraw
+    // @TODO refactor this ununderstandable mess
+    
+    let minX = Math.max(-this._renderingContext.offsetX, 0);
+
+    let trackDecay =
+        this._renderingContext.trackOffsetX +
+        this._renderingContext.startX;
+    if (trackDecay < 0) { minX = -trackDecay; }
+
+    let maxX = minX;
+    maxX += (this._renderingContext.width - minX <
+             this._renderingContext.visibleWidth) ?
+      this._renderingContext.width : this._renderingContext.visibleWidth;
+
+    this._renderingContext.minX = minX;
+    this._renderingContext.maxX = maxX;
   }
 
   // --------------------------------------
@@ -688,6 +713,9 @@ export default class Layer extends events.EventEmitter {
    * attributes and thus place them where they should.
    */
   render() {
+
+    const before = performance.now();
+    
     // render `commonShape` only once
     if (
       this._commonShapeConfiguration !== null &&
@@ -710,23 +738,25 @@ export default class Layer extends events.EventEmitter {
     const values = this._$itemDataMap.values(); // iterator
 
     // enter
-    this.data.forEach((datum) => {
-      for (let value of values) { if (value === datum) { return; } }
+    if (this._shapeConfiguration !== null) {
+      this.data.forEach((datum) => {
+        for (let value of values) { if (value === datum) { return; } }
 
-      const { ctor, accessors, options } = this._shapeConfiguration;
-      const shape = new ctor(options);
-      shape.install(accessors);
+        const { ctor, accessors, options } = this._shapeConfiguration;
+        const shape = new ctor(options);
+        shape.install(accessors);
 
-      const $el = shape.render(this._renderingContext);
-      $el.classList.add('item', shape.getClassName());
+        const $el = shape.render(this._renderingContext);
+        $el.classList.add('item', shape.getClassName());
 
-      this._$itemShapeMap.set($el, shape);
-      this._$itemDataMap.set($el, datum);
+        this._$itemShapeMap.set($el, shape);
+        this._$itemDataMap.set($el, datum);
 
-      fragment.appendChild($el);
-    });
+        fragment.appendChild($el);
+      });
 
-    this.$offset.appendChild(fragment);
+      this.$offset.appendChild(fragment);
+    }
 
     // remove
     for (let [$item, datum] of this._$itemDataMap.entries()) {
@@ -744,6 +774,9 @@ export default class Layer extends events.EventEmitter {
       this._$itemDataMap.delete($item);
       this._$itemShapeMap.delete($item);
     }
+
+    const after = performance.now();
+    console.log("layer render time = " + Math.round(after - before));
   }
 
   /**
@@ -780,22 +813,54 @@ export default class Layer extends events.EventEmitter {
     // maintain context shape
     this.contextShape.update(this._renderingContext, this.timeContext, 0);
   }
-
+  
   /**
    * Updates the attributes of all the `Shape` instances rendered into the layer.
-   *
-   * @todo - allow to filter which shape(s) should be updated.
    */
   updateShapes() {
+
+    const before = performance.now();
+    
     this._updateRenderingContext();
-    // update common shapes
+
+    if (this.dataType === 'entity') {
+      if (!this._cached) {
+	if (this._data !== []) {
+	  let origData = this._data[0];
+          for (let [$item, datum] of this._$itemDataMap.entries()) {
+	    if (datum === origData) {
+              const shape = this._$itemShapeMap.get($item);
+              const cache = shape.encache(datum);
+	      if (cache) {
+		console.log("replacing our entity data with cached value");
+		this._$itemDataMap.set($item, cache);
+                if (typeof(origData.dispose) !== 'undefined') {
+                  console.log("and calling dispose on entity data");
+                  origData.dispose();
+                }
+		this.data = cache;
+	      }
+	    }
+	  }
+          this._cached = true;
+        }
+      }
+    }
+    
+    // Update common shape, if any
     this._$itemCommonShapeMap.forEach((shape, $item) => {
       shape.update(this._renderingContext, this.data);
     });
 
+    console.log("item data map contains " + this._$itemDataMap.size + " entries");
+    
+    // Update specific shapes
     for (let [$item, datum] of this._$itemDataMap.entries()) {
       const shape = this._$itemShapeMap.get($item);
       shape.update(this._renderingContext, datum);
     }
+
+    const after = performance.now();
+    console.log("layer update time = " + Math.round(after - before));
   }
 }

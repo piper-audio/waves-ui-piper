@@ -26,6 +26,9 @@ export default class Ticks extends BaseShape {
   }
 
   update(renderingContext, data) {
+    
+    const before = performance.now();
+
     while (this.$el.firstChild) {
       this.$el.removeChild(this.$el.firstChild);
     }
@@ -50,7 +53,7 @@ export default class Ticks extends BaseShape {
 
       tick.setAttributeNS(null, 'fill', 'none');
       tick.setAttributeNS(null, 'stroke', this.params.color);
-      tick.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+      tick.setAttributeNS(null, 'stroke-width', 2);
       tick.setAttributeNS(null, 'transform', `translate(${x}, 0)`);
       tick.setAttributeNS(null, 'opacity', opacity);
 
@@ -87,5 +90,8 @@ export default class Ticks extends BaseShape {
     });
 
     this.$el.appendChild(fragment);
+
+    const after = performance.now();
+    console.log("ticks update time = " + Math.round(after - before));
   }
 }

@@ -23,7 +23,8 @@
     "pretest": "npm run hint",
     "test": "browserify -t [ babelify --blacklist regenerator ] tests/*/*.js |  testling -u --no-show",
     "hint": "jshint ./src; true",
-    "coverage": "browserify -t [ babelify --blacklist regenerator ] -t coverify tests/*/*.js | testling -u --no-show | coverify --json -o coverage.json && node ./bin/scripts --cover-report -i coverage.json"
+    "coverage": "browserify -t [ babelify --blacklist regenerator ] -t coverify tests/*/*.js | testling -u --no-show | coverify --json -o coverage.json && node ./bin/scripts --cover-report -i coverage.json",
+    "postinstall": "npm run bundle"
   },
   "license": "BSD-3",
   "repository": {
@@ -44,9 +45,7 @@
     "jshint": "^2.6.0",
     "node-watch": "^0.3.4",
     "tape": "^4.0.1",
-    "uglify-js": "^2.4.16"
-  },
-  "globalDependencies[nonStandard]": {
+      "uglify-js": "^2.4.16",
     "esdoc": "0.4.1",
     "babel": "^5.8.29",
     "browserify": "^11.2.0",

@@ -85,7 +85,7 @@
       // as the waveform is an `entity` layer, we have to edit the context directly
       waveformLayer.setContextEditable(true);
 
-      timeline.state = new wavesUI.states.ContextEditionState(timeline);
+      timeline.state = new wavesUI.states.CenteredZoomState(timeline);
 
       track.add(waveformLayer);
       timeline.add(track);

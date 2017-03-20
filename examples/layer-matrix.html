@@ -1,0 +1,81 @@
+<<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Matrix Layer</title>
+
+  <link rel="stylesheet" type="text/css" href="./assets/common.css" />
+  <link rel="stylesheet" type="text/css" href="./assets/prism.css" />
+
+  <script src="../waves-ui.umd.js"></script>
+  <script src="./assets/prism.js"></script>
+  <script src="./assets/insert-code.js"></script>
+  <script src="./assets/waves-loaders.min.js"></script>
+</head>
+<body>
+
+  <h1>Matrix Layer</h1>
+
+  <div class="track" id="track-1"></div>
+  <div class="track" id="track-2"></div>
+
+  <script class="example" rel="track-2">
+    var audioLoader = new wavesLoaders.AudioBufferLoader();
+    var otherLoader = new wavesLoaders.Loader();
+
+    audioLoader.load('./assets/drum-loop.wav').then(function(buffer) {
+      otherLoader.load('./assets/chroma.json').then(function(chroma) {
+    
+        var $track1 = document.querySelector('#track-1');
+        var $track2 = document.querySelector('#track-2');
+        var width = $track1.getBoundingClientRect().width;
+        var height = 200;
+        var duration = buffer.duration * 2;
+
+        var pixelsPerSecond = width / duration;
+
+        var timeline = new wavesUI.core.Timeline(pixelsPerSecond, width);
+        var track1 = new wavesUI.core.Track($track1, height);
+        var track2 = new wavesUI.core.Track($track2, height);
+
+        timeline.state = new wavesUI.states.CenteredZoomState(timeline);
+
+        var matrixEntity = new wavesUI.utils.PrefilledMatrixEntity(chroma, 0, 0.046439909);
+    
+        var matrixLayer = new wavesUI.helpers.MatrixLayer(matrixEntity, {
+          height: height,
+          gain: 100,
+          mapper: (v => { return [ v, v, 0 ]; })
+        });
+
+        var timeContext = new wavesUI.core.LayerTimeContext(timeline.timeContext);
+        timeContext.duration = buffer.duration;
+        timeContext.start = 1;
+
+        matrixLayer.setTimeContext(timeContext);
+    
+        // as the matrix is an `entity` layer, we have to edit the context directly
+        matrixLayer.setContextEditable(true);
+
+        track1.add(matrixLayer);
+        timeline.add(track1);
+
+        // and a waveform for contrast
+        var waveformLayer = new wavesUI.helpers.WaveformLayer(buffer, {
+          height: height,
+          yDomain: [-1, 1]
+        });
+
+        waveformLayer.setTimeContext(timeContext);
+        waveformLayer.setContextEditable(true);
+    
+        track2.add(waveformLayer);
+        timeline.add(track2);
+
+        timeline.tracks.render();
+        timeline.tracks.update();
+      });
+    });
+  </script>
+</body>
+</html>
