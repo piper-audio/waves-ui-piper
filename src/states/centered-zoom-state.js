@@ -55,12 +55,16 @@ export default class CenteredZoomState extends BaseState {
   }
 
   updateDragMode(e) {
+
+    if (this.dragMode === 'free') {
+      return;
+    }
     
     const dx = Math.abs(e.x - this.initialX);
     const dy = Math.abs(e.y - this.initialY);
 
     const smallThreshold = 10, bigThreshold = 50;
-    
+
     if (this.dragMode === 'unresolved') {
       if (dy > smallThreshold && dy > dx * 2) {
         this.dragMode = 'vertical';
