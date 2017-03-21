@@ -17,7 +17,8 @@ export default class TimeAxisLayer extends AxisLayer {
     super(timeAxisGenerator(), options);
 
     this.configureShape(Ticks, {}, {
-      color: options.color
+      color: options.color,
+      unconstrained: true
     });
   }
 }
