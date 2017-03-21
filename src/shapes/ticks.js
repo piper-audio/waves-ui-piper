@@ -16,7 +16,13 @@ export default class Ticks extends BaseShape {
     return {
       color: 'steelblue',
       focusedOpacity: 0.8,
-      defaultOpacity: 0.3
+      defaultOpacity: 0.3,
+      labelPosition: 'top',
+      shadeSegments: false,
+      unconstrained: false // indicates we should always update all
+                           // ticks that exist, as the layer is
+                           // handling tick generation dynamically
+                           // (e.g. in axis layer)
     };
   }
 
@@ -45,52 +51,132 @@ export default class Ticks extends BaseShape {
 
     this.$el.appendChild(ticks);
 
-    const layerHeight = renderingContext.height; // valueToPixel(1);
+    const height = renderingContext.height;
 
     let instructions = [];
+
+    const n = data.length;
     
-    data.forEach((datum) => {
-      const x = renderingContext.timeToPixel(this.time(datum));
-
-      if (x < renderingContext.minX) return;
-      if (x > renderingContext.maxX) return;
+    if (n > 0) {
       
-      const opacity = this.focused(datum) ?
-        this.params.focusedOpacity : this.params.defaultOpacity;
+      let nextX = renderingContext.timeToPixel(this.time(data[0]));
+      let oddTick = false;
+      let firstTick = true;
 
-      const height = layerHeight;
+      const segmentOpacity = (odd => { return odd ? 0.1 : 0.05; });
+      
+      for (let i = 0; i < n; ++i) {
 
-      instructions.push(`M${x},0L${x},${height}`);
+        const datum = data[i];
+        const x = nextX;
+        const lastTick = (i + 1 >= n);
+        oddTick = !oddTick;
 
-      const label = this.label(datum);
-      if (label) {
-        const $label = document.createElementNS(this.ns, 'text');
-        $label.classList.add('label');
-        const $text = document.createTextNode(label);
-        $label.appendChild($text);
-        $label.setAttributeNS(null, 'transform', `matrix(1, 0, 0, -1, ${x + 2}, ${height + 2})`);
-        // firefox problem here
-        // $label.setAttributeNS(null, 'alignment-baseline', 'text-before-edge');
-        $label.setAttributeNS(null, 'y', '10');
+        if (!lastTick) {
+          nextX = renderingContext.timeToPixel(this.time(data[i+1]));
+        }
+        if (!this.params.unconstrained) {
+          if (x < renderingContext.minX) {
+            continue;
+          }
+          if (!lastTick && (Math.floor(nextX) === Math.floor(x))) {
+            continue;
+          }
+        }
+        
+        const opacity = this.focused(datum) ?
+              this.params.focusedOpacity : this.params.defaultOpacity;
 
-        $label.style.fontSize = '10px';
-        $label.style.lineHeight = '10px';
-        $label.style.fontFamily = 'monospace';
-        $label.style.color = '#676767';
-        $label.style.opacity = 0.9;
-        $label.style.mozUserSelect = 'none';
-        $label.style.webkitUserSelect = 'none';
-        $label.style.userSelect = 'none';
+        instructions.push(`M${x},0L${x},${height}`);
 
-        // const bg = document.createElementNS(this.ns, 'rect');
-        // bg.setAttributeNS(null, 'width', '100%');
-        // bg.setAttributeNS(null, 'height', '100%');
-        // bg.setAttributeNS(null, 'fill', '#ffffff');
-        // label.appendChild(bg);
+        if (this.params.shadeSegments) {
+          if (firstTick) {
+            if (x > renderingContext.minX) {
+              const segment = document.createElementNS(this.ns, 'rect');
+              segment.setAttributeNS(null, 'width', x - renderingContext.minX);
+              segment.setAttributeNS(null, 'height', height);
+              segment.setAttributeNS(null, 'fill', this.params.color);
+              segment.setAttributeNS(null, 'opacity', segmentOpacity(!oddTick));
+              segment.setAttributeNS(null, 'transform', `translate(${renderingContext.minX}, 0)`);
+              this.$el.appendChild(segment);
+            }
+          }
+          if (lastTick || nextX > x + 1) {
+            const segment = document.createElementNS(this.ns, 'rect');
+            segment.setAttributeNS(null, 'width', lastTick ? '100%' : (nextX - x));
+            segment.setAttributeNS(null, 'height', height);
+            segment.setAttributeNS(null, 'fill', this.params.color);
+            segment.setAttributeNS(null, 'opacity', segmentOpacity(oddTick));
+            segment.setAttributeNS(null, 'transform', `translate(${x}, 0)`);
+            this.$el.appendChild(segment);
+          }
+        }
+        
+        const label = this.label(datum);
 
-        this.$el.appendChild($label);
+        if (label && label !== "") {
+
+          // find the next label -- we only need enough space between
+          // this and that tick, not between this and the immediately
+          // following tick
+
+          let nextLabelX = x - 1;
+          for (let j = i + 1; j < n; ++j) {
+            const nextLabel = this.label(data[j]);
+            if (nextLabel && nextLabel !== "") {
+              nextLabelX = renderingContext.timeToPixel(this.time(data[j]));
+              break;
+            }
+          }
+          
+          const estWidth = label.length * 6;
+          const enoughSpaceForLabel = (nextLabelX < x || x + estWidth < nextLabelX);
+
+          if (enoughSpaceForLabel) {
+          
+            const $label = document.createElementNS(this.ns, 'text');
+            $label.classList.add('label');
+            const $text = document.createTextNode(label);
+
+            $label.appendChild($text);
+            $label.setAttributeNS(null, 'transform', `matrix(1, 0, 0, -1, ${x + 2}, ${height + 2})`);
+            // firefox problem here
+            // $label.setAttributeNS(null, 'alignment-baseline', 'text-before-edge');
+
+            if (this.params.labelPosition === 'bottom') {
+              $label.setAttributeNS(null, 'y', height);
+            } else {
+              $label.setAttributeNS(null, 'y', '10');
+            }
+
+            $label.style.fontSize = '10px';
+            $label.style.lineHeight = '10px';
+            $label.style.fontFamily = 'monospace';
+            $label.style.color = '#676767';
+            $label.style.opacity = 0.9;
+            $label.style.mozUserSelect = 'none';
+            $label.style.webkitUserSelect = 'none';
+            $label.style.userSelect = 'none';
+/*
+            const bg = document.createElementNS(this.ns, 'rect');
+            bg.setAttributeNS(null, 'width', '100%');
+            bg.setAttributeNS(null, 'height', '100%');
+            bg.setAttributeNS(null, 'fill', '#ffffff');
+            $label.appendChild(bg);
+*/
+            this.$el.appendChild($label);
+          }
+        }
+
+        if (!this.params.unconstrained) {
+          if (nextX > renderingContext.maxX) {
+            break;
+          }
+        }
+        
+        firstTick = false;
       }
-    });
+    }
 
     const d = instructions.join('');
     ticks.setAttributeNS(null, 'd', d);
