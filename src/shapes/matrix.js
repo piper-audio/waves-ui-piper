@@ -29,7 +29,8 @@ export default class Matrix extends BaseShape {
         let level = 1.0 - value;
         return [ level, level, level ];
       }),
-      gain: 1.0
+      gain: 1.0,
+      tileEdgeOverlap: 2
     };
   }
 
@@ -113,6 +114,7 @@ export default class Matrix extends BaseShape {
     console.log("totalWidth = " + totalWidth + ", tileWidth = " + tileWidth);
 
     let resources = [];
+    let starts = [];
     let widths = [];
 
     let normalise = null;
@@ -129,7 +131,7 @@ export default class Matrix extends BaseShape {
       break;
     }
 
-    const condition = (col => {
+    const conditionColumn = (col => {
       let n = [];
       for (let i = 0; i < col.length; ++i) {
         if (col[i] === Infinity || isNaN(col[i])) n.push(0.0);
@@ -138,20 +140,33 @@ export default class Matrix extends BaseShape {
       return n;
     });
 
+    const overlap = this.params.tileEdgeOverlap;
+
+    const usualWidth = tileWidth + overlap * 2;
+    const usualWidthEncoder = new PNGEncoder(usualWidth, height, 256);
+    
     for (let x0 = 0; x0 < totalWidth; x0 += tileWidth) {
 
-      let w = tileWidth;
-      if (totalWidth - x0 < tileWidth) {
-	w = totalWidth - x0;
+      let left = x0 - overlap;
+      let w = tileWidth + overlap * 2;
+
+      if (left < 0) {
+        w += left;
+        left = 0;
       }
-      
-      let p = new PNGEncoder(w, height, 256);
+      if (w > totalWidth - left) {
+	w = totalWidth - left;
+      }
+
+      let p = ((w === usualWidth) ?
+               usualWidthEncoder :
+               new PNGEncoder(w, height, 256));
 
       for (let i = 0; i < w; ++i) {
 
-	const x = x0 + i;
+	const x = left + i;
         let col = matrixEntity.getColumn(x);
-        col = normalise(condition(col));
+        col = normalise(conditionColumn(col));
         
 	for (let y = 0; y < height; ++y) {
           let value = col[y];
@@ -179,6 +194,7 @@ export default class Matrix extends BaseShape {
 
       const resource = 'data:image/png;base64,' + p.getBase64();
       resources.push(resource);
+      starts.push(left);
       widths.push(w);
 
       console.log("image " + resources.length + ": length " + resource.length +
@@ -192,6 +208,7 @@ export default class Matrix extends BaseShape {
     
     return {
       resources: resources,
+      tileStarts: starts,
       tileWidths: widths,
       totalWidth: totalWidth,
       height: height,
@@ -229,7 +246,6 @@ export default class Matrix extends BaseShape {
 	const elt = document.createElementNS(this.ns, 'image');
 	elt.setAttributeNS('http://www.w3.org/1999/xlink', 'href', resource);
         elt.setAttributeNS(null, 'preserveAspectRatio', 'none');
-	elt.setAttributeNS(null, 'image-rendering', 'optimizeSpeed');
 	elt.addEventListener('dragstart', e => { e.preventDefault(); }, false);
 	this.$el.appendChild(elt);
 	cache.elements.push(elt);
@@ -249,18 +265,16 @@ export default class Matrix extends BaseShape {
       widthScaleFactor = (endX - startX) / cache.totalWidth;
     }
     
-    let widthAccumulated = 0;
-    
     for (let i = 0; i < cache.elements.length; ++i) {
       const elt = cache.elements[i];
+      const tileStart = cache.tileStarts[i];
       const tileWidth = cache.tileWidths[i];
-      const x = startX + widthAccumulated * widthScaleFactor;
+      const x = startX + tileStart * widthScaleFactor;
       const w = tileWidth * widthScaleFactor;
       elt.setAttributeNS(null, 'x', Math.floor(x));
       elt.setAttributeNS(null, 'width', Math.ceil(x + w) - Math.floor(x));
       elt.setAttributeNS(null, 'y', 0);
       elt.setAttributeNS(null, 'height', renderingContext.height);
-      widthAccumulated += tileWidth;
     }
     
     const after = performance.now();
