@@ -32,6 +32,7 @@ export default class Waveform extends BaseShape {
     this.$el = document.createElementNS(this.ns, 'path');
     this.$el.setAttributeNS(null, 'fill', 'none');
     this.$el.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+//    this.$el.setAttributeNS(null, 'shape-rendering', 'geometricPrecision');
     this.$el.setAttributeNS(null, 'stroke', this.params.color);
     this.$el.style.opacity = this.params.opacity;
 
@@ -196,36 +197,49 @@ export default class Waveform extends BaseShape {
     return minMax;
   }
 
-  update(renderingContext, cache) {
-
-    const before = performance.now();
+  _updateSummarising(renderingContext, cache, pixelToSample) {
 
     const minX = renderingContext.minX;
     const maxX = renderingContext.maxX;
+    
+    // get min/max values per pixel
+    const minMax = this.summarise(cache, minX, maxX, pixelToSample);
+    if (!minMax.length) { return; }
+
+    let instructions = minMax.map(datum => {
+      const [ x, min, max ] = datum;
+      let y1 = Math.round(renderingContext.valueToPixel(min));
+      let y2 = Math.round(renderingContext.valueToPixel(max));
+      return `${x},${y1}L${x},${y2}`;
+    });
+
+    const d = 'M' + instructions.join('L');
+    this.$el.setAttributeNS(null, 'd', d);
+  }
+
+  _updateInterpolating(renderingContext, cache, pixelToSample) {
+
+    // todo: implement!
+    this._updateSummarising(renderingContext, cache, pixelToSample);
+  }
+  
+  update(renderingContext, cache) {
+
+    const before = performance.now();
 
     const sampleRate = this.params.sampleRate;
     const pixelToSample = (pixel => {
       return Math.floor (sampleRate * renderingContext.timeToPixel.invert(pixel));
     });
 
-    // get min/max per pixels, clamped to the visible area
-    const minMax = this.summarise(cache, minX, maxX, pixelToSample);
-    if (!minMax.length) { return; }
+    const minX = renderingContext.minX;
+    const step = pixelToSample(Math.round(minX) + 1) - pixelToSample(Math.round(minX));
 
-    const PIXEL = 0;
-    const MIN   = 1;
-    const MAX   = 2;
-    const ZERO  = renderingContext.valueToPixel(0);
-
-    let instructions = minMax.map((datum, index) => {
-      const x  = datum[PIXEL];
-      let y1 = Math.round(renderingContext.valueToPixel(datum[MIN]));
-      let y2 = Math.round(renderingContext.valueToPixel(datum[MAX]));
-      return `${x},${y1}L${x},${y2}`;
-    });
-
-    const d = 'M' + instructions.join('L');
-    this.$el.setAttributeNS(null, 'd', d);
+    if (step > 1.0) {
+      this._updateSummarising(renderingContext, cache, pixelToSample);
+    } else {
+      this._updateInterpolating(renderingContext, cache, pixelToSample);
+    }
 
     const after = performance.now();
     console.log("waveform update time = " + Math.round(after - before));
