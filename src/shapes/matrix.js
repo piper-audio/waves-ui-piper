@@ -143,6 +143,9 @@ export default class Matrix extends BaseShape {
       return n;
     });
 
+    const usualWidth = tileWidth;
+    const usualEncoder = new PNGEncoder(usualWidth, height, 256);
+    
     for (let x0 = 0; x0 < totalWidth; x0 += tileWidth) {
 
       let w = tileWidth;
@@ -150,7 +153,9 @@ export default class Matrix extends BaseShape {
 	w = totalWidth - x0;
       }
       
-      let p = new PNGEncoder(w, height, 256);
+      let p = (w === tileWidth ?
+               usualEncoder :
+               new PNGEncoder(w, height, 256));
 
       for (let i = 0; i < w; ++i) {
 
