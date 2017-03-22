@@ -29,7 +29,8 @@ export default class Matrix extends BaseShape {
         let level = 1.0 - value;
         return [ level, level, level ];
       }),
-      gain: 1.0
+      gain: 1.0,
+      smoothing: false // NB with smoothing we get visible joins at tile boundaries
     };
   }
 
@@ -37,6 +38,10 @@ export default class Matrix extends BaseShape {
     console.log("matrix render called");
     if (this.$el) { return this.$el; }
     this.$el = document.createElementNS(this.ns, 'g');
+    if (!this.params.smoothing) {
+      // for Chrome
+      this.$el.setAttributeNS(null, 'image-rendering', 'pixelated');
+    }
     this.lastUpdateHop = 0;
     console.log("matrix render returning");
     return this.$el;
@@ -229,7 +234,10 @@ export default class Matrix extends BaseShape {
 	const elt = document.createElementNS(this.ns, 'image');
 	elt.setAttributeNS('http://www.w3.org/1999/xlink', 'href', resource);
         elt.setAttributeNS(null, 'preserveAspectRatio', 'none');
-	elt.setAttributeNS(null, 'image-rendering', 'optimizeSpeed');
+        if (!this.params.smoothing) {
+          // for Firefox
+	  elt.setAttributeNS(null, 'image-rendering', 'optimizeSpeed');
+        }
 	elt.addEventListener('dragstart', e => { e.preventDefault(); }, false);
 	this.$el.appendChild(elt);
 	cache.elements.push(elt);
