@@ -1,5 +1,5 @@
 import BaseShape from './base-shape';
-
+import Oversampler from '../utils/oversample';
 
 const xhtmlNS = 'http://www.w3.org/1999/xhtml';
 
@@ -34,8 +34,10 @@ export default class Waveform extends BaseShape {
 //    this.$el.setAttributeNS(null, 'shape-rendering', 'crispEdges');
     this.$el.setAttributeNS(null, 'shape-rendering', 'geometricPrecision');
     this.$el.setAttributeNS(null, 'stroke', this.params.color);
-    this.$el.setAttributeNS(null, 'stroke-width', 1);
     this.$el.style.opacity = this.params.opacity;
+
+    this.factor = 8;
+    this.oversampler = new Oversampler(this.factor);
 
     return this.$el;
   }
@@ -217,6 +219,7 @@ export default class Waveform extends BaseShape {
     });
 
     const d = 'M' + instructions.join('L');
+    this.$el.setAttributeNS(null, 'stroke-width', 1.0);
     this.$el.setAttributeNS(null, 'd', d);
   }
 
@@ -234,28 +237,37 @@ export default class Waveform extends BaseShape {
     const n = samples.length;
 
     console.log("minX = " + minX + ", maxX = " + maxX + ", s0 = " + s0 + ", s1 = " + s1);
-    
+
     let instructions = [];
-    for (let i = s0; i < s1; ++i) {
-      //!!! This cannot stand!
-      if (i < n) {
-	const x = sampleToPixel(i);
-	const y = Math.round(renderingContext.valueToPixel(samples[i]));
-//	if (i === s0) {
-	  instructions.push(`M${x},${y}`);
-//	} else {
-//	  instructions.push(`L${x},${y}`);
-//	}
-	instructions.push(`M${x-1},${y-1}`);
-	instructions.push(`L${x+1},${y-1}`);
-	instructions.push(`L${x+1},${y+1}`);
-	instructions.push(`L${x-1},${y+1}`);
-	instructions.push(`L${x-1},${y-1}`);
-	instructions.push(`M${x},${y}`);
-      }
+
+    // Pixel coordinates in this function are *not* rounded, we want
+    // to preserve the proper shape as far as possible
+
+    // Add a little square for each sample location
+    
+    for (let i = s0; i < s1 && i < n; ++i) {
+      const x = sampleToPixel(i);
+      const y = renderingContext.valueToPixel(samples[i]);
+      instructions.push(`M${x-1},${y-1}h2v2h-2v-2`);
     }
 
+    // Now fill in the gaps between the squares
+
+    const factor = this.factor;
+    const oversampled = this.oversampler.oversample(samples, s0, s1 - s0);
+
+    for (let i = 0; i < oversampled.length; ++i) {
+      const x = sampleToPixel(s0 + i/factor); // sampleToPixel accepts non-integers
+      const y = renderingContext.valueToPixel(oversampled[i]);
+      if (i === 0) {
+        instructions.push(`M${x},${y}`);
+      } else {
+        instructions.push(`L${x},${y}`);
+      }
+    }
+    
     const d = instructions.join('');
+    this.$el.setAttributeNS(null, 'stroke-width', 0.6);
     this.$el.setAttributeNS(null, 'd', d);
   }
   
@@ -270,7 +282,7 @@ export default class Waveform extends BaseShape {
       return Math.floor (sampleRate * renderingContext.timeToPixel.invert(pixel));
     });
     const sampleToPixel = (sample => {
-      return Math.round (renderingContext.timeToPixel(sample / sampleRate));
+      return renderingContext.timeToPixel(sample / sampleRate); // not rounded
     });
 
     const minX = renderingContext.minX;
