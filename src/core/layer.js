@@ -818,6 +818,33 @@ export default class Layer extends events.EventEmitter {
     // maintain context shape
     this.contextShape.update(this._renderingContext, this.timeContext, 0);
   }
+
+  _encacheEntity() {
+
+    if (this.dataType !== 'entity') return;
+    if (this._cached) return;
+    if (this._data === []) return;
+    
+    let origData = this._data[0];
+
+    for (let [$item, datum] of this._$itemDataMap.entries()) {
+      if (datum === origData) {
+        const shape = this._$itemShapeMap.get($item);
+        const cache = shape.encache(datum);
+	if (cache) {
+	  console.log("replacing our entity data with cached value");
+	  this._$itemDataMap.set($item, cache);
+          if (typeof(origData.dispose) !== 'undefined') {
+            console.log("and calling dispose on entity data");
+            origData.dispose();
+          }
+	  this.data = cache;
+	}
+      }
+    }
+
+    this._cached = true;
+  }
   
   /**
    * Updates the attributes of all the `Shape` instances rendered into the layer.
@@ -828,29 +855,7 @@ export default class Layer extends events.EventEmitter {
     
     this._updateRenderingContext();
 
-    if (this.dataType === 'entity') {
-      if (!this._cached) {
-	if (this._data !== []) {
-	  let origData = this._data[0];
-          for (let [$item, datum] of this._$itemDataMap.entries()) {
-	    if (datum === origData) {
-              const shape = this._$itemShapeMap.get($item);
-              const cache = shape.encache(datum);
-	      if (cache) {
-		console.log("replacing our entity data with cached value");
-		this._$itemDataMap.set($item, cache);
-                if (typeof(origData.dispose) !== 'undefined') {
-                  console.log("and calling dispose on entity data");
-                  origData.dispose();
-                }
-		this.data = cache;
-	      }
-	    }
-	  }
-          this._cached = true;
-        }
-      }
-    }
+    this._encacheEntity();
     
     // Update common shape, if any
     this._$itemCommonShapeMap.forEach((shape, $item) => {

@@ -117,8 +117,8 @@ export default class Ticks extends BaseShape {
         if (label && label !== "") {
 
           // find the next label -- we only need enough space between
-          // this and that tick, not between this and the immediately
-          // following tick
+          // this tick and that one, not necessarily between this and
+          // its (possibly unlabelled) neighbour
 
           let nextLabelX = x - 1;
           for (let j = i + 1; j < n; ++j) {
