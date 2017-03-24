@@ -83,10 +83,13 @@ export default class AxisLayer extends Layer {
 
     // for foreign object issue in chrome
     this._renderingContext.offsetX = this.timeContext.timeToPixel(this.timeContext.offset);
+    this._renderingContext.startX = this.timeContext.timeToPixel(this.timeContext.start);
 
     // expose some timeline attributes - allow to improve perf in some cases - cf. Waveform
     this._renderingContext.trackOffsetX = this.timeContext.timeToPixel(this.timeContext.offset);
     this._renderingContext.visibleWidth = this.timeContext.visibleWidth;
+
+    super._updateRenderingContextExtents();
   }
 
   /**

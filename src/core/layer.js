@@ -436,7 +436,12 @@ export default class Layer extends events.EventEmitter {
     this._renderingContext.trackOffsetX = this.timeContext.parent.timeToPixel(this.timeContext.parent.offset);
     this._renderingContext.visibleWidth = this.timeContext.parent.visibleWidth;
 
-    // and calculate the visible area, storing it so shapes can
+    this._updateRenderingContextExtents();
+  }
+
+  _updateRenderingContextExtents() {
+    
+    // calculate the visible area, storing it so shapes can
     // determine which bits they need to redraw
     // @TODO refactor this ununderstandable mess
     
