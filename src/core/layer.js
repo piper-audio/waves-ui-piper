@@ -437,6 +437,8 @@ export default class Layer extends events.EventEmitter {
     this._renderingContext.visibleWidth = this.timeContext.parent.visibleWidth;
 
     this._updateRenderingContextExtents();
+
+    console.log("Rendering context: startX = " + this._renderingContext.startX + ", offsetX = " + this._renderingContext.offsetX + ", width = " + this._renderingContext.width + ", visibleWidth = " + this._renderingContext.visibleWidth + ", minX = " + this._renderingContext.minX + ", maxX = " + this._renderingContext.maxX);
   }
 
   _updateRenderingContextExtents() {
