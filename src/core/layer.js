@@ -461,10 +461,16 @@ export default class Layer extends events.EventEmitter {
     const layerStartTime = this.timeContext.start;
     const layerOffsetTime = this.timeContext.offset;
     const trackOffsetTime = this.timeContext.parent.offset;
-    const layerOriginTime = trackOffsetTime + layerStartTime;
-    const viewStartTime = (layerOriginTime < 0 ? -layerOriginTime :
-                           layerOffsetTime < 0 ? -layerOffsetTime : 0);
 
+    const layerOriginTime = trackOffsetTime + layerStartTime;
+
+    const viewStartTime = -layerOriginTime - layerOffsetTime;
+
+//    const viewStartTime = (layerOriginTime < 0 ? -layerOriginTime :
+//                           layerOffsetTime < 0 ? -layerOffsetTime : 0);
+
+    console.log("viewStartTime = " + viewStartTime);
+    
     this._renderingContext.timeToPixel = scales.linear()
       .domain([viewStartTime, viewStartTime + 1])
       .range([0, this.timeContext.timeToPixel(1)]);
@@ -889,7 +895,8 @@ export default class Layer extends events.EventEmitter {
     this.$boundingBox.setAttributeNS(null, 'height', height);
     this.$boundingBox.style.opacity = this.params.opacity;
 
-    this.$offset.setAttributeNS(null, 'transform', `translate(${offset}, 0)`);
+//    this.$offset.setAttributeNS(null, 'transform', `translate(${offset}, 0)`);
+    
     // maintain context shape
     this.contextShape.update(this._renderingContext, this.timeContext, 0);
   }

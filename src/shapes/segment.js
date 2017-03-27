@@ -60,8 +60,13 @@ export default class Segment extends BaseShape {
     const x = renderingContext.timeToPixel(this.x(datum));
     const y = renderingContext.valueToPixel(this.y(datum));
 
-    const width = renderingContext.timeToPixel(this.width(datum));
+    const width =
+          renderingContext.timeToPixel(this.x(datum) +
+                                       this.width(datum)) -
+          renderingContext.timeToPixel(this.x(datum));
+    
     const height = renderingContext.valueToPixel(this.height(datum));
+    
     const color = this.color(datum);
     const opacity = this.opacity(datum);
 

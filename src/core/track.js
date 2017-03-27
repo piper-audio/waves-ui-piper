@@ -241,18 +241,21 @@ export default class Track {
   updateContainer() {
     const $svg = this.$svg;
     const $offset = this.$offset;
+    
     // Should be in some update layout
     const renderingContext = this.renderingContext;
     const height = this.height;
     const width = Math.round(renderingContext.visibleWidth);
-    const offsetX = Math.round(renderingContext.timeToPixel(renderingContext.offset));
-    const translate = `translate(${offsetX}, 0)`;
+
+//    let offsetX = Math.round(renderingContext.timeToPixel(renderingContext.offset));
+//    if (offsetX < 0) offsetX = 0; // layer will handle this
+//    const translate = `translate(${offsetX}, 0)`;
 
     $svg.setAttributeNS(null, 'height', height);
     $svg.setAttributeNS(null, 'width', width);
     $svg.setAttributeNS(null, 'viewbox', `0 0 ${width} ${height}`);
 
-    $offset.setAttributeNS(null, 'transform', translate);
+//    $offset.setAttributeNS(null, 'transform', translate);
   }
 
   /**

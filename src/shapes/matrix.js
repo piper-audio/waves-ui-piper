@@ -42,7 +42,7 @@ export default class Matrix extends BaseShape {
       // for Chrome
       this.$el.setAttributeNS(null, 'image-rendering', 'pixelated');
     }
-    this.lastUpdateHop = 0;
+//    this.lastUpdateHop = 0;
     console.log("matrix render returning");
     return this.$el;
   }
@@ -223,14 +223,6 @@ export default class Matrix extends BaseShape {
       return;
     }
 
-    const hop = renderingContext.timeToPixel(1) - renderingContext.timeToPixel(0);
-    if (hop === this.lastUpdateHop) {
-      console.log("zoom level unchanged, still a hop of " + hop + " pps");
-      return;
-    } else {
-      this.lastUpdateHop = hop;
-    }
-    
     if (cache.elements.length === 0) {
       console.log("About to add " + cache.resources.length +
 		  " image resources to SVG...");
@@ -269,10 +261,16 @@ export default class Matrix extends BaseShape {
       const tileWidth = cache.tileWidths[i];
       const x = startX + widthAccumulated * widthScaleFactor;
       const w = tileWidth * widthScaleFactor;
-      elt.setAttributeNS(null, 'x', Math.floor(x));
-      elt.setAttributeNS(null, 'width', Math.ceil(x + w) - Math.floor(x));
-      elt.setAttributeNS(null, 'y', 0);
-      elt.setAttributeNS(null, 'height', renderingContext.height);
+      const visible = (x + w > 0 && x < renderingContext.maxX);
+      if (visible) {
+        elt.setAttributeNS(null, 'x', Math.floor(x));
+        elt.setAttributeNS(null, 'width', Math.ceil(x + w) - Math.floor(x));
+        elt.setAttributeNS(null, 'y', 0);
+        elt.setAttributeNS(null, 'height', renderingContext.height);
+        elt.setAttributeNS(null, 'visibility', 'visible');
+      } else {
+        elt.setAttributeNS(null, 'visibility', 'hidden');
+      }
       widthAccumulated += tileWidth;
     }
     
