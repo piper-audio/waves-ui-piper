@@ -419,26 +419,92 @@ export default class Layer extends events.EventEmitter {
   }
 
   /**
-   * Updates the values stored int the `_renderingContext` passed  to shapes
+   * Updates the values stored in the `_renderingContext` passed  to shapes
    * for rendering and updating.
    */
   _updateRenderingContext() {
+
+    // PLAN
+    //
+    // The time context structures stay the same. They continue to map
+    // time in seconds onto an absolute pixel axis that starts at
+    // pixel 0 == time 0 and pixel N == time (N / pixels-per-second).
+    //
+    // The rendering context, on the other hand, has pixel 0 at the
+    // left edge of the visible area, so that the rendered SVG has
+    // width (in its coordinate scheme) equal to the visible area. We
+    // always resituate ourselves there so as to avoid extremely large
+    // SVG coordinates when both zoomed in a long way and scrolled a
+    // long way to the right, as browser renderers generally seem to
+    // blow up when presented with coords above 2^24 or so.
+    // 
+    // To arrange pixel 0 at the left edge, we need to ensure that the
+    // time-to-pixel mapping places time 0 at pixel -minX where minX
+    // is as calculated in this code previously:
+    // 
+    //   let minX = Math.max(-this._renderingContext.offsetX, 0);
+    //   let trackDecay =
+    //     this._renderingContext.trackOffsetX +
+    //     this._renderingContext.startX;
+    //   if (trackDecay < 0) { minX = -trackDecay; }
+    //
+    // where the start and offset values in the above code were
+    // derived as:
+    // 
+    //   this._renderingContext.offsetX =
+    //     this.timeContext.timeToPixel(this.timeContext.offset);
+    //   this._renderingContext.startX =
+    //     this.timeContext.parent.timeToPixel(this.timeContext.start);
+    //   this._renderingContext.trackOffsetX =
+    //     this.timeContext.parent.timeToPixel(this.timeContext.parent.offset);
     
-    this._renderingContext.timeToPixel = this.timeContext.timeToPixel;
-    this._renderingContext.valueToPixel = this._valueToPixel;
+    const layerStartTime = this.timeContext.start;
+    const layerOffsetTime = this.timeContext.offset;
+    const trackOffsetTime = this.timeContext.parent.offset;
+    const layerOriginTime = trackOffsetTime + layerStartTime;
+    const viewStartTime = (layerOriginTime < 0 ? -layerOriginTime :
+                           layerOffsetTime < 0 ? -layerOffsetTime : 0);
 
-    this._renderingContext.height = this.params.height;
-    this._renderingContext.width  = this.timeContext.timeToPixel(this.timeContext.duration);
-    // for foreign object issue in chrome
-    this._renderingContext.offsetX = this.timeContext.timeToPixel(this.timeContext.offset);
-    this._renderingContext.startX = this.timeContext.parent.timeToPixel(this.timeContext.start);
+    this._renderingContext.timeToPixel = scales.linear()
+      .domain([viewStartTime, viewStartTime + 1])
+      .range([0, this.timeContext.timeToPixel(1)]);
+    
+    this._renderingContext.minX = 0;
 
-    this._renderingContext.trackOffsetX = this.timeContext.parent.timeToPixel(this.timeContext.parent.offset);
     this._renderingContext.visibleWidth = this.timeContext.parent.visibleWidth;
+    this._renderingContext.width = this._renderingContext.visibleWidth;
+    this._renderingContext.maxX = this._renderingContext.visibleWidth;
+    
+    // This is the track offset (derived from the layer time context's
+    // parent offset, this.timeContext.parent.offset) plus the layer
+    // offset (derived from this.timeContext.offset).
+    
+    this._renderingContext.height = this.params.height;
+    this._renderingContext.valueToPixel = this._valueToPixel;
+/*
+    const scale = scales.linear()
+          .domain([0, 1])
+          .range([0, pixelsPerSecond]);
+    
+    this._renderingContext.timeToPixel = scale;
+*/
+//    this._renderingContext.timeToPixel = this.timeContext.timeToPixel;
+    
+//    this._renderingContext.width = this.timeContext.timeToPixel(this.timeContext.duration);
 
+    // for foreign object issue in chrome
+//    this._renderingContext.startX = this.timeContext.parent.timeToPixel(this.timeContext.start);
+
+//    this._renderingContext.trackOffsetX = this.timeContext.parent.timeToPixel(this.timeContext.parent.offset);
+//    this._renderingContext.visibleWidth = this.timeContext.parent.visibleWidth;
+
+    //!!! + review axis-layer.js
+    
     this._updateRenderingContextExtents();
 
-    console.log("Rendering context: startX = " + this._renderingContext.startX + ", offsetX = " + this._renderingContext.offsetX + ", width = " + this._renderingContext.width + ", visibleWidth = " + this._renderingContext.visibleWidth + ", minX = " + this._renderingContext.minX + ", maxX = " + this._renderingContext.maxX);
+//    console.log("Rendering context: startX = " + this._renderingContext.startX + ", offsetX = " + this._renderingContext.offsetX + " (from time offset " + this.timeContext.offset + "), track offset = " + this._renderingContext.trackOffsetX + " (from track time offset " + this.timeContext.parent.offset + "), width = " + this._renderingContext.width + ", visibleWidth = " + this._renderingContext.visibleWidth + ", minX = " + this._renderingContext.minX + ", maxX = " + this._renderingContext.maxX);
+
+    console.log("Rendering context: width = " + this._renderingContext.width + ", visibleWidth = " + this._renderingContext.visibleWidth + ", minX = " + this._renderingContext.minX + " (time = " + this._renderingContext.timeToPixel.invert(this._renderingContext.minX) + "), maxX = " + this._renderingContext.maxX + " (time = " + this._renderingContext.timeToPixel.invert(this._renderingContext.maxX) + ")");
   }
 
   _updateRenderingContextExtents() {
@@ -446,7 +512,7 @@ export default class Layer extends events.EventEmitter {
     // calculate the visible area, storing it so shapes can
     // determine which bits they need to redraw
     // @TODO refactor this ununderstandable mess
-    
+/*    
     let minX = Math.max(-this._renderingContext.offsetX, 0);
 
     let trackDecay =
@@ -461,6 +527,7 @@ export default class Layer extends events.EventEmitter {
 
     this._renderingContext.minX = minX;
     this._renderingContext.maxX = maxX;
+*/
   }
 
   // --------------------------------------
@@ -801,12 +868,18 @@ export default class Layer extends events.EventEmitter {
     this._updateRenderingContext();
 
     const timeContext = this.timeContext;
-    const width  = timeContext.timeToPixel(timeContext.duration);
+
+    const width = this._renderingContext.visibleWidth;
+    const x = 0;
+    const offset = 0;
+    
+///    const width  = timeContext.timeToPixel(timeContext.duration);
     // x is relative to timeline's timeContext
-    const x      = timeContext.parent.timeToPixel(timeContext.start);
-    const offset = timeContext.timeToPixel(timeContext.offset);
+///    const x      = timeContext.parent.timeToPixel(timeContext.start);
+///    const offset = timeContext.timeToPixel(timeContext.offset);
     const top    = this.params.top;
     const height = this.params.height;
+    
     // matrix to invert the coordinate system
     const translateMatrix = `matrix(1, 0, 0, -1, ${x}, ${top + height})`;
 
