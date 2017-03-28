@@ -75,15 +75,6 @@ export default class TrackCollection extends Array {
   }
 
   /**
-   * Updates all `Track` containers, layers are not updated with this method.
-   * When done, the timeline triggers a `update:containers` event.
-   */
-  updateContainer(/* trackOrTrackIds */) {
-    this.forEach((track) => track.updateContainer());
-    this._timeline.emit('update:containers');
-  }
-
-  /**
    * Updates all layers. When done, the timeline triggers a `update:layers` event.
    *
    * @param {Layer|String} layerOrGroup - Filter the layers to update by

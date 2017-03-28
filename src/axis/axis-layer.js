@@ -130,7 +130,7 @@ export default class AxisLayer extends Layer {
   /**
    * Updates the layout of the layer.
    */
-  updateContainer() {
+  _updateContainer() {
     this._updateRenderingContext();
 
     const top    = this.params.top;
