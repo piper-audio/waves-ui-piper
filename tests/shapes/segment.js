@@ -55,7 +55,7 @@ test('Segment navigation zoom and move', (assert) => {
   timeline.tracks.render();
   timeline.tracks.update();
   timeline.timeContext.zoom = 0.5;
-  timeline.timeContext.offset = 15; //
+  timeline.timeContext.offset = -1;
   timeline.tracks.render();
   timeline.tracks.update();
   const item0 = layer.items[0];
@@ -64,15 +64,13 @@ test('Segment navigation zoom and move', (assert) => {
   const item1Width = item1.getBBox().width;
   let ctm = item1.getCTM()
 
+  // Segment widths, having changed the zoom scale
   assert.equal(item0Width, 150);
   assert.equal(item1Width, 300);
-  // Segment position
-  // We change the timeline.timeContext.offset
-  // So the timeline Container is offseted accordingly (tested in tests/core/timeline.js)
-  // The only thing to test is that the second item
-  // is correctly set to 300 px from the Layer container
-  // as it was before transformation 600 px, and zoom is 0.5
-  assert.equal(ctm.e, 300);
+
+  // Segment position, having changed the timeline.timeContext.offset and zoom
+  assert.equal(ctm.e, 250);
+  
   assert.end();
 });
 
