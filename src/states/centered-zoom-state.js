@@ -127,6 +127,8 @@ export default class CenteredZoomState extends BaseState {
       changed = true;
     }
 
+    console.log("mouse move: time context offset is now " + timeContext.offset);
+    
     // Other possible experiments with centered-zoom-state
     //
     // Example 1: Prevent timeline.offset to be negative
@@ -145,5 +147,7 @@ export default class CenteredZoomState extends BaseState {
     }
   }
 
-  onMouseUp(e) {}
+  onMouseUp(e) {
+    this.dragMode = 'unresolved';
+  }
 }

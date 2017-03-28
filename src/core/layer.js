@@ -23,7 +23,7 @@ let timeContextBehaviorCtor = TimeContextBehavior;
  * ```
  * <g class="layer" transform="translate(${start}, 0)">
  *   <svg class="bounding-box" width="${duration}">
- *     <g class="offset" transform="translate(${offset, 0})">
+ *     <g class="maingroup">
  *       <!-- background -->
  *       <rect class="background"></rect>
  *       <!-- shapes and common shapes are inserted here -->
@@ -90,7 +90,7 @@ export default class Layer extends events.EventEmitter {
     /** @type {Element} */
     this.$boundingBox = null;
     /** @type {Element} */
-    this.$offset = null;
+    this.$maingroup = null;
     /** @type {Element} */
     this.$interactions = null;
     /**
@@ -337,9 +337,9 @@ export default class Layer extends events.EventEmitter {
     this.$boundingBox = document.createElementNS(ns, 'svg');
     this.$boundingBox.classList.add('bounding-box');
     this.$boundingBox.style.overflow = this.params.overflow;
-    // group to apply offset
-    this.$offset = document.createElementNS(ns, 'g');
-    this.$offset.classList.add('offset', 'items');
+    // group to contain layer items
+    this.$maingroup = document.createElementNS(ns, 'g');
+    this.$maingroup.classList.add('maingroup', 'items');
     // layer background
     this.$background = document.createElementNS(ns, 'rect');
     this.$background.setAttributeNS(null, 'height', '100%');
@@ -364,8 +364,8 @@ export default class Layer extends events.EventEmitter {
     this.$interactions.appendChild(this.contextShape.render());
     // create the DOM tree
     this.$el.appendChild(this.$boundingBox);
-    this.$boundingBox.appendChild(this.$offset);
-    this.$offset.appendChild(this.$background);
+    this.$boundingBox.appendChild(this.$maingroup);
+    this.$maingroup.appendChild(this.$background);
     this.$boundingBox.appendChild(this.$interactions);
   }
 
@@ -419,46 +419,52 @@ export default class Layer extends events.EventEmitter {
   }
 
   /**
-   * Updates the values stored int the `_renderingContext` passed  to shapes
+   * Updates the values stored in the `_renderingContext` passed  to shapes
    * for rendering and updating.
    */
   _updateRenderingContext() {
+
+    // PLAN
+    //
+    // The time context structures stay the same. They continue to map
+    // time in seconds onto an absolute pixel axis that starts at
+    // pixel 0 == time 0 and pixel N == time (N / pixels-per-second).
+    //
+    // The rendering context, on the other hand, has pixel 0 at the
+    // left edge of the visible area, so that the rendered SVG has
+    // width (in its coordinate scheme) equal to the visible area. We
+    // always resituate ourselves there so as to avoid extremely large
+    // SVG coordinates when both zoomed in a long way and scrolled a
+    // long way to the right, as browser renderers generally seem to
+    // blow up when presented with coords above 2^24 or so.
+    // 
+    // To arrange pixel 0 at the left edge, we need to ensure that the
+    // time-to-pixel mapping places time 0 at pixel -minX where minX
+    // is the time context's timeToPixel mapping of the sum of all
+    // applicable time offsets.
     
-    this._renderingContext.timeToPixel = this.timeContext.timeToPixel;
+    const layerStartTime = this.timeContext.start;
+    const layerOffsetTime = this.timeContext.offset;
+    const trackOffsetTime = this.timeContext.parent.offset;
+
+    const layerOriginTime = trackOffsetTime + layerStartTime;
+
+    const viewStartTime = -layerOriginTime - layerOffsetTime;
+    
+    this._renderingContext.timeToPixel = scales.linear()
+      .domain([viewStartTime, viewStartTime + 1])
+      .range([0, this.timeContext.timeToPixel(1)]);
+    
+    this._renderingContext.minX = 0;
+
+    this._renderingContext.visibleWidth = this.timeContext.parent.visibleWidth;
+    this._renderingContext.width = this._renderingContext.visibleWidth;
+    this._renderingContext.maxX = this._renderingContext.visibleWidth;
+    
+    this._renderingContext.height = this.params.height;
     this._renderingContext.valueToPixel = this._valueToPixel;
 
-    this._renderingContext.height = this.params.height;
-    this._renderingContext.width  = this.timeContext.timeToPixel(this.timeContext.duration);
-    // for foreign object issue in chrome
-    this._renderingContext.offsetX = this.timeContext.timeToPixel(this.timeContext.offset);
-    this._renderingContext.startX = this.timeContext.parent.timeToPixel(this.timeContext.start);
-
-    this._renderingContext.trackOffsetX = this.timeContext.parent.timeToPixel(this.timeContext.parent.offset);
-    this._renderingContext.visibleWidth = this.timeContext.parent.visibleWidth;
-
-    this._updateRenderingContextExtents();
-  }
-
-  _updateRenderingContextExtents() {
-    
-    // calculate the visible area, storing it so shapes can
-    // determine which bits they need to redraw
-    // @TODO refactor this ununderstandable mess
-    
-    let minX = Math.max(-this._renderingContext.offsetX, 0);
-
-    let trackDecay =
-        this._renderingContext.trackOffsetX +
-        this._renderingContext.startX;
-    if (trackDecay < 0) { minX = -trackDecay; }
-
-    let maxX = minX;
-    maxX += (this._renderingContext.width - minX <
-             this._renderingContext.visibleWidth) ?
-      this._renderingContext.width : this._renderingContext.visibleWidth;
-
-    this._renderingContext.minX = minX;
-    this._renderingContext.maxX = maxX;
+    console.log("Rendering context: width = " + this._renderingContext.width + ", visibleWidth = " + this._renderingContext.visibleWidth + ", minX = " + this._renderingContext.minX + " (time = " + this._renderingContext.timeToPixel.invert(this._renderingContext.minX) + "), maxX = " + this._renderingContext.maxX + " (time = " + this._renderingContext.timeToPixel.invert(this._renderingContext.maxX) + ")");
   }
 
   // --------------------------------------
@@ -660,7 +666,7 @@ export default class Layer extends events.EventEmitter {
   /**
    * Retrieve all the items in a given area as defined in the registered `Shape~inArea` method.
    *
-   * @param {Object} area - The area in which to find the elements
+   * @param {Object} area - The area (in viewport coordinate space) in which to find the elements
    * @param {Number} area.top
    * @param {Number} area.left
    * @param {Number} area.width
@@ -668,15 +674,10 @@ export default class Layer extends events.EventEmitter {
    * @return {Array} - list of the items presents in the area
    */
   getItemsInArea(area) {
-    const start    = this.timeContext.parent.timeToPixel(this.timeContext.start);
-    const duration = this.timeContext.timeToPixel(this.timeContext.duration);
-    const offset   = this.timeContext.timeToPixel(this.timeContext.offset);
-    const top      = this.params.top;
-    // be aware af context's translations - constrain in working view
-    let x1 = Math.max(area.left, start);
-    let x2 = Math.min(area.left + area.width, start + duration);
-    x1 -= (start + offset);
-    x2 -= (start + offset);
+
+    let x1 = area.left;
+    let x2 = area.left + area.width;
+
     // keep consistent with context y coordinates system
     let y1 = this.params.height - (area.top + area.height);
     let y2 = this.params.height - area.top;
@@ -707,7 +708,7 @@ export default class Layer extends events.EventEmitter {
    * @param {Element} $item - The item to be moved.
    */
   _toFront($item) {
-    this.$offset.appendChild($item);
+    this.$maingroup.appendChild($item);
   }
 
   /**
@@ -735,7 +736,7 @@ export default class Layer extends events.EventEmitter {
       $group.classList.add('item', 'common', shape.getClassName());
 
       this._$itemCommonShapeMap.set($group, shape);
-      this.$offset.appendChild($group);
+      this.$maingroup.appendChild($group);
     }
 
     // append elements all at once
@@ -760,7 +761,7 @@ export default class Layer extends events.EventEmitter {
         fragment.appendChild($el);
       });
 
-      this.$offset.appendChild(fragment);
+      this.$maingroup.appendChild(fragment);
     }
 
     // remove
@@ -769,7 +770,7 @@ export default class Layer extends events.EventEmitter {
 
       const shape = this._$itemShapeMap.get($item);
 
-      this.$offset.removeChild($item);
+      this.$maingroup.removeChild($item);
       shape.destroy();
       // a removed item cannot be selected
       if (this._behavior) {
@@ -788,25 +789,30 @@ export default class Layer extends events.EventEmitter {
    * Updates the container of the layer and the attributes of the existing shapes.
    */
   update() {
-    this.updateContainer();
-    this.updateShapes();
+    console.log("layer update called");
+    
+    this._updateContainer();
+    this._updateShapes();
   }
 
   /**
    * Updates the container of the layer.
    */
-  updateContainer() {
+  _updateContainer() {
     this._updateRenderingContext();
 
     const timeContext = this.timeContext;
-    const width  = timeContext.timeToPixel(timeContext.duration);
-    // x is relative to timeline's timeContext
-    const x      = timeContext.parent.timeToPixel(timeContext.start);
-    const offset = timeContext.timeToPixel(timeContext.offset);
-    const top    = this.params.top;
+
+    let width = this._renderingContext.timeToPixel(this.timeContext.duration);
+    if (width > this._renderingContext.visibleWidth) {
+      width = this._renderingContext.visibleWidth;
+    }
+    
+    const top = this.params.top;
     const height = this.params.height;
+    
     // matrix to invert the coordinate system
-    const translateMatrix = `matrix(1, 0, 0, -1, ${x}, ${top + height})`;
+    const translateMatrix = `matrix(1, 0, 0, -1, 0, ${top + height})`;
 
     this.$el.setAttributeNS(null, 'transform', translateMatrix);
 
@@ -814,7 +820,6 @@ export default class Layer extends events.EventEmitter {
     this.$boundingBox.setAttributeNS(null, 'height', height);
     this.$boundingBox.style.opacity = this.params.opacity;
 
-    this.$offset.setAttributeNS(null, 'transform', `translate(${offset}, 0)`);
     // maintain context shape
     this.contextShape.update(this._renderingContext, this.timeContext, 0);
   }
@@ -849,8 +854,10 @@ export default class Layer extends events.EventEmitter {
   /**
    * Updates the attributes of all the `Shape` instances rendered into the layer.
    */
-  updateShapes() {
+  _updateShapes() {
 
+    console.log("layer updateShapes called");
+    
     const before = performance.now();
     
     this._updateRenderingContext();

@@ -34,7 +34,7 @@ export default class Line extends BaseShape {
     data.sort((a, b) => this.cx(a) < this.cx(b) ? -1 : 1);
 
     const minX = Math.floor(renderingContext.minX);
-    const maxX = Math.floor(renderingContext.maxX);
+    const maxX = Math.ceil(renderingContext.maxX);
 
     let instructions = [];
     const n = data.length;

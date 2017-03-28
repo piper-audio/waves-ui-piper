@@ -60,16 +60,29 @@ export default class Segment extends BaseShape {
     const x = renderingContext.timeToPixel(this.x(datum));
     const y = renderingContext.valueToPixel(this.y(datum));
 
-    const width = renderingContext.timeToPixel(this.width(datum));
+    const width = renderingContext.timeToPixel(this.x(datum) +
+                                               this.width(datum)) -
+          renderingContext.timeToPixel(this.x(datum));
+    
     const height = renderingContext.valueToPixel(this.height(datum));
+
+    this.$segment.setAttributeNS(null, 'width', Math.max(width, 0));
+    this.$segment.setAttributeNS(null, 'height', height);
+
+    const visible = (x + width >= renderingContext.minX &&
+                     x <= renderingContext.maxX);
+    if (!visible) {
+      this.$el.setAttributeNS(null, 'visibility', 'hidden');
+      return;
+    } else {
+      this.$el.setAttributeNS(null, 'visibility', 'visible');
+    }
+    
     const color = this.color(datum);
     const opacity = this.opacity(datum);
 
     this.$el.setAttributeNS(null, 'transform', `translate(${x}, ${y})`);
     this.$el.style.opacity = opacity;
-
-    this.$segment.setAttributeNS(null, 'width', Math.max(width, 0));
-    this.$segment.setAttributeNS(null, 'height', height);
     this.$segment.style.fill = color;
 
     if (this.params.displayHandlers) {

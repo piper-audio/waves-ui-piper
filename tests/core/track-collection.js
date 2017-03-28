@@ -26,11 +26,6 @@ test('TrackCollection methods', (assert) => {
     })
     trackCollection.update()
 
-    timeline.once('update:containers', (e) => {
-        assert.ok(true, 'update:containers event is emitted')
-    })
-    trackCollection.updateContainer()
-
     timeline.once('update:layers', (e) => {
         assert.ok(true, 'update:layers event is emitted')
     })

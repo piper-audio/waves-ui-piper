@@ -38,10 +38,8 @@ import ns from './namespace';
  *   <!-- background -->
  *   <rect><rect>
  *   <!-- main view -->
- *   <g class="offset" transform="translate(${offset}, 0)">
- *     <g class="layout">
- *       <!-- layers -->
- *     </g>
+ *   <g class="layout">
+ *     <!-- layers -->
  *   </g>
  *   <g class="interactions"><!-- for feedback --></g>
  * </svg>
@@ -67,8 +65,6 @@ export default class Track {
     this.$interactions = null;
     /** @type {Element} */
     this.$layout = null;
-    /** @type {Element} */
-    this.$offset = null;
     /** @type {Element} */
     this.$svg = null;
     /** @type {Element} */
@@ -150,19 +146,15 @@ export default class Track {
 
     const $defs = document.createElementNS(ns, 'defs');
 
-    const $offsetGroup = document.createElementNS(ns, 'g');
-    $offsetGroup.classList.add('offset');
-
     const $layoutGroup = document.createElementNS(ns, 'g');
     $layoutGroup.classList.add('layout');
 
     const $interactionsGroup = document.createElementNS(ns, 'g');
     $interactionsGroup.classList.add('interactions');
 
-    $offsetGroup.appendChild($layoutGroup);
     $svg.appendChild($defs);
     $svg.appendChild($background);
-    $svg.appendChild($offsetGroup);
+    $svg.appendChild($layoutGroup);
     $svg.appendChild($interactionsGroup);
     this.$el.appendChild($svg);
     // removes additionnal height added who knows why...
@@ -171,7 +163,6 @@ export default class Track {
     this.$el.style.transform = 'translateZ(0)';
 
     this.$layout = $layoutGroup;
-    this.$offset = $offsetGroup;
     this.$interactions = $interactionsGroup;
     this.$svg = $svg;
     this.$background = $background;
@@ -231,28 +222,24 @@ export default class Track {
    * @param {Array<Layer>} [layers=null] - if not null, a subset of the layers to update.
    */
   update(layers = null) {
-    this.updateContainer();
+    this._updateContainer();
     this.updateLayers(layers);
   }
 
   /**
    * Updates the track DOM structure.
    */
-  updateContainer() {
+  _updateContainer() {
     const $svg = this.$svg;
-    const $offset = this.$offset;
+    
     // Should be in some update layout
     const renderingContext = this.renderingContext;
     const height = this.height;
     const width = Math.round(renderingContext.visibleWidth);
-    const offsetX = Math.round(renderingContext.timeToPixel(renderingContext.offset));
-    const translate = `translate(${offsetX}, 0)`;
 
     $svg.setAttributeNS(null, 'height', height);
     $svg.setAttributeNS(null, 'width', width);
     $svg.setAttributeNS(null, 'viewbox', `0 0 ${width} ${height}`);
-
-    $offset.setAttributeNS(null, 'transform', translate);
   }
 
   /**

@@ -153,11 +153,13 @@ export default class Waveform extends BaseShape {
     for (let px = px0; px < px1; px++) {
 
       const startSample = pixelToSample(px);
+      if (startSample < 0) continue;
       if (startSample >= samples.length) break;
 
       let endSample = pixelToSample(px + 1);
       if (endSample >= samples.length) endSample = samples.length;
-      
+      if (endSample < 0) continue;
+
       let min = samples[startSample];
       let max = min;
       
@@ -246,6 +248,7 @@ export default class Waveform extends BaseShape {
     // Add a little square for each sample location
     
     for (let i = s0; i < s1 && i < n; ++i) {
+      if (i < 0) continue;
       const x = sampleToPixel(i);
       const y = renderingContext.valueToPixel(samples[i]);
       instructions.push(`M${x-1},${y-1}h2v2h-2v-2`);

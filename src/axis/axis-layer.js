@@ -1,5 +1,6 @@
 import ns from '../core/namespace';
 import Layer from '../core/layer';
+import scales from '../utils/scales';
 
 
 /**
@@ -76,20 +77,21 @@ export default class AxisLayer extends Layer {
    * Updates the rendering context for the shapes.
    */
   _updateRenderingContext() {
-    this._renderingContext.timeToPixel = this.timeContext.timeToPixel;
-    this._renderingContext.valueToPixel = this._valueToPixel;
-    this._renderingContext.height = this.params.height;
-    this._renderingContext.width  = this.timeContext.timeToPixel(this.timeContext.duration);
+    
+    const viewStartTime = -this.timeContext.offset;
+    
+    this._renderingContext.timeToPixel = scales.linear()
+      .domain([viewStartTime, viewStartTime + 1])
+      .range([0, this.timeContext.timeToPixel(1)]);
+    
+    this._renderingContext.minX = 0;
 
-    // for foreign object issue in chrome
-    this._renderingContext.offsetX = this.timeContext.timeToPixel(this.timeContext.offset);
-    this._renderingContext.startX = this.timeContext.timeToPixel(this.timeContext.start);
-
-    // expose some timeline attributes - allow to improve perf in some cases - cf. Waveform
-    this._renderingContext.trackOffsetX = this.timeContext.timeToPixel(this.timeContext.offset);
     this._renderingContext.visibleWidth = this.timeContext.visibleWidth;
-
-    super._updateRenderingContextExtents();
+    this._renderingContext.width = this._renderingContext.visibleWidth;
+    this._renderingContext.maxX = this._renderingContext.visibleWidth;
+    
+    this._renderingContext.height = this.params.height;
+    this._renderingContext.valueToPixel = this._valueToPixel;
   }
 
   /**
@@ -111,9 +113,9 @@ export default class AxisLayer extends Layer {
       this.$el.classList.add('layer', this.params.className);
     }
 
-    // group to apply offset
-    this.$offset = document.createElementNS(ns, 'g');
-    this.$offset.classList.add('offset', 'items');
+    // group to contain layer items
+    this.$maingroup = document.createElementNS(ns, 'g');
+    this.$maingroup.classList.add('maingroup', 'items');
     // layer background
     this.$background = document.createElementNS(ns, 'rect');
     this.$background.setAttributeNS(null, 'height', '100%');
@@ -121,14 +123,14 @@ export default class AxisLayer extends Layer {
     this.$background.style.fillOpacity = 0;
     this.$background.style.pointerEvents = 'none';
     // create the DOM tree
-    this.$el.appendChild(this.$offset);
-    this.$offset.appendChild(this.$background);
+    this.$el.appendChild(this.$maingroup);
+    this.$maingroup.appendChild(this.$background);
   }
 
   /**
    * Updates the layout of the layer.
    */
-  updateContainer() {
+  _updateContainer() {
     this._updateRenderingContext();
 
     const top    = this.params.top;
