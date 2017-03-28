@@ -147,5 +147,7 @@ export default class CenteredZoomState extends BaseState {
     }
   }
 
-  onMouseUp(e) {}
+  onMouseUp(e) {
+    this.dragMode = 'unresolved';
+  }
 }
