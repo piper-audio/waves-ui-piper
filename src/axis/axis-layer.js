@@ -79,8 +79,6 @@ export default class AxisLayer extends Layer {
   _updateRenderingContext() {
     
     const viewStartTime = -this.timeContext.offset;
-
-    console.log("viewStartTime = " + viewStartTime);
     
     this._renderingContext.timeToPixel = scales.linear()
       .domain([viewStartTime, viewStartTime + 1])
@@ -115,9 +113,9 @@ export default class AxisLayer extends Layer {
       this.$el.classList.add('layer', this.params.className);
     }
 
-    // group to apply offset
-    this.$offset = document.createElementNS(ns, 'g');
-    this.$offset.classList.add('offset', 'items');
+    // group to contain layer items
+    this.$maingroup = document.createElementNS(ns, 'g');
+    this.$maingroup.classList.add('maingroup', 'items');
     // layer background
     this.$background = document.createElementNS(ns, 'rect');
     this.$background.setAttributeNS(null, 'height', '100%');
@@ -125,8 +123,8 @@ export default class AxisLayer extends Layer {
     this.$background.style.fillOpacity = 0;
     this.$background.style.pointerEvents = 'none';
     // create the DOM tree
-    this.$el.appendChild(this.$offset);
-    this.$offset.appendChild(this.$background);
+    this.$el.appendChild(this.$maingroup);
+    this.$maingroup.appendChild(this.$background);
   }
 
   /**

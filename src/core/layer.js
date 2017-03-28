@@ -23,7 +23,7 @@ let timeContextBehaviorCtor = TimeContextBehavior;
  * ```
  * <g class="layer" transform="translate(${start}, 0)">
  *   <svg class="bounding-box" width="${duration}">
- *     <g class="offset" transform="translate(${offset, 0})">
+ *     <g class="maingroup">
  *       <!-- background -->
  *       <rect class="background"></rect>
  *       <!-- shapes and common shapes are inserted here -->
@@ -90,7 +90,7 @@ export default class Layer extends events.EventEmitter {
     /** @type {Element} */
     this.$boundingBox = null;
     /** @type {Element} */
-    this.$offset = null;
+    this.$maingroup = null;
     /** @type {Element} */
     this.$interactions = null;
     /**
@@ -337,9 +337,9 @@ export default class Layer extends events.EventEmitter {
     this.$boundingBox = document.createElementNS(ns, 'svg');
     this.$boundingBox.classList.add('bounding-box');
     this.$boundingBox.style.overflow = this.params.overflow;
-    // group to apply offset
-    this.$offset = document.createElementNS(ns, 'g');
-    this.$offset.classList.add('offset', 'items');
+    // group to contain layer items
+    this.$maingroup = document.createElementNS(ns, 'g');
+    this.$maingroup.classList.add('maingroup', 'items');
     // layer background
     this.$background = document.createElementNS(ns, 'rect');
     this.$background.setAttributeNS(null, 'height', '100%');
@@ -364,8 +364,8 @@ export default class Layer extends events.EventEmitter {
     this.$interactions.appendChild(this.contextShape.render());
     // create the DOM tree
     this.$el.appendChild(this.$boundingBox);
-    this.$boundingBox.appendChild(this.$offset);
-    this.$offset.appendChild(this.$background);
+    this.$boundingBox.appendChild(this.$maingroup);
+    this.$maingroup.appendChild(this.$background);
     this.$boundingBox.appendChild(this.$interactions);
   }
 
@@ -450,8 +450,6 @@ export default class Layer extends events.EventEmitter {
     const layerOriginTime = trackOffsetTime + layerStartTime;
 
     const viewStartTime = -layerOriginTime - layerOffsetTime;
-
-    console.log("viewStartTime = " + viewStartTime);
     
     this._renderingContext.timeToPixel = scales.linear()
       .domain([viewStartTime, viewStartTime + 1])
@@ -676,6 +674,9 @@ export default class Layer extends events.EventEmitter {
    * @return {Array} - list of the items presents in the area
    */
   getItemsInArea(area) {
+
+    //!!! todo rejig
+    
     const start    = this.timeContext.parent.timeToPixel(this.timeContext.start);
     const duration = this.timeContext.timeToPixel(this.timeContext.duration);
     const offset   = this.timeContext.timeToPixel(this.timeContext.offset);
@@ -715,7 +716,7 @@ export default class Layer extends events.EventEmitter {
    * @param {Element} $item - The item to be moved.
    */
   _toFront($item) {
-    this.$offset.appendChild($item);
+    this.$maingroup.appendChild($item);
   }
 
   /**
@@ -743,7 +744,7 @@ export default class Layer extends events.EventEmitter {
       $group.classList.add('item', 'common', shape.getClassName());
 
       this._$itemCommonShapeMap.set($group, shape);
-      this.$offset.appendChild($group);
+      this.$maingroup.appendChild($group);
     }
 
     // append elements all at once
@@ -768,7 +769,7 @@ export default class Layer extends events.EventEmitter {
         fragment.appendChild($el);
       });
 
-      this.$offset.appendChild(fragment);
+      this.$maingroup.appendChild(fragment);
     }
 
     // remove
@@ -777,7 +778,7 @@ export default class Layer extends events.EventEmitter {
 
       const shape = this._$itemShapeMap.get($item);
 
-      this.$offset.removeChild($item);
+      this.$maingroup.removeChild($item);
       shape.destroy();
       // a removed item cannot be selected
       if (this._behavior) {
@@ -807,20 +808,13 @@ export default class Layer extends events.EventEmitter {
     this._updateRenderingContext();
 
     const timeContext = this.timeContext;
-
     const width = this._renderingContext.visibleWidth;
-    const x = 0;
-    const offset = 0;
     
-///    const width  = timeContext.timeToPixel(timeContext.duration);
-    // x is relative to timeline's timeContext
-///    const x      = timeContext.parent.timeToPixel(timeContext.start);
-///    const offset = timeContext.timeToPixel(timeContext.offset);
     const top    = this.params.top;
     const height = this.params.height;
     
     // matrix to invert the coordinate system
-    const translateMatrix = `matrix(1, 0, 0, -1, ${x}, ${top + height})`;
+    const translateMatrix = `matrix(1, 0, 0, -1, 0, ${top + height})`;
 
     this.$el.setAttributeNS(null, 'transform', translateMatrix);
 
@@ -828,8 +822,6 @@ export default class Layer extends events.EventEmitter {
     this.$boundingBox.setAttributeNS(null, 'height', height);
     this.$boundingBox.style.opacity = this.params.opacity;
 
-//    this.$offset.setAttributeNS(null, 'transform', `translate(${offset}, 0)`);
-    
     // maintain context shape
     this.contextShape.update(this._renderingContext, this.timeContext, 0);
   }
