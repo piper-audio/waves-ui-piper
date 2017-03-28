@@ -802,9 +802,13 @@ export default class Layer extends events.EventEmitter {
     this._updateRenderingContext();
 
     const timeContext = this.timeContext;
-    const width = this._renderingContext.visibleWidth;
+
+    let width = this._renderingContext.timeToPixel(this.timeContext.duration);
+    if (width > this._renderingContext.visibleWidth) {
+      width = this._renderingContext.visibleWidth;
+    }
     
-    const top    = this.params.top;
+    const top = this.params.top;
     const height = this.params.height;
     
     // matrix to invert the coordinate system
