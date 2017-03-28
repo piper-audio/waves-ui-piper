@@ -26,10 +26,7 @@ test('Track - instanciation', (assert) => {
   assert.equal(tg[1].getAttribute('width'), "100%");
   assert.equal(tg[1].getAttribute('height'), "100%");
   assert.equal(tg[2].nodeName, "g");
-  assert.equal(tg[2].getAttribute('class'), "offset");
-  assert.equal(tg[2].childNodes.length, 1);
-  assert.equal(tg[2].childNodes[0].nodeName, "g");
-  assert.equal(tg[2].childNodes[0].getAttribute('class'), "layout");
+  assert.equal(tg[2].getAttribute('class'), "layout");
   assert.equal(tg[3].nodeName, "g");
   assert.equal(tg[3].getAttribute('class'), "interactions");
 
@@ -113,6 +110,11 @@ test('Track - add/remove Layer', (assert) => {
 })
 
 test('Track - update container', (assert) => {
+  // updateContainer is no longer a meaningful public API call on
+  // track (as there is no offset container that can be updated in
+  // that way). We retain this test but adjust it to call update()
+  // (which should have the same effect) but to test the new expected
+  // DOM attributes (which, boringly, no longer show a transform).
   const timelineDiv = document.createElement("div");
   document.body.appendChild(timelineDiv);
   const timeline = new Timeline();
@@ -122,7 +124,7 @@ test('Track - update container', (assert) => {
   // And check that it's the right one
   timeline.visibleWidth = 500;
   timeline.offset = 2;
-  track.updateContainer();
+  track.update();
   // <svg viewbox="0 0 500 100" width="500" class="track" xmlns:xhtml="http://www.w3.org/1999/xhtml" height="100" shape-rendering="optimizeSpeed">
   //  <defs></defs>
   //  <rect style="fill-opacity:0" width="100%" height="100%"></rect>
@@ -133,6 +135,6 @@ test('Track - update container', (assert) => {
   // </svg>
   assert.equal(track.$el.firstChild.getAttribute('viewbox'), "0 0 500 100");
   assert.equal(track.$el.firstChild.getAttribute('width'), "500");
-  assert.equal(track.$el.firstChild.childNodes[2].getAttribute('transform'), "translate(200, 0)");
+//  assert.equal(track.$el.firstChild.childNodes[2].getAttribute('transform'), "translate(200, 0)");
   assert.end();
 })
