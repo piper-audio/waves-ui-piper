@@ -72,7 +72,7 @@ test('Track - add/remove Layer', (assert) => {
   assert.equal(track.$layout.firstChild.firstChild.getAttribute('class'), 'bounding-box');
   assert.equal(track.$layout.firstChild.firstChild.childNodes.length, 2);
   assert.equal(track.$layout.firstChild.firstChild.childNodes[0].nodeName, 'g');
-  assert.equal(track.$layout.firstChild.firstChild.childNodes[0].getAttribute('class'), 'offset items');
+  assert.equal(track.$layout.firstChild.firstChild.childNodes[0].getAttribute('class'), 'maingroup items');
   assert.equal(track.$layout.firstChild.firstChild.childNodes[1].nodeName, 'g');
   assert.equal(track.$layout.firstChild.firstChild.childNodes[1].getAttribute('class'), 'interactions');
   assert.equal(track.$layout.firstChild.firstChild.childNodes[1].getAttribute('style'), 'display: none;');
