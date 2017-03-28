@@ -28,6 +28,15 @@ export default class Dot extends BaseShape {
     const r  = this.r(datum);
     const color = this.color(datum);
 
+    const visible = (cx + r >= renderingContext.minX &&
+                     cx - r <= renderingContext.maxX);
+    if (!visible) {
+      this.$el.setAttributeNS(null, 'visibility', 'hidden');
+      return;
+    } else {
+      this.$el.setAttributeNS(null, 'visibility', 'visible');
+    }
+    
     this.$el.setAttributeNS(null, 'transform', `translate(${cx}, ${cy})`);
     this.$el.setAttributeNS(null, 'r', r);
     this.$el.style.fill = color;

@@ -61,6 +61,15 @@ export default class Marker extends BaseShape {
   update(renderingContext, datum) {
 
     const x = renderingContext.timeToPixel(this.x(datum)) - 0.5;
+
+    const visible = (x >= renderingContext.minX &&
+                     x <= renderingContext.maxX);
+    if (!visible) {
+      this.$el.setAttributeNS(null, 'visibility', 'hidden');
+      return;
+    } else {
+      this.$el.setAttributeNS(null, 'visibility', 'visible');
+    }
     
     const color = this.color(datum);
     

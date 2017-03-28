@@ -66,6 +66,15 @@ export default class Segment extends BaseShape {
           renderingContext.timeToPixel(this.x(datum));
     
     const height = renderingContext.valueToPixel(this.height(datum));
+
+    const visible = (x + width >= renderingContext.minX &&
+                     x <= renderingContext.maxX);
+    if (!visible) {
+      this.$el.setAttributeNS(null, 'visibility', 'hidden');
+      return;
+    } else {
+      this.$el.setAttributeNS(null, 'visibility', 'visible');
+    }
     
     const color = this.color(datum);
     const opacity = this.opacity(datum);
