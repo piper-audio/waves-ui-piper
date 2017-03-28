@@ -1,6 +1,8 @@
 # waves - ui
 
-> A library to display and edit audio data and timeseries data in the browser.
+**NOTE** This is a modified version of waves-ui with significant changes to the internal layout and updating logic. Harmonisation is pending.
+
+A library to display and edit audio data and timeseries data in the browser.
 
 ![waves-ui screenshot](https://raw.githubusercontent.com/wavesjs/ui/master/examples/assets/waves-ui-screenshot.png)
 
@@ -155,4 +157,4 @@ This module is released under the BSD-3-Clause license.
 
 ## Acknowledgments
 
-This code is part of the [WAVE](http://wave.ircam.fr) project, funded by ANR (The French National Research Agency).
+This code originated in the [WAVE](http://wave.ircam.fr) project, funded by ANR (The French National Research Agency).
