@@ -789,14 +789,16 @@ export default class Layer extends events.EventEmitter {
    * Updates the container of the layer and the attributes of the existing shapes.
    */
   update() {
-    this.updateContainer();
-    this.updateShapes();
+    console.log("layer update called");
+    
+    this._updateContainer();
+    this._updateShapes();
   }
 
   /**
    * Updates the container of the layer.
    */
-  updateContainer() {
+  _updateContainer() {
     this._updateRenderingContext();
 
     const timeContext = this.timeContext;
@@ -848,8 +850,10 @@ export default class Layer extends events.EventEmitter {
   /**
    * Updates the attributes of all the `Shape` instances rendered into the layer.
    */
-  updateShapes() {
+  _updateShapes() {
 
+    console.log("layer updateShapes called");
+    
     const before = performance.now();
     
     this._updateRenderingContext();
