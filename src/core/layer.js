@@ -666,7 +666,7 @@ export default class Layer extends events.EventEmitter {
   /**
    * Retrieve all the items in a given area as defined in the registered `Shape~inArea` method.
    *
-   * @param {Object} area - The area in which to find the elements
+   * @param {Object} area - The area (in viewport coordinate space) in which to find the elements
    * @param {Number} area.top
    * @param {Number} area.left
    * @param {Number} area.width
@@ -675,17 +675,9 @@ export default class Layer extends events.EventEmitter {
    */
   getItemsInArea(area) {
 
-    //!!! todo rejig
-    
-    const start    = this.timeContext.parent.timeToPixel(this.timeContext.start);
-    const duration = this.timeContext.timeToPixel(this.timeContext.duration);
-    const offset   = this.timeContext.timeToPixel(this.timeContext.offset);
-    const top      = this.params.top;
-    // be aware af context's translations - constrain in working view
-    let x1 = Math.max(area.left, start);
-    let x2 = Math.min(area.left + area.width, start + duration);
-    x1 -= (start + offset);
-    x2 -= (start + offset);
+    let x1 = area.left;
+    let x2 = area.left + area.width;
+
     // keep consistent with context y coordinates system
     let y1 = this.params.height - (area.top + area.height);
     let y2 = this.params.height - area.top;
