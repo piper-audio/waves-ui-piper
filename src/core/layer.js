@@ -440,23 +440,8 @@ export default class Layer extends events.EventEmitter {
     // 
     // To arrange pixel 0 at the left edge, we need to ensure that the
     // time-to-pixel mapping places time 0 at pixel -minX where minX
-    // is as calculated in this code previously:
-    // 
-    //   let minX = Math.max(-this._renderingContext.offsetX, 0);
-    //   let trackDecay =
-    //     this._renderingContext.trackOffsetX +
-    //     this._renderingContext.startX;
-    //   if (trackDecay < 0) { minX = -trackDecay; }
-    //
-    // where the start and offset values in the above code were
-    // derived as:
-    // 
-    //   this._renderingContext.offsetX =
-    //     this.timeContext.timeToPixel(this.timeContext.offset);
-    //   this._renderingContext.startX =
-    //     this.timeContext.parent.timeToPixel(this.timeContext.start);
-    //   this._renderingContext.trackOffsetX =
-    //     this.timeContext.parent.timeToPixel(this.timeContext.parent.offset);
+    // is the time context's timeToPixel mapping of the sum of all
+    // applicable time offsets.
     
     const layerStartTime = this.timeContext.start;
     const layerOffsetTime = this.timeContext.offset;
@@ -465,9 +450,6 @@ export default class Layer extends events.EventEmitter {
     const layerOriginTime = trackOffsetTime + layerStartTime;
 
     const viewStartTime = -layerOriginTime - layerOffsetTime;
-
-//    const viewStartTime = (layerOriginTime < 0 ? -layerOriginTime :
-//                           layerOffsetTime < 0 ? -layerOffsetTime : 0);
 
     console.log("viewStartTime = " + viewStartTime);
     
@@ -481,59 +463,10 @@ export default class Layer extends events.EventEmitter {
     this._renderingContext.width = this._renderingContext.visibleWidth;
     this._renderingContext.maxX = this._renderingContext.visibleWidth;
     
-    // This is the track offset (derived from the layer time context's
-    // parent offset, this.timeContext.parent.offset) plus the layer
-    // offset (derived from this.timeContext.offset).
-    
     this._renderingContext.height = this.params.height;
     this._renderingContext.valueToPixel = this._valueToPixel;
-/*
-    const scale = scales.linear()
-          .domain([0, 1])
-          .range([0, pixelsPerSecond]);
-    
-    this._renderingContext.timeToPixel = scale;
-*/
-//    this._renderingContext.timeToPixel = this.timeContext.timeToPixel;
-    
-//    this._renderingContext.width = this.timeContext.timeToPixel(this.timeContext.duration);
-
-    // for foreign object issue in chrome
-//    this._renderingContext.startX = this.timeContext.parent.timeToPixel(this.timeContext.start);
-
-//    this._renderingContext.trackOffsetX = this.timeContext.parent.timeToPixel(this.timeContext.parent.offset);
-//    this._renderingContext.visibleWidth = this.timeContext.parent.visibleWidth;
-
-    //!!! + review axis-layer.js
-    
-    this._updateRenderingContextExtents();
-
-//    console.log("Rendering context: startX = " + this._renderingContext.startX + ", offsetX = " + this._renderingContext.offsetX + " (from time offset " + this.timeContext.offset + "), track offset = " + this._renderingContext.trackOffsetX + " (from track time offset " + this.timeContext.parent.offset + "), width = " + this._renderingContext.width + ", visibleWidth = " + this._renderingContext.visibleWidth + ", minX = " + this._renderingContext.minX + ", maxX = " + this._renderingContext.maxX);
 
     console.log("Rendering context: width = " + this._renderingContext.width + ", visibleWidth = " + this._renderingContext.visibleWidth + ", minX = " + this._renderingContext.minX + " (time = " + this._renderingContext.timeToPixel.invert(this._renderingContext.minX) + "), maxX = " + this._renderingContext.maxX + " (time = " + this._renderingContext.timeToPixel.invert(this._renderingContext.maxX) + ")");
-  }
-
-  _updateRenderingContextExtents() {
-    
-    // calculate the visible area, storing it so shapes can
-    // determine which bits they need to redraw
-    // @TODO refactor this ununderstandable mess
-/*    
-    let minX = Math.max(-this._renderingContext.offsetX, 0);
-
-    let trackDecay =
-        this._renderingContext.trackOffsetX +
-        this._renderingContext.startX;
-    if (trackDecay < 0) { minX = -trackDecay; }
-
-    let maxX = minX;
-    maxX += (this._renderingContext.width - minX <
-             this._renderingContext.visibleWidth) ?
-      this._renderingContext.width : this._renderingContext.visibleWidth;
-
-    this._renderingContext.minX = minX;
-    this._renderingContext.maxX = maxX;
-*/
   }
 
   // --------------------------------------
