@@ -1,5 +1,6 @@
 import ns from '../core/namespace';
 import Layer from '../core/layer';
+import scales from '../utils/scales';
 
 
 /**
@@ -76,20 +77,23 @@ export default class AxisLayer extends Layer {
    * Updates the rendering context for the shapes.
    */
   _updateRenderingContext() {
-    this._renderingContext.timeToPixel = this.timeContext.timeToPixel;
-    this._renderingContext.valueToPixel = this._valueToPixel;
-    this._renderingContext.height = this.params.height;
-    this._renderingContext.width  = this.timeContext.timeToPixel(this.timeContext.duration);
+    
+    const viewStartTime = -this.timeContext.offset;
 
-    // for foreign object issue in chrome
-    this._renderingContext.offsetX = this.timeContext.timeToPixel(this.timeContext.offset);
-    this._renderingContext.startX = this.timeContext.timeToPixel(this.timeContext.start);
+    console.log("viewStartTime = " + viewStartTime);
+    
+    this._renderingContext.timeToPixel = scales.linear()
+      .domain([viewStartTime, viewStartTime + 1])
+      .range([0, this.timeContext.timeToPixel(1)]);
+    
+    this._renderingContext.minX = 0;
 
-    // expose some timeline attributes - allow to improve perf in some cases - cf. Waveform
-    this._renderingContext.trackOffsetX = this.timeContext.timeToPixel(this.timeContext.offset);
     this._renderingContext.visibleWidth = this.timeContext.visibleWidth;
-
-    super._updateRenderingContextExtents();
+    this._renderingContext.width = this._renderingContext.visibleWidth;
+    this._renderingContext.maxX = this._renderingContext.visibleWidth;
+    
+    this._renderingContext.height = this.params.height;
+    this._renderingContext.valueToPixel = this._valueToPixel;
   }
 
   /**
