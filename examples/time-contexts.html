@@ -75,17 +75,17 @@
 
     new wavesBasicControllers.Slider('start', 0, 15, 0.1, 0, 's', '', $controls, function(value) {
       layers[0].timeContext.start = value;
-      layers[0].updateContainer();
+      layers[0].update();
     });
 
     new wavesBasicControllers.Slider('duration', 0, 20, 0.1, 20, 's', '', $controls, function(value) {
       layers[0].timeContext.duration = value;
-      layers[0].updateContainer();
+      layers[0].update();
     });
 
     new wavesBasicControllers.Slider('offset', -15, 0, 0.1, 0, 's', '', $controls, function(value) {
       layers[0].timeContext.offset = value;
-      layers[0].updateContainer();
+      layers[0].update();
     });
 
     new wavesBasicControllers.Slider('stretchRatio', 1, 2, 0.01, 1, '', '', $controls, function(value) {
@@ -98,17 +98,17 @@
 
     new wavesBasicControllers.Slider('start', 0, 15, 0.1, 0, 's', '', $controls, function(value) {
       layers[1].timeContext.start = value;
-      layers[1].updateContainer();
+      layers[1].update();
     });
 
     new wavesBasicControllers.Slider('duration', 0, 20, 0.1, 20, 's', '', $controls, function(value) {
       layers[1].timeContext.duration = value;
-      layers[1].updateContainer();
+      layers[1].update();
     });
 
     new wavesBasicControllers.Slider('offset', 0, 15, 0.1, 0, 's', '', $controls, function(value) {
       layers[1].timeContext.offset = -value;
-      layers[1].updateContainer();
+      layers[1].update();
     });
 
     new wavesBasicControllers.Slider('stretchRatio', 1, 2, 0.01, 1, '', '', $controls, function(value) {
@@ -121,7 +121,7 @@
 
     new wavesBasicControllers.Slider('offset', 0, 10, 0.1, 0, 's', '', $controls, function(value) {
       timeline.offset = -value;
-      timeline.tracks.updateContainer();
+      timeline.tracks.update();
     });
 
     new wavesBasicControllers.Slider('zoom', 1, 2, 0.01, 1, '', '', $controls, function(value) {
