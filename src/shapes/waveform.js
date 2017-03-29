@@ -23,6 +23,7 @@ export default class Waveform extends BaseShape {
       sampleRate: 44100,
       color: '#000000',
       opacity: 1,
+      peakCacheBlockSize: 32,
     };
   }
 
@@ -31,8 +32,6 @@ export default class Waveform extends BaseShape {
 
     this.$el = document.createElementNS(this.ns, 'path');
     this.$el.setAttributeNS(null, 'fill', 'none');
-//    this.$el.setAttributeNS(null, 'shape-rendering', 'crispEdges');
-    this.$el.setAttributeNS(null, 'shape-rendering', 'geometricPrecision');
     this.$el.setAttributeNS(null, 'stroke', this.params.color);
     this.$el.style.opacity = this.params.opacity;
 
@@ -102,7 +101,7 @@ export default class Waveform extends BaseShape {
     // moment it can't. And the more complex logic would carry its own
     // overhead.
     
-    const blockSize = 32;
+    const blockSize = this.params.peakCacheBlockSize;
     let [ peaks, troughs ] = peakCacheFor(samples, blockSize);
     
     return {
@@ -221,6 +220,7 @@ export default class Waveform extends BaseShape {
     });
 
     const d = 'M' + instructions.join('L');
+    this.$el.setAttributeNS(null, 'shape-rendering', 'crispEdges');
     this.$el.setAttributeNS(null, 'stroke-width', 1.0);
     this.$el.setAttributeNS(null, 'd', d);
   }
@@ -270,6 +270,7 @@ export default class Waveform extends BaseShape {
     }
     
     const d = instructions.join('');
+    this.$el.setAttributeNS(null, 'shape-rendering', 'geometricPrecision');
     this.$el.setAttributeNS(null, 'stroke-width', 0.6);
     this.$el.setAttributeNS(null, 'd', d);
   }
@@ -281,19 +282,32 @@ export default class Waveform extends BaseShape {
     const before = performance.now();
 
     const sampleRate = this.params.sampleRate;
-    const pixelToSample = (pixel => {
-      return Math.floor (sampleRate * renderingContext.timeToPixel.invert(pixel));
-    });
-    const sampleToPixel = (sample => {
-      return renderingContext.timeToPixel(sample / sampleRate); // not rounded
-    });
-
     const minX = renderingContext.minX;
+    
     const step = sampleRate * (renderingContext.timeToPixel.invert(minX + 1) -
 			       renderingContext.timeToPixel.invert(minX));
 
-    console.log("waveform update: pixel step = " + step + " samples");
+    const snapToCacheBoundaries = (step >= this.params.peakCacheBlockSize * 2);
     
+    console.log("waveform update: pixel step = " + step + " samples, snapToCacheBoundaries = " + snapToCacheBoundaries);
+
+    const pixelToSampleSnapped = (pixel => {
+      return this.params.peakCacheBlockSize *
+	Math.floor ((sampleRate * renderingContext.timeToPixel.invert(pixel)) /
+		    this.params.peakCacheBlockSize);
+    });
+    const pixelToSampleUnsnapped = (pixel => {
+      return Math.floor (sampleRate * renderingContext.timeToPixel.invert(pixel));
+    });
+    const pixelToSample = (snapToCacheBoundaries ?
+			   pixelToSampleSnapped :
+			   pixelToSampleUnsnapped);
+    
+    const sampleToPixel = (sample => {
+      // neither snapped nor even rounded to integer pixel
+      return renderingContext.timeToPixel(sample / sampleRate);
+    });
+
     if (step > 1.0) {
       this._updateSummarising(renderingContext, cache,
 			      pixelToSample);
