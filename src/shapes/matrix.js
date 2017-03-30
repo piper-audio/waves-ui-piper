@@ -30,7 +30,8 @@ export default class Matrix extends BaseShape {
         return [ level, level, level ];
       }),
       gain: 1.0,
-      smoothing: false // NB with smoothing we get visible joins at tile boundaries
+      smoothing: false, // NB with smoothing we get visible joins at tile boundaries
+      maxDataUriLength: 32767 // old IE browser limitation, others are more helpful
     };
   }
 
@@ -42,7 +43,6 @@ export default class Matrix extends BaseShape {
       // for Chrome
       this.$el.setAttributeNS(null, 'image-rendering', 'pixelated');
     }
-//    this.lastUpdateHop = 0;
     console.log("matrix render returning");
     return this.$el;
   }
@@ -110,11 +110,21 @@ export default class Matrix extends BaseShape {
 
     const height = matrixEntity.getColumnHeight();
     const totalWidth = matrixEntity.getColumnCount();
-    let tileWidth = 100;
-    if (totalWidth < tileWidth * 2) {
-      tileWidth = totalWidth;
-    }
 
+    // We use one byte per pixel, as our PNG is indexed but
+    // uncompressed, and base64 encoding increases that to 4/3
+    // characters per pixel. The header and data URI scheme stuff add
+    // a further 1526 chars after encoding, which we round up to 1530
+    // for paranoia.
+    const maxPixels = Math.floor((this.params.maxDataUriLength * 3) / 4 - 1530);
+    let tileWidth = Math.floor(maxPixels / height);
+    if (tileWidth < 1) {
+      console.log("WARNING: Matrix shape tile width of " + tileWidth +
+                  " calculated for height " + height +
+                  ", using 1 instead: this may exceed maxDataUriLength of " +
+                  this.params.maxDataUriLength);
+      tileWidth = 1;
+    }
     console.log("totalWidth = " + totalWidth + ", tileWidth = " + tileWidth);
 
     let resources = [];
