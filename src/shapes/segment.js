@@ -30,31 +30,37 @@ export default class Segment extends BaseShape {
     this.$segment.style.opacity = this.params.opacity;
     this.$segment.setAttributeNS(null, 'shape-rendering', 'geometricPrecision');
 
-    if (this.params.displayHandlers) {
+    const useShortcut = (this.getClassName() == 'segment' && // not a subclass
+                         !this.params.displayHandlers);
 
-      this.$el = document.createElementNS(this.ns, 'g');
-      this.$el.appendChild(this.$segment);
-      
-      this.$leftHandler = document.createElementNS(this.ns, 'rect');
-      this.$leftHandler.classList.add('left', 'handler');
-      this.$leftHandler.setAttributeNS(null, 'width', this.params.handlerWidth);
-      this.$leftHandler.setAttributeNS(null, 'shape-rendering', 'crispEdges');
-      this.$leftHandler.style.opacity = this.params.handlerOpacity;
-      this.$leftHandler.style.cursor = 'ew-resize';
+    if (useShortcut) {
 
-      this.$rightHandler = document.createElementNS(this.ns, 'rect');
-      this.$rightHandler.classList.add('right', 'handler');
-      this.$rightHandler.setAttributeNS(null, 'width', this.params.handlerWidth);
-      this.$rightHandler.setAttributeNS(null, 'shape-rendering', 'crispEdges');
-      this.$rightHandler.style.opacity = this.params.handlerOpacity;
-      this.$rightHandler.style.cursor = 'ew-resize';
-
-      this.$el.appendChild(this.$leftHandler);
-      this.$el.appendChild(this.$rightHandler);
+      this.$el = this.$segment;
 
     } else {
 
-      this.$el = this.$segment;
+      this.$el = document.createElementNS(this.ns, 'g');
+      this.$el.appendChild(this.$segment);
+
+      if (this.params.displayHandlers) {
+        
+        this.$leftHandler = document.createElementNS(this.ns, 'rect');
+        this.$leftHandler.classList.add('left', 'handler');
+        this.$leftHandler.setAttributeNS(null, 'width', this.params.handlerWidth);
+        this.$leftHandler.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+        this.$leftHandler.style.opacity = this.params.handlerOpacity;
+        this.$leftHandler.style.cursor = 'ew-resize';
+
+        this.$rightHandler = document.createElementNS(this.ns, 'rect');
+        this.$rightHandler.classList.add('right', 'handler');
+        this.$rightHandler.setAttributeNS(null, 'width', this.params.handlerWidth);
+        this.$rightHandler.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+        this.$rightHandler.style.opacity = this.params.handlerOpacity;
+        this.$rightHandler.style.cursor = 'ew-resize';
+
+        this.$el.appendChild(this.$leftHandler);
+        this.$el.appendChild(this.$rightHandler);
+      }
     }
 
     return this.$el;
