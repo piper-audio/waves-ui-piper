@@ -61,7 +61,7 @@
       if (segment !== null) {
         var datum = segmentLayer.getDatumFromItem(segment);
         datum.opacity = eventType === 'mouseover' ? 1 : 0.8;
-        segmentLayer.updateShapes();
+        segmentLayer.update();
       }
     });
   }());
@@ -112,7 +112,7 @@
       if (segment !== null) {
         var datum = segmentLayer.getDatumFromItem(segment);
         datum.opacity = eventType === 'mouseover' ? 1 : 0.8;
-        segmentLayer.updateShapes();
+        segmentLayer.update();
       }
     });
   }());
