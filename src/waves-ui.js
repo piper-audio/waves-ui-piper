@@ -55,6 +55,7 @@ import GridAxisLayer from './helpers/grid-axis-layer';
 import LineLayer from './helpers/line-layer';
 import MarkerLayer from './helpers/marker-layer';
 import MatrixLayer from './helpers/matrix-layer';
+import PianoRollLayer from './helpers/pianoroll-layer';
 import SegmentLayer from './helpers/segment-layer';
 import TickLayer from './helpers/tick-layer';
 import TimeAxisLayer from './helpers/time-axis-layer';
@@ -93,8 +94,8 @@ export default {
   },
   helpers: {
     AnnotatedMarkerLayer, AnnotatedSegmentLayer, BreakpointLayer,
-    CursorLayer, GridAxisLayer, LineLayer, MarkerLayer, MatrixLayer, SegmentLayer,
-    TickLayer, TimeAxisLayer, TraceLayer, WaveformLayer
+    CursorLayer, GridAxisLayer, LineLayer, MarkerLayer, MatrixLayer, PianoRollLayer,
+    SegmentLayer, TickLayer, TimeAxisLayer, TraceLayer, WaveformLayer
   },
   axis: {
     AxisLayer, timeAxisGenerator, gridAxisGenerator

@@ -25,16 +25,16 @@ export default class Segment extends BaseShape {
   render(renderingContext) {
     if (this.$el) { return this.$el; }
 
-    this.$el = document.createElementNS(this.ns, 'g');
-
     this.$segment = document.createElementNS(this.ns, 'rect');
     this.$segment.classList.add('segment');
     this.$segment.style.opacity = this.params.opacity;
-    this.$segment.setAttributeNS(null, 'shape-rendering', 'crispEdges');
-
-    this.$el.appendChild(this.$segment);
+    this.$segment.setAttributeNS(null, 'shape-rendering', 'geometricPrecision');
 
     if (this.params.displayHandlers) {
+
+      this.$el = document.createElementNS(this.ns, 'g');
+      this.$el.appendChild(this.$segment);
+      
       this.$leftHandler = document.createElementNS(this.ns, 'rect');
       this.$leftHandler.classList.add('left', 'handler');
       this.$leftHandler.setAttributeNS(null, 'width', this.params.handlerWidth);
@@ -51,26 +51,33 @@ export default class Segment extends BaseShape {
 
       this.$el.appendChild(this.$leftHandler);
       this.$el.appendChild(this.$rightHandler);
+
+    } else {
+
+      this.$el = this.$segment;
     }
 
     return this.$el;
   }
 
   update(renderingContext, datum) {
+    
     const x = renderingContext.timeToPixel(this.x(datum));
     const y = renderingContext.valueToPixel(this.y(datum));
 
     const width = renderingContext.timeToPixel(this.x(datum) +
-                                               this.width(datum)) -
-          renderingContext.timeToPixel(this.x(datum));
-    
+                                               this.width(datum)) - x;
+
     const height = renderingContext.valueToPixel(this.height(datum));
 
+    this.$segment.setAttributeNS(null, 'x', x);
+    this.$segment.setAttributeNS(null, 'y', y);
     this.$segment.setAttributeNS(null, 'width', Math.max(width, 0));
     this.$segment.setAttributeNS(null, 'height', height);
 
     const visible = (x + width >= renderingContext.minX &&
                      x <= renderingContext.maxX);
+
     if (!visible) {
       this.$el.setAttributeNS(null, 'visibility', 'hidden');
       return;
@@ -81,19 +88,19 @@ export default class Segment extends BaseShape {
     const color = this.color(datum);
     const opacity = this.opacity(datum);
 
-    this.$el.setAttributeNS(null, 'transform', `translate(${x}, ${y})`);
     this.$el.style.opacity = opacity;
     this.$segment.style.fill = color;
 
     if (this.params.displayHandlers) {
-      // display handlers
+      this.$leftHandler.setAttributeNS(null, 'x', x);
+      this.$leftHandler.setAttributeNS(null, 'y', 0);
       this.$leftHandler.setAttributeNS(null, 'height', height);
-      this.$leftHandler.setAttributeNS(null, 'transform', 'translate(0, 0)');
       this.$leftHandler.style.fill = color;
 
-      const rightHandlerTranslate = `translate(${width - this.params.handlerWidth}, 0)`;
+      this.$rightHandler.setAttributeNS(null, 'x',
+                                        x + width - this.params.handlerWidth);
+      this.$rightHandler.setAttributeNS(null, 'y', 0);
       this.$rightHandler.setAttributeNS(null, 'height', height);
-      this.$rightHandler.setAttributeNS(null, 'transform', rightHandlerTranslate);
       this.$rightHandler.style.fill = color;
     }
   }

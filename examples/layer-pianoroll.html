@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Piano Roll Layer</title>
+
+  <link rel="stylesheet" type="text/css" href="./assets/common.css" />
+  <link rel="stylesheet" type="text/css" href="./assets/prism.css" />
+
+  <script src="../waves-ui.umd.js"></script>
+  <script src="./assets/prism.js"></script>
+  <script src="./assets/insert-code.js"></script>
+  <script src="./assets/waves-loaders.min.js"></script>
+</head>
+<body>
+
+  <h1>Piano Roll Layer</h1>
+
+  <div class="track" id="track-1"></div>
+  <script class="example" rel="track-1">
+    var loader = new wavesLoaders.Loader();
+
+    loader.load('./assets/notes.json').then(function(notes) {
+
+      var $track = document.querySelector('#track-1');
+      var width = $track.getBoundingClientRect().width;
+      var height = 200;
+      var duration = 160;
+      var pixelsPerSecond = 20;
+      var timeline = new wavesUI.core.Timeline(pixelsPerSecond, width);
+
+      timeline.createTrack($track, height, 'main');
+
+      var pianoRollLayer = new wavesUI.helpers.PianoRollLayer(notes, {
+        height: height
+      });
+
+      var timeContext = new wavesUI.core.LayerTimeContext(timeline.timeContext);
+      timeContext.duration = duration;
+      timeContext.start = 0;
+      pianoRollLayer.setTimeContext(timeContext);
+    
+      timeline.addLayer(pianoRollLayer, 'main');
+
+      timeline.state = new wavesUI.states.CenteredZoomState(timeline);
+    });
+  </script>
+</body>
+</html>
