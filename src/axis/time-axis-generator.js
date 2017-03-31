@@ -75,6 +75,14 @@ export default function timeAxisGenerator() {
       type = 'ms';
     }
 
+    if (pixelsPerSecond / 10000 > minStep) {
+      step = 1 / 10000;
+      toFixed = 4;
+      markerModulo = 10;
+      includeModulo = 1;
+      type = 'ms-1'; 
+    }
+
     for (let time = min; time < max; time += step) {
       const formattedTime = time.toFixed(toFixed);
 
