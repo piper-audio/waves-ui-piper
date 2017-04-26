@@ -202,7 +202,7 @@ export default class BaseShape {
 
   /**
    * Interface method that returns a value or description for salient
-   * features of the shape at the given x-coordinate in the pixel domain.
+   * features of the shape at the given x-coordinate (in time).
    */
-  describe(renderingContext, datum, x) {}
+  describe(datum, x) { return null; }
 }

@@ -129,10 +129,9 @@ export default class Line extends BaseShape {
     return 'M' + instructions.join('L');
   }
 
-  describe(renderingContext, data, x) {
+  describe(data, t) {
     if (!data.length) return 0;
-    let cx = renderingContext.timeToPixel.invert(x);
-    let i = this._findInData(data, cx);
+    let i = this._findInData(data, t);
     return data[i];
   }
 }
