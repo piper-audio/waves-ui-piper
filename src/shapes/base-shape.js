@@ -199,4 +199,10 @@ export default class BaseShape {
    * @return {Boolean} - Returns `true` if the is considered to be in the given area, `false` otherwise.
    */
   inArea(renderingContext, datum, x1, y1, x2, y2) {}
+
+  /**
+   * Interface method that returns a value or description for salient
+   * features of the shape at the given x-coordinate in the pixel domain.
+   */
+  describe(renderingContext, datum, x) {}
 }
