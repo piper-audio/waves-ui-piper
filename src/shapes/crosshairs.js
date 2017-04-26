@@ -42,7 +42,7 @@ export default class Crosshairs extends BaseShape {
     const h = renderingContext.height;
     
     this.$el.setAttributeNS(null, 'd',
-                            `M${x},${0}L${x},${h}M${minX},${y}L${maxX},${y}`)
+                            `M${x},${0}L${x},${h}M${minX},${y}L${maxX},${y}`);
   }
 
   /**
