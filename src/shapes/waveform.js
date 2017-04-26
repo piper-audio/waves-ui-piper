@@ -14,7 +14,6 @@ export default class Waveform extends BaseShape {
   getClassName() { return 'waveform'; }
 
   _getAccessorList() {
-    // return { y: 0 };
     return {};
   }
 
