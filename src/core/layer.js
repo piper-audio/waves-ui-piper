@@ -398,7 +398,7 @@ export default class Layer extends events.EventEmitter {
   }
 
   /**
-   * Optionnaly register a shape to be used accros the entire collection.
+   * Optionally register a shape to be used across the entire collection.
    *
    * @param {BaseShape} ctor - The constructor of the shape to be used.
    * @param {Object} [accessors={}] - Defines how the shape should adapt to a particular data struture.
