@@ -880,4 +880,14 @@ export default class Layer extends events.EventEmitter {
     const after = performance.now();
     console.log("layer update time = " + Math.round(after - before));
   }
+
+  describe(x) {
+    for (let [$item, datum] of this._$itemDataMap.entries()) {
+      const shape = this._$itemShapeMap.get($item);
+      const description = shape.describe(datum, x);
+      if (description !== null) {
+        return description;
+      }
+    }
+  }
 }

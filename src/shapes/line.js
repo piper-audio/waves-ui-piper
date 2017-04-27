@@ -21,7 +21,7 @@ export default class Line extends BaseShape {
     if (this.$el) { return this.$el; }
 
     this.$el = document.createElementNS(this.ns, 'path');
-    // this.el.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+    this.$el.setAttributeNS(null, 'shape-rendering', 'geometricPrecision');
     return this.$el;
   }
 
@@ -125,6 +125,19 @@ export default class Line extends BaseShape {
   describe(data, t) {
     if (!data.length) return 0;
     let i = this._findInData(data, t);
-    return this.cy(data[i]);
+    const cy = this.cy(data[i]);
+    let value = cy;
+    if (typeof(data[i].value) !== 'undefined') {
+      value = data[i].value;
+    }
+    let unit = "";
+    if (typeof(data[i].unit) !== 'undefined') {
+      unit = data[i].unit;
+    }
+    return [{
+      cy: cy,
+      value: value,
+      unit: unit
+    }];
   }
 }
