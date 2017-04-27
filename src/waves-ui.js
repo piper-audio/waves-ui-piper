@@ -11,6 +11,7 @@ import Track from './core/track';
 import AnnotatedMarker from './shapes/annotated-marker';
 import AnnotatedSegment from './shapes/annotated-segment';
 import BaseShape from './shapes/base-shape';
+import Crosshairs from './shapes/crosshairs';
 import Cursor from './shapes/cursor';
 import Dot from './shapes/dot';
 import Line from './shapes/line';
@@ -52,6 +53,7 @@ import AnnotatedSegmentLayer from './helpers/annotated-segment-layer';
 import BreakpointLayer from './helpers/breakpoint-layer';
 import CursorLayer from './helpers/cursor-layer';
 import GridAxisLayer from './helpers/grid-axis-layer';
+import HighlightLayer from './helpers/highlight-layer';
 import LineLayer from './helpers/line-layer';
 import MarkerLayer from './helpers/marker-layer';
 import MatrixLayer from './helpers/matrix-layer';
@@ -80,7 +82,7 @@ export default {
     TimelineTimeContext, Timeline, TrackCollection, Track
   },
   shapes: {
-    AnnotatedMarker, AnnotatedSegment, BaseShape, Cursor,
+    AnnotatedMarker, AnnotatedSegment, BaseShape, Crosshairs, Cursor,
     Dot, Line, Marker, Matrix, Segment, Ticks, TracePath, TraceDots, Waveform
   },
   behaviors: {
@@ -94,7 +96,7 @@ export default {
   },
   helpers: {
     AnnotatedMarkerLayer, AnnotatedSegmentLayer, BreakpointLayer,
-    CursorLayer, GridAxisLayer, LineLayer, MarkerLayer, MatrixLayer, PianoRollLayer,
+    CursorLayer, GridAxisLayer, HighlightLayer, LineLayer, MarkerLayer, MatrixLayer, PianoRollLayer,
     SegmentLayer, TickLayer, TimeAxisLayer, TraceLayer, WaveformLayer
   },
   axis: {
