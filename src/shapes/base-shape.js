@@ -203,6 +203,11 @@ export default class BaseShape {
   /**
    * Interface method that returns a value or description for salient
    * features of the shape at the given x-coordinate (in time).
+   *
+   * The return value should be an array of objects each having
+   * properties "value" (underlying value of datum at or nearest to
+   * the given time), "unit" (unit of value as a string), and "cy"
+   * (y-coord).
    */
-  describe(datum, x) { return null; }
+  describe(datum, x) { return []; }
 }
