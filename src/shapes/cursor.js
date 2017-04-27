@@ -28,7 +28,9 @@ export default class Cursor extends BaseShape {
     this.$el.setAttributeNS(null, 'x', 0);
     this.$el.setAttributeNS(null, 'y1', 0);
     this.$el.setAttributeNS(null, 'y2', renderingContext.height);
-    this.$el.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+//    this.$el.setAttributeNS(null, 'shape-rendering', 'crispEdges');
+    this.$el.setAttributeNS(null, 'shape-rendering', 'geometricPrecision');
+    this.$el.setAttributeNS(null, 'stroke-width', '2');
     this.$el.style.stroke = this.params.color;
 
     return this.$el;
