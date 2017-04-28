@@ -62,19 +62,39 @@ export default class Scale extends BaseShape {
     const cy0 = renderingContext.valueToPixel.domain()[0];
     const cy1 = renderingContext.valueToPixel.domain()[1];
 
+    if (typeof(this.lastCy0) !== 'undefined') {
+      if (this.lastCy0 === cy0 &&
+	  this.lastCy1 === cy1 &&
+	  this.lastH === h) {
+	return;
+      }
+    }
+    this.lastCy0 = cy0;
+    this.lastCy1 = cy1;
+    this.lastH = h;
+    
+    console.log("cy0 = " + cy0);
+    console.log("cy1 = " + cy1);
 
     let n = 10;
     let val = cy0;
     let inc = (cy1 - cy0) / n;
     
     let dp = 0;
+    let sf = 0;
     let round = 1.0;
     if (inc > 0) {
       let prec = Math.trunc(Math.log10(inc)) - 1;
       if (prec < 0) {
         dp = -prec;
+	sf = 2;
+      } else {
+	sf = prec;
       }
       round = Math.pow(10.0, prec);
+
+      console.log("inc = " + inc + ", prec = " + prec + ", dp = " + dp + ", sf = " +
+		sf + ", round = " + round);
     }
 
     let prevy = -1;
@@ -89,7 +109,9 @@ export default class Scale extends BaseShape {
 
       let dispval = Math.round(val / round) * round;
       let y = renderingContext.valueToPixel(dispval);
-      
+
+      console.log("i = " + i + " -> val = " + val + ", dispval = " + dispval + ", y = " + y);
+	
       let ly = h - y - 5;
       if (ly < 10) {
         ly = h - y + 15;
@@ -111,15 +133,20 @@ export default class Scale extends BaseShape {
       this.$el.appendChild($label);
 
       $label.setAttributeNS(
-        null, 'transform', `matrix(1, 0, 0, -1, 0, ${h})`
+        null, 'transform', `matrix(1, 0, 0, -1, 15, ${h})`
       );
       
       $label.setAttributeNS(null, 'y', ly);
       
-      const label = dispval.toPrecision(4);
+      const label = dispval.toPrecision(sf);
       const $text = document.createTextNode(label);
       $label.appendChild($text);
+
+      prevy = y;
+      val += inc;
     }
+
+    this.$path.setAttributeNS(null, 'd', path);
   }
 
   /**
