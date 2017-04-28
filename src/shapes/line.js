@@ -125,18 +125,15 @@ export default class Line extends BaseShape {
   describe(data, t) {
     if (!data.length) return 0;
     let i = this._findInData(data, t);
+    const cx = this.cx(data[i]);
     const cy = this.cy(data[i]);
-    let value = cy;
-    if (typeof(data[i].value) !== 'undefined') {
-      value = data[i].value;
-    }
     let unit = "";
     if (typeof(data[i].unit) !== 'undefined') {
       unit = data[i].unit;
     }
     return [{
+      cx: cx,
       cy: cy,
-      value: value,
       unit: unit
     }];
   }

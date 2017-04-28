@@ -205,9 +205,9 @@ export default class BaseShape {
    * features of the shape at the given x-coordinate (in time).
    *
    * The return value should be an array of objects each having
-   * properties "value" (underlying value of datum at or nearest to
-   * the given time), "unit" (unit of value as a string), and "cy"
-   * (y-coord).
+   * properties "cy" (y-coord, i.e. underlying value of datum at or
+   * nearest to the given time), "cx" (x-coord in time of that datum)
+   * and optionally "unit" (unit of value as a string).
    */
   describe(datum, x) { return []; }
 }

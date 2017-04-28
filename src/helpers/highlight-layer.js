@@ -5,8 +5,9 @@ import Crosshairs from '../shapes/crosshairs';
  * Helper to create a crosshair layer that highlights the value
  * reported by an object's describe() method at a time set through the
  * currentPosition property. The describingObject must have a
- * describe(time) method that takes only a time and returns only a
- * value. An example of such an object might be another layer.
+ * describe(time) method that takes only a time and returns an array
+ * of { cx, cy, unit }. An example of such a describingObject might be
+ * another layer.
  *
  * [example usage](./examples/layer-highlight.html)
  */
@@ -42,9 +43,13 @@ export default class HighlightLayer extends Layer {
     super('entity', data, options);
 
     this.configureShape(Crosshairs, {
+      // We have a choice here -- use the x coord of the nearest point
+      // (the one that is also contributing its y coord) or use the x
+      // coord of the probe point. The latter looks better when the
+      // probe point is based on a cursor that is also displayed on
+      // this track. But it's a bit of a lie. Let's do it anyway
       cx: (d) => d.currentPosition,
       cy: (d) => d.describe()[0].cy,
-      value: (d) => d.describe()[0].value,
       unit: (d) => d.describe()[0].unit
     }, {
       color: options.color,

@@ -12,7 +12,7 @@ export default class Crosshairs extends BaseShape {
   getClassName() { return 'crosshairs'; }
 
   _getAccessorList() {
-    return { cx: 0, cy: 0, value: 0 };
+    return { cx: 0, cy: 0 };
   }
 
   _getDefaults() {
@@ -72,8 +72,7 @@ export default class Crosshairs extends BaseShape {
     this.$path.setAttributeNS(null, 'd',
                               `M${x},${0}L${x},${h}M${minX},${y}L${maxX},${y}`);
 
-    const value = this.value(datum);
-    const label = value.toPrecision(4);
+    const label = cy.toPrecision(4);
     const lw = label.length * 10;
 
     for (let i = 0; i < this.$labels.length; ++i) {
