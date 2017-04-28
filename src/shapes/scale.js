@@ -83,6 +83,7 @@ export default class Scale extends BaseShape {
     let dp = 0;
     let sf = 0;
     let round = 1.0;
+    let fixed = false;
     if (inc > 0) {
       let prec = Math.trunc(Math.log10(inc)) - 1;
       if (prec < 0) {
@@ -90,6 +91,12 @@ export default class Scale extends BaseShape {
 	sf = 2;
       } else {
 	sf = prec;
+      }
+      if (sf === 0) {
+	sf = 1;
+      }
+      if (prec < 4 && prec > -3) {
+	fixed = true;
       }
       round = Math.pow(10.0, prec);
 
@@ -137,8 +144,13 @@ export default class Scale extends BaseShape {
       );
       
       $label.setAttributeNS(null, 'y', ly);
-      
-      const label = dispval.toPrecision(sf);
+
+      let label = "";
+      if (fixed) {
+	label = dispval.toFixed(dp);
+      } else {
+	label = dispval.toPrecision(sf);
+      }
       const $text = document.createTextNode(label);
       $label.appendChild($text);
 
