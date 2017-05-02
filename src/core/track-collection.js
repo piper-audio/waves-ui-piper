@@ -37,10 +37,12 @@ export default class TrackCollection extends Array {
    * @type {Number} - Updates the height of all tracks at once.
    * @todo - Propagate to layers, not usefull for now.
    */
+/*
   set height(value) {
     this.forEach((track) => track.height = value);
   }
-
+*/
+    
   /**
    * An array of all registered layers.
    *
