@@ -14,6 +14,7 @@ export default class Scale extends BaseShape {
 
   _getDefaults() {
     return {
+      background: '#ffffff',
       tickColor: '#000000',
       textColor: '#000000',
       opacity: 1
@@ -24,6 +25,12 @@ export default class Scale extends BaseShape {
     if (this.$el) { return this.$el; }
 
     this.$el = document.createElementNS(this.ns, 'g');
+
+    this.$bg = document.createElementNS(ns, 'rect');
+    this.$bg.setAttributeNS(null, 'fill', this.params.background);
+    this.$bg.setAttributeNS(null, 'x', 0);
+    this.$bg.setAttributeNS(null, 'y', 0);
+    this.$el.appendChild(this.$bg);
 
     this.$path = document.createElementNS(ns, 'path');
     this.$path.setAttributeNS(null, 'shape-rendering', 'geometricPrecision');
@@ -62,13 +69,20 @@ export default class Scale extends BaseShape {
 
     let n = 10;
     let inc = (cy1 - cy0) / n;
-    
+
+    // todo: factor out, test
     let dp = 0;
     let sf = 0;
     let round = 1.0;
     let fixed = false;
     if (inc > 0) {
-      let prec = Math.trunc(Math.log10(inc)) - 1;
+      let ilg = Math.log10(inc);
+      let prec;
+      if (ilg > 0) {
+	prec = Math.round(ilg) - 1;
+      } else {
+	prec = Math.trunc(ilg) - 1;
+      }
       if (prec < 0) {
         dp = -prec;
 	sf = 2;
@@ -84,7 +98,11 @@ export default class Scale extends BaseShape {
       round = Math.pow(10.0, prec);
 
       console.log("inc = " + inc + ", prec = " + prec + ", dp = " + dp + ", sf = " +
-		sf + ", round = " + round);
+		  sf + ", round = " + round);
+      inc = Math.round(inc / round) * round;
+      console.log("rounding inc to " + inc);
+    } else {
+      inc = 1.0;
     }
 
     for (let i = 0; i < this.$labels.length; ++i) {
@@ -92,25 +110,15 @@ export default class Scale extends BaseShape {
     }
     this.$labels = [];
 
-    let scaleWidth = 30;
-    let path = `M${scaleWidth},0L${scaleWidth},${h}`;
+    let scaleWidth = 35;
+
+    this.$bg.setAttributeNS(null, 'width', scaleWidth);
+    this.$bg.setAttributeNS(null, 'height', h);
     
-    for (let i = 0; i < n; ++i) {
+    let path = `M${scaleWidth},0L${scaleWidth},${h}`;
 
-      let val = cy0 + i * inc;
-      let dispval = Math.round(val / round) * round;
-      let y = renderingContext.valueToPixel(dispval);
-
-      console.log("i = " + i + " -> val = " + val + ", dispval = " + dispval + ", y = " + y);
-
-      path = path + `M${scaleWidth*2/3},${y}L${scaleWidth},${y}`;
-	
-      let ly = h - y - 2;
-
-      if (ly < 10) {
-	continue;
-      }
-
+    const addLabel = ((value, x, y) => {
+    
       const $label = document.createElementNS(this.ns, 'text');
       $label.classList.add('label');
       $label.style.fontSize = '10px';
@@ -121,23 +129,60 @@ export default class Scale extends BaseShape {
       $label.style.mozUserSelect = 'none';
       $label.style.webkitUserSelect = 'none';
       $label.style.userSelect = 'none';
-      this.$labels.push($label);
-      this.$el.appendChild($label);
-
+      
       $label.setAttributeNS(
-        null, 'transform', `matrix(1, 0, 0, -1, 2, ${h})`
+	null, 'transform', `matrix(1, 0, 0, -1, ${x}, ${h})`
       );
       
-      $label.setAttributeNS(null, 'y', ly);
-
       let label = "";
       if (fixed) {
-	label = dispval.toFixed(dp);
+	label = value.toFixed(dp);
       } else {
-	label = dispval.toPrecision(sf);
+	label = value.toPrecision(sf);
       }
+
+      $label.setAttributeNS(null, 'y', y);
       const $text = document.createTextNode(label);
       $label.appendChild($text);
+
+      this.$labels.push($label);
+      this.$el.appendChild($label);
+    });
+
+    const lx = 2;
+    
+    let prevy = h + 2;
+				    
+    for (let i = 0; ; ++i) {
+
+      let val = cy0 + i * inc;
+      if (val >= cy1) {
+	break;
+      }
+      
+      let dispval = Math.round(val / round) * round;
+      let y = renderingContext.valueToPixel(dispval);
+
+      let ly = h - y + 3;
+
+      let showText = true;
+      if (ly > h - 8 || ly < 8 || ly > prevy - 20) {
+	// not enough space
+	showText = false;
+      }
+
+      console.log("i = " + i + " -> val = " + val + ", dispval = " + dispval + ", y = " + y);
+
+      if (!showText) {
+	
+	path = path + `M${scaleWidth-5},${y}L${scaleWidth},${y}`;
+
+      } else {
+
+	path = path + `M${scaleWidth-8},${y}L${scaleWidth},${y}`;
+	prevy = ly;
+	addLabel(dispval, lx, ly);
+      }
     }
 
     this.$path.setAttributeNS(null, 'd', path);

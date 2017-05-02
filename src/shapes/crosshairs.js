@@ -18,6 +18,7 @@ export default class Crosshairs extends BaseShape {
   _getDefaults() {
     return {
       color: '#000000',
+      labelOffset: 0,
       opacity: 1
     };
   }
@@ -62,6 +63,15 @@ export default class Crosshairs extends BaseShape {
     
     const cx = this.cx(datum);
     const cy = this.cy(datum);
+
+    if (typeof(this.lastCx) !== 'undefined') {
+      if (this.lastCx === cx && this.lastCy === cy) {
+	return;
+      }
+    }
+    this.lastCx = cx;
+    this.lastCy = cy;
+    
     const x = Math.round(renderingContext.timeToPixel(cx)) + 0.5;
     const y = Math.round(renderingContext.valueToPixel(cy)) + 0.5;
 
@@ -90,6 +100,7 @@ export default class Crosshairs extends BaseShape {
       if (i == 1) {
         lx = maxX - lw - 2;
       }
+      lx += this.params.labelOffset;
       
       $label.setAttributeNS(
         null, 'transform', `matrix(1, 0, 0, -1, ${lx}, ${h})`

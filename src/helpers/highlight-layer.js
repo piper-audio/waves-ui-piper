@@ -18,6 +18,7 @@ export default class HighlightLayer extends Layer {
   constructor(describingObject, options = {}) {
     const defaults = {
       color: 'red',
+      labelOffset: 0,
       hittable: false, // kind of pass through layer
     };
 
@@ -53,7 +54,8 @@ export default class HighlightLayer extends Layer {
       unit: (d) => d.describe()[0].unit
     }, {
       color: options.color,
-      opacity: options.opacity
+      opacity: options.opacity,
+      labelOffset: options.labelOffset
     });
   }
 
