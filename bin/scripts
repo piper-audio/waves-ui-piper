@@ -33,9 +33,15 @@ var browserifyOptions = {
 
 // colors for shell - for a more complete list
 // cf. http://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
-var red   = '\033[0;31m';
-var green = '\033[0;32m';
-var NC    = '\033[0m'; // No Color
+//var red   = '\033[0;31m';
+//var green = '\033[0;32m';
+//var NC    = '\033[0m'; // No Color
+
+// I don't really like console apps messing with different colours: it
+// presumes too much about the other colours in your environment --cc
+var red = '';
+var green = '';
+var NC = '';
 
 // COMMAND INTERPRETER
 // -----------------------------------------------
