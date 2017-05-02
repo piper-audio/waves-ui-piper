@@ -202,25 +202,37 @@ function uglify() {
   });
 }
 
+function walkSync(dir, filelist) {
+    var path = path || require('path');
+    var fs = fs || require('fs'),
+        files = fs.readdirSync(dir);
+    filelist = filelist || [];
+    files.forEach(function(file) {
+        if (fs.statSync(path.join(dir, file)).isDirectory()) {
+            filelist = walkSync(path.join(dir, file), filelist);
+        }
+        else {
+            filelist.push(path.join(dir, file));
+        }
+    });
+    return filelist;
+};
+
 // transpile all files in `srcDir`
 function transpileAll() {
-  var cmd = 'find ' + srcDir + ' \\( -type f -a -name \\*.js \\) -print';
-
-  childProcess.exec(cmd , function(err, stdout, stderr) {
-    if (err) { console.error(err); }
-    var fileList = stdout.split('\n');
+    var fileList = walkSync(srcDir, []);
 
     var stack = [];
 
     for (var i = 0; i < fileList.length; i++) {
-      var file = fileList[i];
-      if (!file) { continue; }
-
-      stack.push(file);
+	var file = fileList[i];
+	if (!file || !file.endsWith(".js")) {
+	    continue;
+	}
+	stack.push(file);
     }
 
     transpile(stack.shift(), stack);
-  });
 }
 
 // transpile one file or several files sequencially
