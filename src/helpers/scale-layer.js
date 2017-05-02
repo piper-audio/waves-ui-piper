@@ -13,7 +13,8 @@ export default class ScaleLayer extends Layer {
    */
   constructor(options = {}) {
     const defaults = {
-      color: 'red',
+      tickColor: 'red',
+      textColor: 'red',
       hittable: false, // kind of pass through layer
     };
 
@@ -23,7 +24,8 @@ export default class ScaleLayer extends Layer {
     super('entity', data, options);
 
     this.configureShape(Scale, { }, {
-      color: options.color
+      tickColor: options.tickColor,
+      textColor: options.textColor
     });
   }
 }

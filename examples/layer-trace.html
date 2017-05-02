@@ -52,6 +52,11 @@
       rangeColor: 'steelblue'
     });
 
+    var timeContext = new wavesUI.core.LayerTimeContext(timeline.timeContext);
+    timeContext.duration = duration;
+    timeContext.start = 0;
+    traceLayer.setTimeContext(timeContext);
+
     timeline.state = new wavesUI.states.CenteredZoomState(timeline);
     
     // insert the layer inside the 'main' track

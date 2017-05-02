@@ -109,8 +109,9 @@ export default class Line extends BaseShape {
     }          
 
     console.log("line instructions have " + instructions.length + " elements");
-    
-    this.$el.setAttributeNS(null, 'd', 'M' + instructions.join('L'));
+
+    const instructionStr = 'M' + instructions.join('L');
+    this.$el.setAttributeNS(null, 'd', instructionStr);
 
     this.$el.style.stroke = this.params.color;
     this.$el.style.strokeWidth = 2;

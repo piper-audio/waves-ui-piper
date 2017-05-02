@@ -14,7 +14,8 @@ export default class Scale extends BaseShape {
 
   _getDefaults() {
     return {
-      color: '#000000',
+      tickColor: '#000000',
+      textColor: '#000000',
       opacity: 1
     };
   }
@@ -26,31 +27,13 @@ export default class Scale extends BaseShape {
 
     this.$path = document.createElementNS(ns, 'path');
     this.$path.setAttributeNS(null, 'shape-rendering', 'geometricPrecision');
-    this.$path.setAttributeNS(null, 'stroke-width', '1');
+    this.$path.setAttributeNS(null, 'stroke-width', '0.7');
     this.$path.style.opacity = this.params.opacity;
-    this.$path.style.stroke = this.params.color;
+    this.$path.style.stroke = this.params.tickColor;
     this.$el.appendChild(this.$path);
 
     this.$labels = [];
 
-    /*document.createElementNS(this.ns, 'text'),
-      document.createElementNS(this.ns, 'text')
-    ];
-
-    for (let i = 0; i < this.$labels.length; ++i) {
-      const $label = this.$labels[i];
-      $label.classList.add('label');
-      $label.style.fontSize = '10px';
-      $label.style.lineHeight = '10px';
-      $label.style.fontFamily = 'monospace';
-      $label.style.color = '#676767';
-      $label.style.opacity = 0.9;
-      $label.style.mozUserSelect = 'none';
-      $label.style.webkitUserSelect = 'none';
-      $label.style.userSelect = 'none';
-      this.$el.appendChild($label);
-    }
-*/
     return this.$el;
   }
 
@@ -66,6 +49,7 @@ export default class Scale extends BaseShape {
       if (this.lastCy0 === cy0 &&
 	  this.lastCy1 === cy1 &&
 	  this.lastH === h) {
+	console.log("scale unchanged");
 	return;
       }
     }
@@ -77,7 +61,6 @@ export default class Scale extends BaseShape {
     console.log("cy1 = " + cy1);
 
     let n = 10;
-    let val = cy0;
     let inc = (cy1 - cy0) / n;
     
     let dp = 0;
@@ -104,35 +87,37 @@ export default class Scale extends BaseShape {
 		sf + ", round = " + round);
     }
 
-    let prevy = -1;
-
-    let path = "";
     for (let i = 0; i < this.$labels.length; ++i) {
       this.$el.removeChild(this.$labels[i]);
     }
     this.$labels = [];
+
+    let scaleWidth = 30;
+    let path = `M${scaleWidth},0L${scaleWidth},${h}`;
     
     for (let i = 0; i < n; ++i) {
 
+      let val = cy0 + i * inc;
       let dispval = Math.round(val / round) * round;
       let y = renderingContext.valueToPixel(dispval);
 
       console.log("i = " + i + " -> val = " + val + ", dispval = " + dispval + ", y = " + y);
-	
-      let ly = h - y - 5;
-      if (ly < 10) {
-        ly = h - y + 15;
-      }
 
-      path = path + `M0,${y}L15,${y}`;
+      path = path + `M${scaleWidth*2/3},${y}L${scaleWidth},${y}`;
+	
+      let ly = h - y - 2;
+
+      if (ly < 10) {
+	continue;
+      }
 
       const $label = document.createElementNS(this.ns, 'text');
       $label.classList.add('label');
       $label.style.fontSize = '10px';
       $label.style.lineHeight = '10px';
       $label.style.fontFamily = 'monospace';
-      $label.style.color = '#676767';
-      $label.style.opacity = 0.9;
+      $label.style.fill = this.params.textColor;
+      $label.style.opacity = this.params.opacity;
       $label.style.mozUserSelect = 'none';
       $label.style.webkitUserSelect = 'none';
       $label.style.userSelect = 'none';
@@ -140,7 +125,7 @@ export default class Scale extends BaseShape {
       this.$el.appendChild($label);
 
       $label.setAttributeNS(
-        null, 'transform', `matrix(1, 0, 0, -1, 15, ${h})`
+        null, 'transform', `matrix(1, 0, 0, -1, 2, ${h})`
       );
       
       $label.setAttributeNS(null, 'y', ly);
@@ -153,9 +138,6 @@ export default class Scale extends BaseShape {
       }
       const $text = document.createTextNode(label);
       $label.appendChild($text);
-
-      prevy = y;
-      val += inc;
     }
 
     this.$path.setAttributeNS(null, 'd', path);
