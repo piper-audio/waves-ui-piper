@@ -1,5 +1,6 @@
 import BaseShape from './base-shape';
 import ns from '../core/namespace';
+import ScaleTickIntervals from '../utils/scale-tick-intervals';
 
 
 /**
@@ -67,44 +68,6 @@ export default class Scale extends BaseShape {
     console.log("cy0 = " + cy0);
     console.log("cy1 = " + cy1);
 
-    let n = 10;
-    let inc = (cy1 - cy0) / n;
-
-    // todo: factor out, test
-    let dp = 0;
-    let sf = 0;
-    let round = 1.0;
-    let fixed = false;
-    if (inc > 0) {
-      let ilg = Math.log10(inc);
-      let prec;
-      if (ilg > 0) {
-	prec = Math.round(ilg) - 1;
-      } else {
-	prec = Math.trunc(ilg) - 1;
-      }
-      if (prec < 0) {
-        dp = -prec;
-	sf = 2;
-      } else {
-	sf = prec;
-      }
-      if (sf === 0) {
-	sf = 1;
-      }
-      if (prec < 4 && prec > -3) {
-	fixed = true;
-      }
-      round = Math.pow(10.0, prec);
-
-      console.log("inc = " + inc + ", prec = " + prec + ", dp = " + dp + ", sf = " +
-		  sf + ", round = " + round);
-      inc = Math.round(inc / round) * round;
-      console.log("rounding inc to " + inc);
-    } else {
-      inc = 1.0;
-    }
-
     for (let i = 0; i < this.$labels.length; ++i) {
       this.$el.removeChild(this.$labels[i]);
     }
@@ -117,7 +80,7 @@ export default class Scale extends BaseShape {
     
     let path = `M${scaleWidth},0L${scaleWidth},${h}`;
 
-    const addLabel = ((value, x, y) => {
+    const addLabel = ((text, x, y) => {
     
       const $label = document.createElementNS(this.ns, 'text');
       $label.classList.add('label');
@@ -134,15 +97,8 @@ export default class Scale extends BaseShape {
 	null, 'transform', `matrix(1, 0, 0, -1, ${x}, ${h})`
       );
       
-      let label = "";
-      if (fixed) {
-	label = value.toFixed(dp);
-      } else {
-	label = value.toPrecision(sf);
-      }
-
       $label.setAttributeNS(null, 'y', y);
-      const $text = document.createTextNode(label);
+      const $text = document.createTextNode(text);
       $label.appendChild($text);
 
       this.$labels.push($label);
@@ -152,16 +108,12 @@ export default class Scale extends BaseShape {
     const lx = 2;
     
     let prevy = h + 2;
-				    
-    for (let i = 0; ; ++i) {
 
-      let val = cy0 + i * inc;
-      if (val >= cy1) {
-	break;
-      }
-      
-      let dispval = Math.round(val / round) * round;
-      let y = renderingContext.valueToPixel(dispval);
+    const ticks = (new ScaleTickIntervals()).linear(cy0, cy1, 10);
+    
+    for (let i = 0; i < ticks.length; ++i) {
+
+      let y = renderingContext.valueToPixel(ticks[i].value);
 
       let ly = h - y + 3;
 
@@ -171,8 +123,6 @@ export default class Scale extends BaseShape {
 	showText = false;
       }
 
-      console.log("i = " + i + " -> val = " + val + ", dispval = " + dispval + ", y = " + y);
-
       if (!showText) {
 	
 	path = path + `M${scaleWidth-5},${y}L${scaleWidth},${y}`;
@@ -181,7 +131,7 @@ export default class Scale extends BaseShape {
 
 	path = path + `M${scaleWidth-8},${y}L${scaleWidth},${y}`;
 	prevy = ly;
-	addLabel(dispval, lx, ly);
+	addLabel(ticks[i].label, lx, ly);
       }
     }
 
