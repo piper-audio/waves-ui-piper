@@ -34,6 +34,11 @@ export default class ScaleTickIntervals {
 	roundTo: min, display, precision: 1, logUnmap: false
       };
     }
+    if (min !== min || max !== max) {
+      // NaNs must be involved
+      console.log("ScaleTickIntervals: WARNING: min = " + min + ", max = " + max);
+      return [];
+    }
 
     let inc = (max - min) / n;
 
