@@ -1,13 +1,15 @@
 {
-  "name": "waves-ui",
-  "version": "0.3.0",
-  "description": "'UI section of the wavesjs library'",
+  "name": "waves-ui-piper",
+  "version": "0.4.0",
+  "description": "A library to display and edit audio data and timeseries data in the browser.",
   "authors": [
     "Victor Saiz",
     "Samuel Goldszmidt",
     "Benjamin Matuszewski",
     "Norbert Schnell",
-    "Karim Barkati"
+    "Karim Barkati",
+    "Lucas Thompson",
+    "Chris Cannam"
   ],
   "main": "dist/waves-ui.js",
   "standalone": "wavesUI",
@@ -29,7 +31,7 @@
   "license": "BSD-3",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wavesjs/ui"
+    "url": "https://github.com/piper-audio/waves-ui-piper"
   },
   "jshintConfig": {
     "esnext": true,
@@ -45,7 +47,7 @@
     "jshint": "^2.6.0",
     "node-watch": "^0.3.4",
     "tape": "^4.0.1",
-      "uglify-js": "^2.4.16",
+    "uglify-js": "^2.4.16",
     "esdoc": "0.4.1",
     "babel": "^5.8.29",
     "browserify": "^11.2.0",
