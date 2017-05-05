@@ -73,7 +73,11 @@ export default class Scale extends BaseShape {
     }
     this.$labels = [];
 
-    let scaleWidth = 35;
+    const ticks = (new ScaleTickIntervals()).linear(cy0, cy1, 10);
+
+    let maxLength = ticks.reduce((acc, t) => Math.max(acc, t.label.length), 0);
+    
+    let scaleWidth = maxLength * 6.5 + 12;
 
     this.$bg.setAttributeNS(null, 'width', scaleWidth);
     this.$bg.setAttributeNS(null, 'height', h);
@@ -108,8 +112,6 @@ export default class Scale extends BaseShape {
     const lx = 2;
     
     let prevy = h + 2;
-
-    const ticks = (new ScaleTickIntervals()).linear(cy0, cy1, 10);
     
     for (let i = 0; i < ticks.length; ++i) {
 
