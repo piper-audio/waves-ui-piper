@@ -1,7 +1,7 @@
 {
   "source": "./src",
   "destination": "./doc",
-  "title": "WavesJS UI",
+  "title": "Waves UI Piper",
   "manual": {
     "example": ["./examples/examples.md"]
   }
