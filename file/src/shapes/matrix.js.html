@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/shapes/matrix.js | Waves UI Piper API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/piper-audio/waves-ui-piper" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">axis</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/axis/axis-layer.js~AxisLayer.html">AxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-gridAxisGenerator">gridAxisGenerator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-timeAxisGenerator">timeAxisGenerator</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">behaviors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/base-behavior.js~BaseBehavior.html">BaseBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/breakpoint-behavior.js~BreakpointBehavior.html">BreakpointBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/marker-behavior.js~MarkerBehavior.html">MarkerBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/segment-behavior.js~SegmentBehavior.html">SegmentBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/time-context-behavior.js~TimeContextBehavior.html">TimeContextBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/trace-behavior.js~TraceBehavior.html">TraceBehavior</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">core</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/layer-time-context.js~LayerTimeContext.html">LayerTimeContext</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/layer.js~Layer.html">Layer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/timeline-time-context.js~TimelineTimeContext.html">TimelineTimeContext</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/timeline.js~Timeline.html">Timeline</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/track-collection.js~TrackCollection.html">TrackCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/track.js~Track.html">Track</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helpers</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/annotated-marker-layer.js~AnnotatedMarkerLayer.html">AnnotatedMarkerLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/annotated-segment-layer.js~AnnotatedSegmentLayer.html">AnnotatedSegmentLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/breakpoint-layer.js~BreakpointLayer.html">BreakpointLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/cursor-layer.js~CursorLayer.html">CursorLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/grid-axis-layer.js~GridAxisLayer.html">GridAxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/highlight-layer.js~HighlightLayer.html">HighlightLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/line-layer.js~LineLayer.html">LineLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/marker-layer.js~MarkerLayer.html">MarkerLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/matrix-layer.js~MatrixLayer.html">MatrixLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/pianoroll-layer.js~PianoRollLayer.html">PianoRollLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/scale-layer.js~ScaleLayer.html">ScaleLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/segment-layer.js~SegmentLayer.html">SegmentLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/tick-layer.js~TickLayer.html">TickLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/time-axis-layer.js~TimeAxisLayer.html">TimeAxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/trace-layer.js~TraceLayer.html">TraceLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/waveform-layer.js~WaveformLayer.html">WaveformLayer</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">interactions</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/event-source.js~EventSource.html">EventSource</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/keyboard.js~Keyboard.html">Keyboard</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/surface.js~Surface.html">Surface</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/wave-event.js~WaveEvent.html">WaveEvent</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">shapes</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/annotated-marker.js~AnnotatedMarker.html">AnnotatedMarker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/annotated-segment.js~AnnotatedSegment.html">AnnotatedSegment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/base-shape.js~BaseShape.html">BaseShape</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/crosshairs.js~Crosshairs.html">Crosshairs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/cursor.js~Cursor.html">Cursor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/dot.js~Dot.html">Dot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/line.js~Line.html">Line</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/marker.js~Marker.html">Marker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/matrix.js~Matrix.html">Matrix</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/scale.js~Scale.html">Scale</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/segment.js~Segment.html">Segment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/ticks.js~Ticks.html">Ticks</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/trace-dots.js~TraceDots.html">TraceDots</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/trace-path.js~TracePath.html">TracePath</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/waveform.js~Waveform.html">Waveform</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">states</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/base-state.js~BaseState.html">BaseState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/breakpoint-state.js~BreakpointState.html">BreakpointState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/brush-zoom-state.js~BrushZoomState.html">BrushZoomState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/centered-zoom-state.js~CenteredZoomState.html">CenteredZoomState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/context-edition-state.js~ContextEditionState.html">ContextEditionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/edition-state.js~EditionState.html">EditionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/selection-state.js~SelectionState.html">SelectionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/simple-edition-state.js~SimpleEditionState.html">SimpleEditionState</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">utils</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/matrix-entity.js~MatrixEntity.html">MatrixEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/orthogonal-data.js~OrthogonalData.html">OrthogonalData</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/oversample.js~Oversampler.html">Oversampler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/png.js~PNGEncoder.html">PNGEncoder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/prefilled-matrix-entity.js~PrefilledMatrixEntity.html">PrefilledMatrixEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/scale-tick-intervals.js~ScaleTickIntervals.html">ScaleTickIntervals</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/shapes/matrix.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
+import BaseShape from &apos;./base-shape&apos;;
+import TimelineTimeContext from &apos;../core/timeline-time-context&apos;;
+import LayerTimeContext from &apos;../core/layer-time-context&apos;;
+import PNGEncoder from &apos;../utils/png.js&apos;;
+
+const xhtmlNS = &apos;http://www.w3.org/1999/xhtml&apos;;
+
+export default class Matrix extends BaseShape {
+
+  getClassName() {
+    return &apos;matrix&apos;;
+  }
+
+  _getAccessorList() {
+    // return { y: 0 };
+    return {};
+  }
+
+  // TODO determine suitable implementations for _getAccessorList and _getDefaults
+  _getDefaults() {
+    return {
+      normalise: &apos;none&apos;,
+      mapper: (value =&gt; {
+        // The mapper accepts a value, which is guaranteed to be in
+        // the range [0,1], and returns r, g, b components which are
+        // also in the range [0,1]. This example mapper just returns a
+        // grey level.
+        let level = 1.0 - value;
+        return [ level, level, level ];
+      }),
+      gain: 1.0,
+      smoothing: false, // NB with smoothing we get visible joins at tile boundaries
+      maxDataUriLength: 32767 // old IE browser limitation, others are more helpful
+    };
+  }
+
+  render(renderingCtx) {
+    console.log(&quot;matrix render called&quot;);
+    if (this.$el) { return this.$el; }
+    this.$el = document.createElementNS(this.ns, &apos;g&apos;);
+    if (!this.params.smoothing) {
+      // for Chrome
+      this.$el.setAttributeNS(null, &apos;image-rendering&apos;, &apos;pixelated&apos;);
+    }
+    console.log(&quot;matrix render returning&quot;);
+    return this.$el;
+  }
+
+  _hybridNormalise(gain) {
+    return (col =&gt; {
+      let max = 0.0;
+      for (let i = 0; i &lt; col.length; ++i) {
+        let value = Math.abs(col[i]);
+        if (value &gt; max) {
+          max = value;
+        }
+      }
+      let scale = gain;
+      if (max &gt; 0.0) {
+        scale = scale * (Math.log10(max + 1.0) / max);
+      }
+      let n = [];
+      for (let i = 0; i &lt; col.length; ++i) {
+        let value = col[i];
+        n.push(value * scale);
+      }
+      return n;
+    });
+  }
+
+  _columnNormalise(gain) {
+    return (col =&gt; {
+      let max = 0.0;
+      for (let i = 0; i &lt; col.length; ++i) {
+        let value = Math.abs(col[i]);
+        if (value &gt; max) {
+          max = value;
+        }
+      }
+      let scale = gain;
+      if (max &gt; 0.0) {
+        scale = scale * (1.0 / max);
+      }
+      let n = [];
+      for (let i = 0; i &lt; col.length; ++i) {
+        let value = col[i];
+        n.push(value * scale);
+      }
+      return n;
+    });
+  }      
+  
+  _noNormalise(gain) {
+    return (col =&gt; {
+      let n = [];
+      for (let i = 0; i &lt; col.length; ++i) {
+        let value = col[i];
+        n.push(value * gain);
+      }
+      return n;
+    });
+  }      
+  
+  encache(matrixEntity) {
+
+    const before = performance.now();
+
+    console.log(&quot;matrix cache called&quot;);
+
+    const height = matrixEntity.getColumnHeight();
+    const totalWidth = matrixEntity.getColumnCount();
+
+    // We use one byte per pixel, as our PNG is indexed but
+    // uncompressed, and base64 encoding increases that to 4/3
+    // characters per pixel. The header and data URI scheme stuff add
+    // a further 1526 chars after encoding, which we round up to 1530
+    // for paranoia.
+    const maxPixels = Math.floor((this.params.maxDataUriLength * 3) / 4 - 1530);
+    let tileWidth = Math.floor(maxPixels / height);
+    if (tileWidth &lt; 1) {
+      console.log(&quot;WARNING: Matrix shape tile width of &quot; + tileWidth +
+                  &quot; calculated for height &quot; + height +
+                  &quot;, using 1 instead: this may exceed maxDataUriLength of &quot; +
+                  this.params.maxDataUriLength);
+      tileWidth = 1;
+    }
+    console.log(&quot;totalWidth = &quot; + totalWidth + &quot;, tileWidth = &quot; + tileWidth);
+
+    let resources = [];
+    let widths = [];
+
+    let normalise = null;
+
+    switch (this.params.normalise) {
+    case &apos;hybrid&apos;:
+      normalise = this._hybridNormalise(this.params.gain);
+      break;
+    case &apos;column&apos;:
+      normalise = this._columnNormalise(this.params.gain);
+      break;
+    default:
+      normalise = this._noNormalise(this.params.gain);
+      break;
+    }
+
+    const condition = (col =&gt; {
+      let n = [];
+      for (let i = 0; i &lt; col.length; ++i) {
+        if (col[i] === Infinity || isNaN(col[i])) n.push(0.0);
+        else n.push(col[i]);
+      }
+      return n;
+    });
+
+    const usualWidth = tileWidth;
+    const usualEncoder = new PNGEncoder(usualWidth, height, 256);
+    
+    for (let x0 = 0; x0 &lt; totalWidth; x0 += tileWidth) {
+
+      let w = tileWidth;
+      if (totalWidth - x0 &lt; tileWidth) {
+	w = totalWidth - x0;
+      }
+      
+      let p = (w === tileWidth ?
+               usualEncoder :
+               new PNGEncoder(w, height, 256));
+
+      for (let i = 0; i &lt; w; ++i) {
+
+	const x = x0 + i;
+        let col = matrixEntity.getColumn(x);
+        col = normalise(condition(col));
+        
+	for (let y = 0; y &lt; height; ++y) {
+          let value = col[y];
+          // The value must be in the range [0,1] to pass to the
+          // mapper. We also quantize the range, as the PNG encoder
+          // uses a 256-level palette.
+          if (value &lt; 0) value = 0;
+          if (value &gt; 1) value = 1;
+          value = Math.round(value * 255) / 255;
+          let [ r, g, b ] = this.params.mapper(value);
+          if (r &lt; 0) r = 0;
+          if (r &gt; 1) r = 1;
+          if (g &lt; 0) g = 0;
+          if (g &gt; 1) g = 1;
+          if (b &lt; 0) b = 0;
+          if (b &gt; 1) b = 1;
+          const colour = p.color(Math.round(r * 255),
+                                 Math.round(g * 255),
+                                 Math.round(b * 255),
+                                 255);
+          const index = p.index(i, y);
+	  p.buffer[index] = colour;
+	}
+      }
+
+      const resource = &apos;data:image/png;base64,&apos; + p.getBase64();
+      resources.push(resource);
+      widths.push(w);
+
+      console.log(&quot;image &quot; + resources.length + &quot;: length &quot; + resource.length +
+		  &quot; (dimensions &quot; + w + &quot; x &quot; + height + &quot;)&quot;);
+    }
+
+    console.log(&quot;drawing complete&quot;);
+
+    const after = performance.now();
+    console.log(&quot;matrix cache time = &quot; + Math.round(after - before));
+    
+    return {
+      resources: resources,
+      tileWidths: widths,
+      totalWidth: totalWidth,
+      height: height,
+      startTime: matrixEntity.getStartTime(),
+      stepDuration: matrixEntity.getStepDuration(),
+      elements: [] // will be installed in first call to update
+    };
+  }
+  
+  update(renderingContext, cache) {
+
+    const before = performance.now();
+
+    console.log(&quot;matrix update called&quot;);
+
+    if (!cache.totalWidth || !cache.height ||
+	!renderingContext.width || !renderingContext.height) {
+      console.log(&quot;nothing to update&quot;);
+      return;
+    }
+
+    if (cache.elements.length === 0) {
+      console.log(&quot;About to add &quot; + cache.resources.length +
+		  &quot; image resources to SVG...&quot;);
+      for (let i = 0; i &lt; cache.resources.length; ++i) {
+	const resource = cache.resources[i];
+	const elt = document.createElementNS(this.ns, &apos;image&apos;);
+	elt.setAttributeNS(&apos;http://www.w3.org/1999/xlink&apos;, &apos;href&apos;, resource);
+        elt.setAttributeNS(null, &apos;preserveAspectRatio&apos;, &apos;none&apos;);
+        if (!this.params.smoothing) {
+          // for Firefox
+	  elt.setAttributeNS(null, &apos;image-rendering&apos;, &apos;optimizeSpeed&apos;);
+        }
+	elt.addEventListener(&apos;dragstart&apos;, e =&gt; { e.preventDefault(); }, false);
+	this.$el.appendChild(elt);
+	cache.elements.push(elt);
+      }
+      console.log(&quot;Done that&quot;);
+    }
+
+    console.log(&quot;Render width = &quot; + renderingContext.width);
+
+    let startX = renderingContext.timeToPixel(cache.startTime);
+    const drawnWidth = renderingContext.width - startX;
+    let widthScaleFactor = drawnWidth / cache.totalWidth;
+
+    if (cache.stepDuration &gt; 0) {
+      let totalDuration = cache.stepDuration * cache.totalWidth;
+      let endX = renderingContext.timeToPixel(cache.startTime + totalDuration);
+      widthScaleFactor = (endX - startX) / cache.totalWidth;
+    }
+    
+    let widthAccumulated = 0;
+    
+    for (let i = 0; i &lt; cache.elements.length; ++i) {
+      const elt = cache.elements[i];
+      const tileWidth = cache.tileWidths[i];
+      const x = startX + widthAccumulated * widthScaleFactor;
+      const w = tileWidth * widthScaleFactor;
+      const visible = (x + w &gt; 0 &amp;&amp; x &lt; renderingContext.maxX);
+      if (visible) {
+        elt.setAttributeNS(null, &apos;x&apos;, Math.floor(x));
+        elt.setAttributeNS(null, &apos;width&apos;, Math.ceil(x + w) - Math.floor(x));
+        elt.setAttributeNS(null, &apos;y&apos;, 0);
+        elt.setAttributeNS(null, &apos;height&apos;, renderingContext.height);
+        elt.setAttributeNS(null, &apos;visibility&apos;, &apos;visible&apos;);
+      } else {
+        elt.setAttributeNS(null, &apos;visibility&apos;, &apos;hidden&apos;);
+      }
+      widthAccumulated += tileWidth;
+    }
+    
+    const after = performance.now();
+    console.log(&quot;matrix update time = &quot; + Math.round(after - before));
+  }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

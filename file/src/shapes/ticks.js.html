@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/shapes/ticks.js | Waves UI Piper API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/piper-audio/waves-ui-piper" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">axis</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/axis/axis-layer.js~AxisLayer.html">AxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-gridAxisGenerator">gridAxisGenerator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-timeAxisGenerator">timeAxisGenerator</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">behaviors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/base-behavior.js~BaseBehavior.html">BaseBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/breakpoint-behavior.js~BreakpointBehavior.html">BreakpointBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/marker-behavior.js~MarkerBehavior.html">MarkerBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/segment-behavior.js~SegmentBehavior.html">SegmentBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/time-context-behavior.js~TimeContextBehavior.html">TimeContextBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/trace-behavior.js~TraceBehavior.html">TraceBehavior</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">core</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/layer-time-context.js~LayerTimeContext.html">LayerTimeContext</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/layer.js~Layer.html">Layer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/timeline-time-context.js~TimelineTimeContext.html">TimelineTimeContext</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/timeline.js~Timeline.html">Timeline</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/track-collection.js~TrackCollection.html">TrackCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/track.js~Track.html">Track</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helpers</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/annotated-marker-layer.js~AnnotatedMarkerLayer.html">AnnotatedMarkerLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/annotated-segment-layer.js~AnnotatedSegmentLayer.html">AnnotatedSegmentLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/breakpoint-layer.js~BreakpointLayer.html">BreakpointLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/cursor-layer.js~CursorLayer.html">CursorLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/grid-axis-layer.js~GridAxisLayer.html">GridAxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/highlight-layer.js~HighlightLayer.html">HighlightLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/line-layer.js~LineLayer.html">LineLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/marker-layer.js~MarkerLayer.html">MarkerLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/matrix-layer.js~MatrixLayer.html">MatrixLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/pianoroll-layer.js~PianoRollLayer.html">PianoRollLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/scale-layer.js~ScaleLayer.html">ScaleLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/segment-layer.js~SegmentLayer.html">SegmentLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/tick-layer.js~TickLayer.html">TickLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/time-axis-layer.js~TimeAxisLayer.html">TimeAxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/trace-layer.js~TraceLayer.html">TraceLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/waveform-layer.js~WaveformLayer.html">WaveformLayer</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">interactions</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/event-source.js~EventSource.html">EventSource</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/keyboard.js~Keyboard.html">Keyboard</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/surface.js~Surface.html">Surface</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/wave-event.js~WaveEvent.html">WaveEvent</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">shapes</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/annotated-marker.js~AnnotatedMarker.html">AnnotatedMarker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/annotated-segment.js~AnnotatedSegment.html">AnnotatedSegment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/base-shape.js~BaseShape.html">BaseShape</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/crosshairs.js~Crosshairs.html">Crosshairs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/cursor.js~Cursor.html">Cursor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/dot.js~Dot.html">Dot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/line.js~Line.html">Line</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/marker.js~Marker.html">Marker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/matrix.js~Matrix.html">Matrix</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/scale.js~Scale.html">Scale</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/segment.js~Segment.html">Segment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/ticks.js~Ticks.html">Ticks</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/trace-dots.js~TraceDots.html">TraceDots</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/trace-path.js~TracePath.html">TracePath</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/waveform.js~Waveform.html">Waveform</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">states</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/base-state.js~BaseState.html">BaseState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/breakpoint-state.js~BreakpointState.html">BreakpointState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/brush-zoom-state.js~BrushZoomState.html">BrushZoomState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/centered-zoom-state.js~CenteredZoomState.html">CenteredZoomState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/context-edition-state.js~ContextEditionState.html">ContextEditionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/edition-state.js~EditionState.html">EditionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/selection-state.js~SelectionState.html">SelectionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/simple-edition-state.js~SimpleEditionState.html">SimpleEditionState</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">utils</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/matrix-entity.js~MatrixEntity.html">MatrixEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/orthogonal-data.js~OrthogonalData.html">OrthogonalData</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/oversample.js~Oversampler.html">Oversampler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/png.js~PNGEncoder.html">PNGEncoder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/prefilled-matrix-entity.js~PrefilledMatrixEntity.html">PrefilledMatrixEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/scale-tick-intervals.js~ScaleTickIntervals.html">ScaleTickIntervals</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/shapes/ticks.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import BaseShape from &apos;./base-shape&apos;;
+
+/**
+ * Kind of Marker for entity oriented data. Useful to display a grid.
+ */
+export default class Ticks extends BaseShape {
+  _getClassName() {
+    return &apos;tick&apos;;
+  }
+
+  _getAccessorList() {
+    return { time: 0, focused: true, label: &apos;&apos; };
+  }
+
+  _getDefaults() {
+    return {
+      color: &apos;steelblue&apos;,
+      focusedOpacity: 0.8,
+      defaultOpacity: 0.3,
+      labelPosition: &apos;top&apos;,
+      shadeSegments: false,
+      unconstrained: false // indicates we should always update all
+                           // ticks that exist, as the layer is
+                           // handling tick generation dynamically
+                           // (e.g. in axis layer)
+    };
+  }
+
+  render(renderingContext) {
+    if (this.$el) { return this.$el; }
+    
+    this.$el = document.createElementNS(this.ns, &apos;g&apos;);
+    
+    return this.$el;
+  }
+
+  update(renderingContext, data) {
+
+    const before = performance.now();
+
+    while (this.$el.firstChild) {
+      this.$el.removeChild(this.$el.firstChild);
+    }
+
+    const ticks = document.createElementNS(this.ns, &apos;path&apos;);
+    ticks.setAttributeNS(null, &apos;fill&apos;, &apos;none&apos;);
+    ticks.setAttributeNS(null, &apos;shape-rendering&apos;, &apos;crispEdges&apos;);
+    ticks.setAttributeNS(null, &apos;stroke&apos;, this.params.color);
+    ticks.setAttributeNS(null, &apos;stroke-width&apos;, 2);
+    ticks.style.opacity = this.params.opacity;
+
+    this.$el.appendChild(ticks);
+
+    const height = renderingContext.height;
+
+    let instructions = [];
+
+    const n = data.length;
+    
+    if (n &gt; 0) {
+      
+      let nextX = renderingContext.timeToPixel(this.time(data[0]));
+      let oddTick = false;
+      let firstTick = true;
+
+      const segmentOpacity = (odd =&gt; { return odd ? 0.1 : 0.05; });
+      
+      for (let i = 0; i &lt; n; ++i) {
+
+        const datum = data[i];
+        const x = nextX;
+        const lastTick = (i + 1 &gt;= n);
+        oddTick = !oddTick;
+
+        if (!lastTick) {
+          nextX = renderingContext.timeToPixel(this.time(data[i+1]));
+        }
+        if (!this.params.unconstrained) {
+          if (x &lt; renderingContext.minX) {
+            continue;
+          }
+          if (!lastTick &amp;&amp; (Math.floor(nextX) === Math.floor(x))) {
+            continue;
+          }
+        }
+        
+        const opacity = this.focused(datum) ?
+              this.params.focusedOpacity : this.params.defaultOpacity;
+
+        instructions.push(`M${x},0L${x},${height}`);
+
+        if (this.params.shadeSegments) {
+          if (firstTick) {
+            if (x &gt; renderingContext.minX) {
+              const segment = document.createElementNS(this.ns, &apos;rect&apos;);
+              segment.setAttributeNS(null, &apos;width&apos;, x - renderingContext.minX);
+              segment.setAttributeNS(null, &apos;height&apos;, height);
+              segment.setAttributeNS(null, &apos;fill&apos;, this.params.color);
+              segment.setAttributeNS(null, &apos;opacity&apos;, segmentOpacity(!oddTick));
+              segment.setAttributeNS(null, &apos;transform&apos;, `translate(${renderingContext.minX}, 0)`);
+              this.$el.appendChild(segment);
+            }
+          }
+          if (lastTick || nextX &gt; x + 1) {
+            const segment = document.createElementNS(this.ns, &apos;rect&apos;);
+            segment.setAttributeNS(null, &apos;width&apos;, lastTick ? &apos;100%&apos; : (nextX - x));
+            segment.setAttributeNS(null, &apos;height&apos;, height);
+            segment.setAttributeNS(null, &apos;fill&apos;, this.params.color);
+            segment.setAttributeNS(null, &apos;opacity&apos;, segmentOpacity(oddTick));
+            segment.setAttributeNS(null, &apos;transform&apos;, `translate(${x}, 0)`);
+            this.$el.appendChild(segment);
+          }
+        }
+        
+        const label = this.label(datum);
+
+        if (label &amp;&amp; label !== &quot;&quot;) {
+
+          // find the next label -- we only need enough space between
+          // this tick and that one, not necessarily between this and
+          // its (possibly unlabelled) neighbour
+
+          let nextLabelX = x - 1;
+          for (let j = i + 1; j &lt; n; ++j) {
+            const nextLabel = this.label(data[j]);
+            if (nextLabel &amp;&amp; nextLabel !== &quot;&quot;) {
+              nextLabelX = renderingContext.timeToPixel(this.time(data[j]));
+              break;
+            }
+          }
+          
+          const estWidth = label.length * 6;
+          const enoughSpaceForLabel = (nextLabelX &lt; x || x + estWidth &lt; nextLabelX);
+
+          if (enoughSpaceForLabel) {
+          
+            const $label = document.createElementNS(this.ns, &apos;text&apos;);
+            $label.classList.add(&apos;label&apos;);
+            const $text = document.createTextNode(label);
+
+            $label.appendChild($text);
+            $label.setAttributeNS(null, &apos;transform&apos;, `matrix(1, 0, 0, -1, ${x + 2}, ${height + 2})`);
+            // firefox problem here
+            // $label.setAttributeNS(null, &apos;alignment-baseline&apos;, &apos;text-before-edge&apos;);
+
+            if (this.params.labelPosition === &apos;bottom&apos;) {
+              $label.setAttributeNS(null, &apos;y&apos;, height);
+            } else {
+              $label.setAttributeNS(null, &apos;y&apos;, &apos;10&apos;);
+            }
+
+            $label.style.fontSize = &apos;10px&apos;;
+            $label.style.lineHeight = &apos;10px&apos;;
+            $label.style.fontFamily = &apos;monospace&apos;;
+            $label.style.color = &apos;#676767&apos;;
+            $label.style.opacity = 0.9;
+            $label.style.mozUserSelect = &apos;none&apos;;
+            $label.style.webkitUserSelect = &apos;none&apos;;
+            $label.style.userSelect = &apos;none&apos;;
+/*
+            const bg = document.createElementNS(this.ns, &apos;rect&apos;);
+            bg.setAttributeNS(null, &apos;width&apos;, &apos;100%&apos;);
+            bg.setAttributeNS(null, &apos;height&apos;, &apos;100%&apos;);
+            bg.setAttributeNS(null, &apos;fill&apos;, &apos;#ffffff&apos;);
+            $label.appendChild(bg);
+*/
+            this.$el.appendChild($label);
+          }
+        }
+
+        if (!this.params.unconstrained) {
+          if (nextX &gt; renderingContext.maxX) {
+            break;
+          }
+        }
+        
+        firstTick = false;
+      }
+    }
+
+    const d = instructions.join(&apos;&apos;);
+    ticks.setAttributeNS(null, &apos;d&apos;, d);
+
+    const after = performance.now();
+    console.log(&quot;ticks update time = &quot; + Math.round(after - before) + &quot;ms&quot;);
+  }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

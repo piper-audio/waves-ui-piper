@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/shapes/waveform.js | Waves UI Piper API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/piper-audio/waves-ui-piper" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">axis</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/axis/axis-layer.js~AxisLayer.html">AxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-gridAxisGenerator">gridAxisGenerator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-timeAxisGenerator">timeAxisGenerator</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">behaviors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/base-behavior.js~BaseBehavior.html">BaseBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/breakpoint-behavior.js~BreakpointBehavior.html">BreakpointBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/marker-behavior.js~MarkerBehavior.html">MarkerBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/segment-behavior.js~SegmentBehavior.html">SegmentBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/time-context-behavior.js~TimeContextBehavior.html">TimeContextBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/trace-behavior.js~TraceBehavior.html">TraceBehavior</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">core</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/layer-time-context.js~LayerTimeContext.html">LayerTimeContext</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/layer.js~Layer.html">Layer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/timeline-time-context.js~TimelineTimeContext.html">TimelineTimeContext</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/timeline.js~Timeline.html">Timeline</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/track-collection.js~TrackCollection.html">TrackCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/track.js~Track.html">Track</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helpers</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/annotated-marker-layer.js~AnnotatedMarkerLayer.html">AnnotatedMarkerLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/annotated-segment-layer.js~AnnotatedSegmentLayer.html">AnnotatedSegmentLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/breakpoint-layer.js~BreakpointLayer.html">BreakpointLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/cursor-layer.js~CursorLayer.html">CursorLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/grid-axis-layer.js~GridAxisLayer.html">GridAxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/highlight-layer.js~HighlightLayer.html">HighlightLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/line-layer.js~LineLayer.html">LineLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/marker-layer.js~MarkerLayer.html">MarkerLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/matrix-layer.js~MatrixLayer.html">MatrixLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/pianoroll-layer.js~PianoRollLayer.html">PianoRollLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/scale-layer.js~ScaleLayer.html">ScaleLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/segment-layer.js~SegmentLayer.html">SegmentLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/tick-layer.js~TickLayer.html">TickLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/time-axis-layer.js~TimeAxisLayer.html">TimeAxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/trace-layer.js~TraceLayer.html">TraceLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/waveform-layer.js~WaveformLayer.html">WaveformLayer</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">interactions</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/event-source.js~EventSource.html">EventSource</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/keyboard.js~Keyboard.html">Keyboard</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/surface.js~Surface.html">Surface</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/wave-event.js~WaveEvent.html">WaveEvent</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">shapes</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/annotated-marker.js~AnnotatedMarker.html">AnnotatedMarker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/annotated-segment.js~AnnotatedSegment.html">AnnotatedSegment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/base-shape.js~BaseShape.html">BaseShape</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/crosshairs.js~Crosshairs.html">Crosshairs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/cursor.js~Cursor.html">Cursor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/dot.js~Dot.html">Dot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/line.js~Line.html">Line</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/marker.js~Marker.html">Marker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/matrix.js~Matrix.html">Matrix</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/scale.js~Scale.html">Scale</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/segment.js~Segment.html">Segment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/ticks.js~Ticks.html">Ticks</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/trace-dots.js~TraceDots.html">TraceDots</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/trace-path.js~TracePath.html">TracePath</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/waveform.js~Waveform.html">Waveform</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">states</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/base-state.js~BaseState.html">BaseState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/breakpoint-state.js~BreakpointState.html">BreakpointState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/brush-zoom-state.js~BrushZoomState.html">BrushZoomState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/centered-zoom-state.js~CenteredZoomState.html">CenteredZoomState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/context-edition-state.js~ContextEditionState.html">ContextEditionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/edition-state.js~EditionState.html">EditionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/selection-state.js~SelectionState.html">SelectionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/simple-edition-state.js~SimpleEditionState.html">SimpleEditionState</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">utils</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/matrix-entity.js~MatrixEntity.html">MatrixEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/orthogonal-data.js~OrthogonalData.html">OrthogonalData</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/oversample.js~Oversampler.html">Oversampler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/png.js~PNGEncoder.html">PNGEncoder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/prefilled-matrix-entity.js~PrefilledMatrixEntity.html">PrefilledMatrixEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/scale-tick-intervals.js~ScaleTickIntervals.html">ScaleTickIntervals</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/shapes/waveform.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import BaseShape from &apos;./base-shape&apos;;
+import Oversampler from &apos;../utils/oversample&apos;;
+
+const xhtmlNS = &apos;http://www.w3.org/1999/xhtml&apos;;
+
+/**
+ * A shape to display a waveform. (for entity data)
+ *
+ * [example usage](./examples/layer-waveform.html)
+ *
+ * @todo - fix problems with canvas strategy.
+ */
+export default class Waveform extends BaseShape {
+  getClassName() { return &apos;waveform&apos;; }
+
+  _getAccessorList() {
+    return {};
+  }
+
+  _getDefaults() {
+    return {
+      sampleRate: 44100,
+      color: &apos;#000000&apos;,
+      opacity: 1,
+      peakCacheBlockSize: 32,
+    };
+  }
+
+  render(renderingContext) {
+    if (this.$el) { return this.$el; }
+
+    this.$el = document.createElementNS(this.ns, &apos;path&apos;);
+    this.$el.setAttributeNS(null, &apos;fill&apos;, &apos;none&apos;);
+    this.$el.setAttributeNS(null, &apos;stroke&apos;, this.params.color);
+    this.$el.style.opacity = this.params.opacity;
+
+    this.factor = 8;
+    this.oversampler = new Oversampler(this.factor);
+
+    return this.$el;
+  }
+
+  encache(samples) {
+
+    console.log(&quot;waveform encache called&quot;);
+
+    // The cache is an array of peak caches (holding the min and max
+    // values within each block for a given block size) with each peak
+    // cache represented as an object with blockSize, min array, and
+    // max array properties.
+    //
+    // For example:
+    //    
+    // [ {
+    //     blockSize: 16,
+    //     max: [ 0.7,  0.5, 0.25, -0.1 ],
+    //     min: [ 0.5, -0.1, -0.8, -0.2 ]
+    //   }, {
+    //     blockSize: 32, 
+    //     max: [  0.7,  0.25 ],
+    //     min: [ -0.1, -0.8  ]
+    //   }
+    // ]
+    //
+    // As it happens we are only creating a cache with a single block
+    // size at the moment, but it&apos;s useful to record that block size
+    // in the cache rather than have to fix it here in the shape.
+
+    const before = performance.now();
+
+    const peakCacheFor = ((arr, blockSize) =&gt; {
+    
+      let peaks = [], troughs = [];
+
+      const len = arr.length;
+    
+      for (let i = 0; i &lt; len; i = i + blockSize) {
+        let min = arr[i];
+        let max = arr[i];
+        for (let j = 0; j &lt; blockSize; j++) {
+          let sample = arr[i + j];
+          if (sample &lt; min) { min = sample; }
+          if (sample &gt; max) { max = sample; }
+        }
+        peaks.push(max);
+        troughs.push(min);
+      }
+
+      return [ peaks, troughs ];
+    });
+
+    // For a single peak cache, experiment suggests smallish block
+    // sizes are better. There&apos;s no benefit in having multiple layers
+    // of cache (e.g. 32 and 512) unless update() can take advantage
+    // of both in a single summarise action (e.g. when asked for a
+    // read from 310 to 1050, start by reading single samples from 310
+    // to 320, then from the 32-sample cache from 320 to 512, then
+    // switch to the 512 sample cache, rather than having to read
+    // single samples all the way from 310 to 512)... but at the
+    // moment it can&apos;t. And the more complex logic would carry its own
+    // overhead.
+    
+    const blockSize = this.params.peakCacheBlockSize;
+    let [ peaks, troughs ] = peakCacheFor(samples, blockSize);
+    
+    return {
+      samples,
+      peakCaches: [
+        { blockSize,
+          max: peaks,
+          min: troughs
+        }
+      ]
+    };
+  }
+  
+  summarise(cache, minX, maxX, pixelToSample) {
+
+    const before = performance.now();
+
+    const samples = cache.samples;
+    
+    const px0 = Math.floor(minX);
+    const px1 = Math.floor(maxX);
+
+    let peakCache = null;
+    let peakCacheBlockSize = 0;
+
+    if (cache &amp;&amp; (cache.peakCaches.length &gt; 0)) {
+
+      // Find a suitable peak cache if we have one.
+      
+      // &quot;step&quot; is the distance in samples from one pixel to the next.
+      // We want the largest cache whose block size is no larger than
+      // half this, so as to avoid situations where our step is always
+      // straddling cache block boundaries.
+      const step = pixelToSample(px0 + 1) - pixelToSample(px0);
+
+      for (var i = 0; i &lt; cache.peakCaches.length; ++i) {
+        const blockSize = cache.peakCaches[i].blockSize;
+        if (blockSize &gt; peakCacheBlockSize &amp;&amp; blockSize &lt;= step/2) {
+          peakCache = cache.peakCaches[i];
+          peakCacheBlockSize = peakCache.blockSize;
+        }
+      }
+    }
+
+    const sampleRate = this.params.sampleRate;
+    let minMax = [];
+
+    for (let px = px0; px &lt; px1; px++) {
+
+      const startSample = pixelToSample(px);
+      if (startSample &lt; 0) continue;
+      if (startSample &gt;= samples.length) break;
+
+      let endSample = pixelToSample(px + 1);
+      if (endSample &gt;= samples.length) endSample = samples.length;
+      if (endSample &lt; 0) continue;
+
+      let min = samples[startSample];
+      let max = min;
+      
+      let ix = startSample;
+
+      if (peakCache &amp;&amp; (peakCacheBlockSize &gt; 0)) {
+      
+        while (ix &lt; endSample &amp;&amp; (ix % peakCacheBlockSize) !== 0) {
+          let sample = samples[ix];
+          if (sample &lt; min) { min = sample; }
+          if (sample &gt; max) { max = sample; }
+          ++ix;
+        }
+
+        let cacheIx = ix / peakCacheBlockSize;
+        const cacheMax = peakCache.max;
+        const cacheMin = peakCache.min;
+      
+        while (ix + peakCacheBlockSize &lt;= endSample) {
+          if (cacheMax[cacheIx] &gt; max) max = cacheMax[cacheIx];
+          if (cacheMin[cacheIx] &lt; min) min = cacheMin[cacheIx];
+          ++cacheIx;
+          ix = ix + peakCacheBlockSize;
+        }
+      }
+
+      while (ix &lt; endSample) {
+        let sample = samples[ix];
+        if (sample &lt; min) { min = sample; }
+        if (sample &gt; max) { max = sample; }
+        ++ix;
+      }
+
+      minMax.push([px, min, max]);
+    }
+
+    const after = performance.now();
+    console.log(&quot;waveform summarisation time = &quot; + Math.round(after - before));
+    
+    return minMax;
+  }
+
+  _updateSummarising(renderingContext, cache, pixelToSample) {
+
+    console.log(&quot;waveform updateSummarising&quot;);
+    
+    const minX = renderingContext.minX;
+    const maxX = renderingContext.maxX;
+    
+    // get min/max values per pixel
+    const minMax = this.summarise(cache, minX, maxX, pixelToSample);
+    if (!minMax.length) { return; }
+
+    let instructions = minMax.map(datum =&gt; {
+      const [ x, min, max ] = datum;
+      const y1 = Math.round(renderingContext.valueToPixel(min));
+      const y2 = Math.round(renderingContext.valueToPixel(max));
+      return `${x},${y1}L${x},${y2}`;
+    });
+
+    const d = &apos;M&apos; + instructions.join(&apos;L&apos;);
+    this.$el.setAttributeNS(null, &apos;shape-rendering&apos;, &apos;crispEdges&apos;);
+    this.$el.setAttributeNS(null, &apos;stroke-width&apos;, 1.0);
+    this.$el.setAttributeNS(null, &apos;d&apos;, d);
+  }
+
+  _updateInterpolating(renderingContext, cache, pixelToSample, sampleToPixel) {
+
+    console.log(&quot;waveform updateInterpolating&quot;);
+    
+    const minX = renderingContext.minX;
+    const maxX = renderingContext.maxX;
+
+    const s0 = pixelToSample(minX);
+    const s1 = pixelToSample(maxX) + 1;
+
+    const samples = cache.samples;
+    const n = samples.length;
+
+    console.log(&quot;minX = &quot; + minX + &quot;, maxX = &quot; + maxX + &quot;, s0 = &quot; + s0 + &quot;, s1 = &quot; + s1);
+
+    let instructions = [];
+
+    // Pixel coordinates in this function are *not* rounded, we want
+    // to preserve the proper shape as far as possible
+
+    // Add a little square for each sample location
+    
+    for (let i = s0; i &lt; s1 &amp;&amp; i &lt; n; ++i) {
+      if (i &lt; 0) continue;
+      const x = sampleToPixel(i);
+      const y = renderingContext.valueToPixel(samples[i]);
+      instructions.push(`M${x-1},${y-1}h2v2h-2v-2`);
+    }
+
+    // Now fill in the gaps between the squares
+
+    const factor = this.factor;
+    const oversampled = this.oversampler.oversample(samples, s0, s1 - s0);
+
+    for (let i = 0; i &lt; oversampled.length; ++i) {
+      const x = sampleToPixel(s0 + i/factor); // sampleToPixel accepts non-integers
+      const y = renderingContext.valueToPixel(oversampled[i]);
+      if (i === 0) {
+        instructions.push(`M${x},${y}`);
+      } else {
+        instructions.push(`L${x},${y}`);
+      }
+    }
+    
+    const d = instructions.join(&apos;&apos;);
+    this.$el.setAttributeNS(null, &apos;shape-rendering&apos;, &apos;geometricPrecision&apos;);
+    this.$el.setAttributeNS(null, &apos;stroke-width&apos;, 0.6);
+    this.$el.setAttributeNS(null, &apos;d&apos;, d);
+  }
+  
+  update(renderingContext, cache) {
+
+    console.log(&quot;waveform update called&quot;);
+    
+    const before = performance.now();
+
+    const sampleRate = this.params.sampleRate;
+    const minX = renderingContext.minX;
+    
+    const step = sampleRate * (renderingContext.timeToPixel.invert(minX + 1) -
+			       renderingContext.timeToPixel.invert(minX));
+
+    const snapToCacheBoundaries = (step &gt;= this.params.peakCacheBlockSize * 2);
+    
+    console.log(&quot;waveform update: pixel step = &quot; + step + &quot; samples, snapToCacheBoundaries = &quot; + snapToCacheBoundaries);
+
+    const pixelToSampleSnapped = (pixel =&gt; {
+      return this.params.peakCacheBlockSize *
+	Math.floor ((sampleRate * renderingContext.timeToPixel.invert(pixel)) /
+		    this.params.peakCacheBlockSize);
+    });
+    const pixelToSampleUnsnapped = (pixel =&gt; {
+      return Math.floor (sampleRate * renderingContext.timeToPixel.invert(pixel));
+    });
+    const pixelToSample = (snapToCacheBoundaries ?
+			   pixelToSampleSnapped :
+			   pixelToSampleUnsnapped);
+    
+    const sampleToPixel = (sample =&gt; {
+      // neither snapped nor even rounded to integer pixel
+      return renderingContext.timeToPixel(sample / sampleRate);
+    });
+
+    if (step &gt; 1.0) {
+      this._updateSummarising(renderingContext, cache,
+			      pixelToSample);
+    } else {
+      this._updateInterpolating(renderingContext, cache,
+				pixelToSample, sampleToPixel);
+    }
+
+    const after = performance.now();
+    console.log(&quot;waveform update time = &quot; + Math.round(after - before));
+  }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

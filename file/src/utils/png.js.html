@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/utils/png.js | Waves UI Piper API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/piper-audio/waves-ui-piper" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">axis</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/axis/axis-layer.js~AxisLayer.html">AxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-gridAxisGenerator">gridAxisGenerator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-timeAxisGenerator">timeAxisGenerator</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">behaviors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/base-behavior.js~BaseBehavior.html">BaseBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/breakpoint-behavior.js~BreakpointBehavior.html">BreakpointBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/marker-behavior.js~MarkerBehavior.html">MarkerBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/segment-behavior.js~SegmentBehavior.html">SegmentBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/time-context-behavior.js~TimeContextBehavior.html">TimeContextBehavior</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/behaviors/trace-behavior.js~TraceBehavior.html">TraceBehavior</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">core</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/layer-time-context.js~LayerTimeContext.html">LayerTimeContext</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/layer.js~Layer.html">Layer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/timeline-time-context.js~TimelineTimeContext.html">TimelineTimeContext</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/timeline.js~Timeline.html">Timeline</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/track-collection.js~TrackCollection.html">TrackCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/track.js~Track.html">Track</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">helpers</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/annotated-marker-layer.js~AnnotatedMarkerLayer.html">AnnotatedMarkerLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/annotated-segment-layer.js~AnnotatedSegmentLayer.html">AnnotatedSegmentLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/breakpoint-layer.js~BreakpointLayer.html">BreakpointLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/cursor-layer.js~CursorLayer.html">CursorLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/grid-axis-layer.js~GridAxisLayer.html">GridAxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/highlight-layer.js~HighlightLayer.html">HighlightLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/line-layer.js~LineLayer.html">LineLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/marker-layer.js~MarkerLayer.html">MarkerLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/matrix-layer.js~MatrixLayer.html">MatrixLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/pianoroll-layer.js~PianoRollLayer.html">PianoRollLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/scale-layer.js~ScaleLayer.html">ScaleLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/segment-layer.js~SegmentLayer.html">SegmentLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/tick-layer.js~TickLayer.html">TickLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/time-axis-layer.js~TimeAxisLayer.html">TimeAxisLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/trace-layer.js~TraceLayer.html">TraceLayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/helpers/waveform-layer.js~WaveformLayer.html">WaveformLayer</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">interactions</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/event-source.js~EventSource.html">EventSource</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/keyboard.js~Keyboard.html">Keyboard</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/surface.js~Surface.html">Surface</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/interactions/wave-event.js~WaveEvent.html">WaveEvent</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">shapes</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/annotated-marker.js~AnnotatedMarker.html">AnnotatedMarker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/annotated-segment.js~AnnotatedSegment.html">AnnotatedSegment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/base-shape.js~BaseShape.html">BaseShape</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/crosshairs.js~Crosshairs.html">Crosshairs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/cursor.js~Cursor.html">Cursor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/dot.js~Dot.html">Dot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/line.js~Line.html">Line</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/marker.js~Marker.html">Marker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/matrix.js~Matrix.html">Matrix</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/scale.js~Scale.html">Scale</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/segment.js~Segment.html">Segment</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/ticks.js~Ticks.html">Ticks</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/trace-dots.js~TraceDots.html">TraceDots</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/trace-path.js~TracePath.html">TracePath</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/shapes/waveform.js~Waveform.html">Waveform</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">states</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/base-state.js~BaseState.html">BaseState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/breakpoint-state.js~BreakpointState.html">BreakpointState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/brush-zoom-state.js~BrushZoomState.html">BrushZoomState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/centered-zoom-state.js~CenteredZoomState.html">CenteredZoomState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/context-edition-state.js~ContextEditionState.html">ContextEditionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/edition-state.js~EditionState.html">EditionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/selection-state.js~SelectionState.html">SelectionState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/states/simple-edition-state.js~SimpleEditionState.html">SimpleEditionState</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">utils</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/matrix-entity.js~MatrixEntity.html">MatrixEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/orthogonal-data.js~OrthogonalData.html">OrthogonalData</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/oversample.js~Oversampler.html">Oversampler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/png.js~PNGEncoder.html">PNGEncoder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/prefilled-matrix-entity.js~PrefilledMatrixEntity.html">PrefilledMatrixEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/utils/scale-tick-intervals.js~ScaleTickIntervals.html">ScaleTickIntervals</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/utils/png.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+* @author Robert Eisele &lt;robert@xarg.org&gt;
+* @copyright Copyright (c) 2010, Robert Eisele
+* @link http://www.xarg.org/2010/03/generate-client-side-png-files-using-javascript/
+* @license http://www.opensource.org/licenses/bsd-license.php BSD License
+*/
+export default class PNGEncoder {
+
+  constructor(width, height, depth) {
+
+    this.width   = width;
+    this.height  = height;
+    this.depth   = depth;
+
+    // pixel data and row filter identifier size
+    this.pix_size = height * (width + 1);
+
+    // deflate header, pix_size, block headers, adler32 checksum
+    this.data_size = 2 + this.pix_size + 5 * Math.floor((0xfffe + this.pix_size) / 0xffff) + 4;
+
+    // offsets and sizes of Png chunks
+    this.ihdr_offs = 0;                                   // IHDR offset and size
+    this.ihdr_size = 4 + 4 + 13 + 4;
+    this.plte_offs = this.ihdr_offs + this.ihdr_size;	// PLTE offset and size
+    this.plte_size = 4 + 4 + 3 * depth + 4;
+    this.trns_offs = this.plte_offs + this.plte_size;	// tRNS offset and size
+    this.trns_size = 4 + 4 + depth + 4;
+    this.idat_offs = this.trns_offs + this.trns_size;	// IDAT offset and size
+    this.idat_size = 4 + 4 + this.data_size + 4;
+    this.iend_offs = this.idat_offs + this.idat_size;	// IEND offset and size
+    this.iend_size = 4 + 4 + 4;
+    this.buffer_size  = this.iend_offs + this.iend_size;	// total PNG size
+
+    this.buffer  = [];
+    this.palette = {};
+    this.pindex  = 0;
+
+    var _crc32 = [];
+
+    var i;
+    
+    // initialize buffer with zero bytes
+    for (i = 0; i &lt; this.buffer_size; i++) {
+      this.buffer[i] = &quot;\x00&quot;;
+    }
+
+    // initialize non-zero elements
+    PNGEncoder._write(this.buffer, this.ihdr_offs, PNGEncoder._byte4(this.ihdr_size - 12), &apos;IHDR&apos;, PNGEncoder._byte4(width), PNGEncoder._byte4(height), &quot;\x08\x03&quot;);
+    PNGEncoder._write(this.buffer, this.plte_offs, PNGEncoder._byte4(this.plte_size - 12), &apos;PLTE&apos;);
+    PNGEncoder._write(this.buffer, this.trns_offs, PNGEncoder._byte4(this.trns_size - 12), &apos;tRNS&apos;);
+    PNGEncoder._write(this.buffer, this.idat_offs, PNGEncoder._byte4(this.idat_size - 12), &apos;IDAT&apos;);
+    PNGEncoder._write(this.buffer, this.iend_offs, PNGEncoder._byte4(this.iend_size - 12), &apos;IEND&apos;);
+
+    // initialize deflate header
+    var header = ((8 + (7 &lt;&lt; 4)) &lt;&lt; 8) | (3 &lt;&lt; 6);
+    header+= 31 - (header % 31);
+
+    PNGEncoder._write(this.buffer, this.idat_offs + 8, PNGEncoder._byte2(header));
+
+    // initialize deflate block headers
+    for (i = 0; (i &lt;&lt; 16) - 1 &lt; this.pix_size; i++) {
+      var size, bits;
+      if (i + 0xffff &lt; this.pix_size) {
+	size = 0xffff;
+	bits = &quot;\x00&quot;;
+      } else {
+	size = this.pix_size - (i &lt;&lt; 16) - i;
+	bits = &quot;\x01&quot;;
+      }
+      PNGEncoder._write(this.buffer, this.idat_offs + 8 + 2 + (i &lt;&lt; 16) + (i &lt;&lt; 2), bits, PNGEncoder._byte2lsb(size), PNGEncoder._byte2lsb(~size));
+    }
+
+    /* Create crc32 lookup table */
+    for (i = 0; i &lt; 256; i++) {
+      var c = i;
+      for (var j = 0; j &lt; 8; j++) {
+	if (c &amp; 1) {
+	  c = -306674912 ^ ((c &gt;&gt; 1) &amp; 0x7fffffff);
+	} else {
+	  c = (c &gt;&gt; 1) &amp; 0x7fffffff;
+	}
+      }
+      _crc32[i] = c;
+    }
+
+    this._crc32 = _crc32;
+  }
+  
+  static _write(buffer, offs) {
+    for (var i = 2; i &lt; arguments.length; i++) {
+      for (var j = 0; j &lt; arguments[i].length; j++) {
+	buffer[offs++] = arguments[i].charAt(j);
+      }
+    }
+  }
+
+  static _byte2(w) {
+    return String.fromCharCode((w &gt;&gt; 8) &amp; 255, w &amp; 255);
+  }
+
+  static _byte4(w) {
+    return String.fromCharCode((w &gt;&gt; 24) &amp; 255, (w &gt;&gt; 16) &amp; 255, (w &gt;&gt; 8) &amp; 255, w &amp; 255);
+  }
+  
+  static _byte2lsb(w) {
+    return String.fromCharCode(w &amp; 255, (w &gt;&gt; 8) &amp; 255);
+  }
+
+  // compute the index into a png for a given pixel
+  index(x,y) {
+    var i = y * (this.width + 1) + x + 1;
+    var j = this.idat_offs + 8 + 2 + 5 * Math.floor((i / 0xffff) + 1) + i;
+    return j;
+  }
+
+  // convert a color and build up the palette
+  color(red, green, blue, alpha) {
+      
+    alpha = alpha &gt;= 0 ? alpha : 255;
+    var color = (((((alpha &lt;&lt; 8) | red) &lt;&lt; 8) | green) &lt;&lt; 8) | blue;
+      
+    if (typeof this.palette[color] == &quot;undefined&quot;) {
+      if (this.pindex == this.depth) return &quot;\x00&quot;;
+      
+      var ndx = this.plte_offs + 8 + 3 * this.pindex;
+      
+      this.buffer[ndx + 0] = String.fromCharCode(red);
+      this.buffer[ndx + 1] = String.fromCharCode(green);
+      this.buffer[ndx + 2] = String.fromCharCode(blue);
+      this.buffer[this.trns_offs+8+this.pindex] = String.fromCharCode(alpha);
+      
+      this.palette[color] = String.fromCharCode(this.pindex++);
+
+//      console.log(&quot;Added colour [&quot; + red + &quot;,&quot; + green + &quot;,&quot; + blue +
+//                  &quot;], palette now has &quot; + this.pindex + &quot; colour(s)&quot;);
+    }
+    return this.palette[color];
+  }
+
+  // output a PNG string, Base64 encoded
+  getBase64() {
+      
+    var s = this.getDump();
+      
+    // If the current browser supports the Base64 encoding
+    // function, then offload the that to the browser as it
+    // will be done in native code.
+    if ((typeof window.btoa !== &apos;undefined&apos;) &amp;&amp; (window.btoa !== null)) {
+      return window.btoa(s);
+    }
+    
+    var ch = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&quot;;
+    var c1, c2, c3, e1, e2, e3, e4;
+    var l = s.length;
+    var i = 0;
+    var r = &quot;&quot;;
+    
+    do {
+      c1 = s.charCodeAt(i);
+      e1 = c1 &gt;&gt; 2;
+      c2 = s.charCodeAt(i+1);
+      e2 = ((c1 &amp; 3) &lt;&lt; 4) | (c2 &gt;&gt; 4);
+      c3 = s.charCodeAt(i+2);
+      if (l &lt; i+2) { e3 = 64; } else { e3 = ((c2 &amp; 0xf) &lt;&lt; 2) | (c3 &gt;&gt; 6); }
+      if (l &lt; i+3) { e4 = 64; } else { e4 = c3 &amp; 0x3f; }
+      r+= ch.charAt(e1) + ch.charAt(e2) + ch.charAt(e3) + ch.charAt(e4);
+    } while ((i+= 3) &lt; l);
+    return r;
+  }
+
+  // output a PNG string
+  getDump() {
+
+    // compute adler32 of output pixels + row filter bytes
+    var BASE = 65521; /* largest prime smaller than 65536 */
+    var NMAX = 5552;  /* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) &lt;= 2^32-1 */
+    var s1 = 1;
+    var s2 = 0;
+    var n = NMAX;
+
+    for (var y = 0; y &lt; this.height; y++) {
+      for (var x = -1; x &lt; this.width; x++) {
+	s1+= this.buffer[this.index(x, y)].charCodeAt(0);
+	s2+= s1;
+	if ((n-= 1) === 0) {
+	  s1%= BASE;
+	  s2%= BASE;
+	  n = NMAX;
+	}
+      }
+    }
+    s1%= BASE;
+    s2%= BASE;
+    PNGEncoder._write(this.buffer, this.idat_offs + this.idat_size - 8, PNGEncoder._byte4((s2 &lt;&lt; 16) | s1));
+    
+    // compute crc32 of the PNG chunks
+    function crc32(png, offs, size, crctable) {
+      var crc = -1;
+      for (var i = 4; i &lt; size-4; i += 1) {
+	crc = crctable[(crc ^ png[offs+i].charCodeAt(0)) &amp; 0xff] ^ ((crc &gt;&gt; 8) &amp; 0x00ffffff);
+      }
+      PNGEncoder._write(png, offs+size-4, PNGEncoder._byte4(crc ^ -1));
+    }
+    
+    crc32(this.buffer, this.ihdr_offs, this.ihdr_size, this._crc32);
+    crc32(this.buffer, this.plte_offs, this.plte_size, this._crc32);
+    crc32(this.buffer, this.trns_offs, this.trns_size, this._crc32);
+    crc32(this.buffer, this.idat_offs, this.idat_size, this._crc32);
+    crc32(this.buffer, this.iend_offs, this.iend_size, this._crc32);
+    
+    // convert PNG to string
+    return &quot;\x89PNG\r\n\x1a\n&quot;+this.buffer.join(&apos;&apos;);
+  }
+  
+}
+
+
+
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
