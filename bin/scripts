@@ -134,6 +134,7 @@ function generateDoc() {
     console.log("  Otherwise press Return to continue.\n");
     process.stdin.on('data', function () {
         actuallyGenerateDoc();
+        process.exit();
     });
 }
 
