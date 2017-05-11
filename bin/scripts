@@ -128,7 +128,8 @@ function generateDoc() {
     console.log("  This script deletes & recreates the local gh-pages branch, regnerates");
     console.log("  the documentation, commits it along with everything in your examples");
     console.log("  folder, and force-pushes to the origin remote.\n");
-    console.log("  At the very least, you probably want to run this in a clean working copy.\n");
+    console.log("  At the very least, you probably want to run this in a clean working copy,");
+    console.log("  and/or first check what the origin remote actually is.\n");
     console.log("  If you are not sure whether this is a good idea, hit ^C now.");
     console.log("  Otherwise press Return to continue.\n");
     process.stdin.on('data', function () {
