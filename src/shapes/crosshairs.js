@@ -6,7 +6,7 @@ import ns from '../core/namespace';
  * A shape to display labelled crosshairs or similar positional
  * crosshairs/focus overlay.
  *
- * [example usage](./examples/layer-crosshairs.html)
+ * [example usage](./examples/layer-highlight.html)
  */
 export default class Crosshairs extends BaseShape {
   getClassName() { return 'crosshairs'; }
@@ -78,7 +78,10 @@ export default class Crosshairs extends BaseShape {
     const minX = Math.floor(renderingContext.minX);
     const maxX = Math.ceil(renderingContext.maxX);
     const h = renderingContext.height;
-    
+
+      console.log("x = " + x + ", y = " + y + ", minX = " + minX + ", maxX = " +
+                  maxX + ", h = " + h);
+      
     this.$path.setAttributeNS(null, 'd',
                               `M${x},${0}L${x},${h}M${minX},${y}L${maxX},${y}`);
 
