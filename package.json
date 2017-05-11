@@ -48,7 +48,7 @@
     "node-watch": "^0.3.4",
     "tape": "^4.0.1",
     "uglify-js": "^2.4.16",
-    "esdoc": "0.4.1",
+    "esdoc": "0.5.2",
     "babel": "^5.8.29",
     "browserify": "^11.2.0",
     "babelify": "^6.1.3",
