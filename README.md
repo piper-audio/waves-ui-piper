@@ -27,8 +27,8 @@ This library differs from Waves-UI v0.3.0 in the following ways:
   makes scrolling very simple, but unfortunately means there is an
   implementation-dependent limit on how wide the underlying shape data
   can be. This version of the library changes that so that only the
-  visible area is drawn into the SVG at all. This makes it scale to
-  longer source material, but means there is more updating to do
+  visible area is drawn into the SVG at all. This means it can handle
+  longer source material, but also means there is more work to do
   during scrolling.
 * The way shapes are rendered and updated has changed, to add a
   caching step for shapes (like the waveform) that benefit from

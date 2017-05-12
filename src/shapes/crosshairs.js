@@ -12,7 +12,7 @@ export default class Crosshairs extends BaseShape {
   getClassName() { return 'crosshairs'; }
 
   _getAccessorList() {
-    return { cx: 0, cy: 0 };
+    return { visible: true, cx: 0, cy: 0, unit: "" };
   }
 
   _getDefaults() {
@@ -60,24 +60,26 @@ export default class Crosshairs extends BaseShape {
   update(renderingContext, datum) {
 
     console.log("crosshairs update: datum = " + datum);
-    
+
     const cx = this.cx(datum);
     const cy = this.cy(datum);
+    const visible = this.visible(datum);
+    const unit = this.unit(datum);
 
-    if (typeof(this.lastCx) !== 'undefined') {
-      if (this.lastCx === cx && this.lastCy === cy) {
-	return;
-      }
+    if (!visible) {
+      this.$el.setAttributeNS(null, 'visibility', 'hidden');
+      return;
+    } else {
+      this.$el.setAttributeNS(null, 'visibility', 'visible');
     }
-    this.lastCx = cx;
-    this.lastCy = cy;
     
-    const x = Math.round(renderingContext.timeToPixel(cx)) + 0.5;
-    const y = Math.round(renderingContext.valueToPixel(cy)) + 0.5;
-
     const minX = Math.floor(renderingContext.minX);
     const maxX = Math.ceil(renderingContext.maxX);
+
     const h = renderingContext.height;
+
+    const x = Math.round(renderingContext.timeToPixel(cx)) + 0.5;
+    const y = Math.round(renderingContext.valueToPixel(cy)) + 0.5;
 
       console.log("x = " + x + ", y = " + y + ", minX = " + minX + ", maxX = " +
                   maxX + ", h = " + h);
@@ -96,7 +98,7 @@ export default class Crosshairs extends BaseShape {
         $label.removeChild($label.firstChild);
       }
       
-      const $textLeft = document.createTextNode(label);
+      const $textLeft = document.createTextNode(label + unit);
       $label.appendChild($textLeft);
       
       let lx = minX + 2;

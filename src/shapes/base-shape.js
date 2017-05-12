@@ -187,7 +187,7 @@ export default class BaseShape {
 
   /**
    * Interface method to override called by `Layer~getItemsInArea`. Defines if
-   * the shape is considered to be the given area. Arguments are passed in pixel domain.
+   * the shape is considered to be in the given area. Arguments are passed in pixel domain.
    *
    * @param {Object} renderingContext - the renderingContext of the layer which
    *    owns this shape.
