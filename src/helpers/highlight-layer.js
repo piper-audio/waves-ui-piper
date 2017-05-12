@@ -29,6 +29,7 @@ export default class HighlightLayer extends Layer {
       color: 'red',
       labelOffset: 0,
       hittable: false, // kind of pass through layer
+      unit: ''
     };
 
     const crosshairDataSource = {
@@ -117,10 +118,7 @@ export default class HighlightLayer extends Layer {
         const dd = d.describe();
         return (dd.length > 0 ? dd[0].cy : 0);
       },
-      unit: d => {
-        const dd = d.describe();
-        return (dd.length > 0 ? dd[0].unit : "");
-      }
+      unit: d => options.unit
     }, {
       color: options.color,
       opacity: options.opacity,

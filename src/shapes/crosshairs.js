@@ -64,7 +64,8 @@ export default class Crosshairs extends BaseShape {
     const cx = this.cx(datum);
     const cy = this.cy(datum);
     const visible = this.visible(datum);
-    const unit = this.unit(datum);
+    let unit = this.unit(datum);
+    if (unit !== '') unit = " " + unit;
 
     if (!visible) {
       this.$el.setAttributeNS(null, 'visibility', 'hidden');
@@ -88,7 +89,7 @@ export default class Crosshairs extends BaseShape {
                               `M${x},${0}L${x},${h}M${minX},${y}L${maxX},${y}`);
 
     const label = cy.toPrecision(4);
-    const lw = label.length * 10;
+    const lw = (label.length + unit.length) * 9;
 
     for (let i = 0; i < this.$labels.length; ++i) {
 
