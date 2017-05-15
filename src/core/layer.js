@@ -884,7 +884,7 @@ export default class Layer extends events.EventEmitter {
   describe(x) {
     for (let [$item, datum] of this._$itemDataMap.entries()) {
       const shape = this._$itemShapeMap.get($item);
-      const description = shape.describe(datum, x);
+      const description = shape.describe(datum, x - this.start);
       if (description !== null) {
         return description;
       }
