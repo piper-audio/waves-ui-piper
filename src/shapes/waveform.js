@@ -42,8 +42,6 @@ export default class Waveform extends BaseShape {
 
   encache(samples) {
 
-    console.log("waveform encache called");
-
     // The cache is an array of peak caches (holding the min and max
     // values within each block for a given block size) with each peak
     // cache represented as an object with blockSize, min array, and
@@ -202,8 +200,6 @@ export default class Waveform extends BaseShape {
 
   _updateSummarising(renderingContext, cache, pixelToSample) {
 
-    console.log("waveform updateSummarising");
-    
     const minX = renderingContext.minX;
     const maxX = renderingContext.maxX;
     
@@ -226,8 +222,6 @@ export default class Waveform extends BaseShape {
 
   _updateInterpolating(renderingContext, cache, pixelToSample, sampleToPixel) {
 
-    console.log("waveform updateInterpolating");
-    
     const minX = renderingContext.minX;
     const maxX = renderingContext.maxX;
 
@@ -236,8 +230,6 @@ export default class Waveform extends BaseShape {
 
     const samples = cache.samples;
     const n = samples.length;
-
-    console.log("minX = " + minX + ", maxX = " + maxX + ", s0 = " + s0 + ", s1 = " + s1);
 
     let instructions = [];
 
@@ -276,8 +268,6 @@ export default class Waveform extends BaseShape {
   
   update(renderingContext, cache) {
 
-    console.log("waveform update called");
-    
     const before = performance.now();
 
     const sampleRate = this.params.sampleRate;
@@ -288,8 +278,6 @@ export default class Waveform extends BaseShape {
 
     const snapToCacheBoundaries = (step >= this.params.peakCacheBlockSize * 2);
     
-    console.log("waveform update: pixel step = " + step + " samples, snapToCacheBoundaries = " + snapToCacheBoundaries);
-
     const pixelToSampleSnapped = (pixel => {
       return this.params.peakCacheBlockSize *
 	Math.floor ((sampleRate * renderingContext.timeToPixel.invert(pixel)) /

@@ -248,12 +248,16 @@ export default class Track {
    * @param {Array<Layer>} [layers=null] - if not null, a subset of the layers to update.
    */
   updateLayers(layers = null) {
-    layers = (layers === null) ? this.layers : layers;
-
-    layers.forEach((layer) => {
-      if (this.layers.indexOf(layer) === -1) { return; }
-      layer.update();
-    });
+    if (layers === null) {
+      this.layers.forEach((layer) => {
+        layer.update();
+      });
+    } else {
+      layers.forEach((layer) => {
+        if (this.layers.indexOf(layer) === -1) { return; }
+        layer.update();
+      });
+    }
   }
 
   /**

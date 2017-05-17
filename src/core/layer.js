@@ -347,10 +347,30 @@ export default class Layer extends events.EventEmitter {
     this.$background.classList.add('background');
     this.$background.style.fillOpacity = 0;
     this.$background.style.pointerEvents = 'none';
+
+    // create the DOM tree
+    this.$el.appendChild(this.$boundingBox);
+    this.$boundingBox.appendChild(this.$maingroup);
+    this.$maingroup.appendChild(this.$background);
+
+    if (this._isContextEditable) {
+      this._addInteractionsElements();
+    }
+  }
+
+  _addInteractionsElements() {
+
+    if (this.$interactions !== null) {
+      return;
+    }
+
     // context interactions
     this.$interactions = document.createElementNS(ns, 'g');
     this.$interactions.classList.add('interactions');
-    this.$interactions.style.display = 'none';
+
+    const display = this._isContextEditable ? 'block' : 'none';
+    this.$interactions.style.display = display;
+
     // @NOTE: works but king of ugly... should be cleaned
     this.contextShape = new Segment();
     this.contextShape.install({
@@ -360,12 +380,8 @@ export default class Layer extends events.EventEmitter {
       height : () => this._renderingContext.valueToPixel.domain()[1],
       y      : () => this._renderingContext.valueToPixel.domain()[0]
     });
-
+    
     this.$interactions.appendChild(this.contextShape.render());
-    // create the DOM tree
-    this.$el.appendChild(this.$boundingBox);
-    this.$boundingBox.appendChild(this.$maingroup);
-    this.$maingroup.appendChild(this.$background);
     this.$boundingBox.appendChild(this.$interactions);
   }
 
@@ -464,7 +480,7 @@ export default class Layer extends events.EventEmitter {
     this._renderingContext.height = this.params.height;
     this._renderingContext.valueToPixel = this._valueToPixel;
 
-    console.log("Rendering context: width = " + this._renderingContext.width + ", visibleWidth = " + this._renderingContext.visibleWidth + ", minX = " + this._renderingContext.minX + " (time = " + this._renderingContext.timeToPixel.invert(this._renderingContext.minX) + "), maxX = " + this._renderingContext.maxX + " (time = " + this._renderingContext.timeToPixel.invert(this._renderingContext.maxX) + ")");
+//    console.log("Rendering context: width = " + this._renderingContext.width + ", visibleWidth = " + this._renderingContext.visibleWidth + ", minX = " + this._renderingContext.minX + " (time = " + this._renderingContext.timeToPixel.invert(this._renderingContext.minX) + "), maxX = " + this._renderingContext.maxX + " (time = " + this._renderingContext.timeToPixel.invert(this._renderingContext.maxX) + ")");
   }
 
   // --------------------------------------
@@ -557,9 +573,15 @@ export default class Layer extends events.EventEmitter {
    * @params {Boolean} [bool=true]
    */
   setContextEditable(bool = true) {
-    const display = bool ? 'block' : 'none';
-    this.$interactions.style.display = display;
+    
     this._isContextEditable = bool;
+    
+    if (this.$interactions === null) {
+      this._addInteractionsElements();
+    } else {
+      const display = bool ? 'block' : 'none';
+      this.$interactions.style.display = display;
+    }
   }
 
   /**
@@ -789,8 +811,6 @@ export default class Layer extends events.EventEmitter {
    * Updates the container of the layer and the attributes of the existing shapes.
    */
   update() {
-    console.log("layer update called");
-    
     this._updateContainer();
     this._updateShapes();
   }
@@ -820,8 +840,10 @@ export default class Layer extends events.EventEmitter {
     this.$boundingBox.setAttributeNS(null, 'height', height);
     this.$boundingBox.style.opacity = this.params.opacity;
 
-    // maintain context shape
-    this.contextShape.update(this._renderingContext, this.timeContext, 0);
+    if (this.contextShape !== null) {
+      // maintain context shape
+      this.contextShape.update(this._renderingContext, this.timeContext, 0);
+    }
   }
 
   _encacheEntity() {
@@ -837,10 +859,8 @@ export default class Layer extends events.EventEmitter {
         const shape = this._$itemShapeMap.get($item);
         const cache = shape.encache(datum);
 	if (cache) {
-	  console.log("replacing our entity data with cached value");
 	  this._$itemDataMap.set($item, cache);
           if (typeof(origData.dispose) !== 'undefined') {
-            console.log("and calling dispose on entity data");
             origData.dispose();
           }
 	  this.data = cache;
@@ -856,8 +876,6 @@ export default class Layer extends events.EventEmitter {
    */
   _updateShapes() {
 
-    console.log("layer updateShapes called");
-    
     const before = performance.now();
     
     this._updateRenderingContext();
@@ -869,8 +887,6 @@ export default class Layer extends events.EventEmitter {
       shape.update(this._renderingContext, this.data);
     });
 
-    console.log("item data map contains " + this._$itemDataMap.size + " entries");
-    
     // Update specific shapes
     for (let [$item, datum] of this._$itemDataMap.entries()) {
       const shape = this._$itemShapeMap.get($item);

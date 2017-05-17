@@ -74,41 +74,43 @@ export default class Line extends BaseShape {
     const minX = Math.floor(renderingContext.minX);
     const maxX = Math.ceil(renderingContext.maxX);
 
-    console.log("minX = " + minX + ", maxX = " + maxX);
+    if (data === [] ||
+        renderingContext.timeToPixel(this.cx(data[0])) > maxX ||
+        renderingContext.timeToPixel(this.cx(data[data.length-1])) < minX) {
+      this.$el.setAttributeNS(null, 'visibility', 'hidden');
+      return;
+    } else {
+      this.$el.setAttributeNS(null, 'visibility', 'visible');
+    }
     
     let instructions = [];
     const n = data.length;
     
-    if (n > 0) {
-
-      // We want to start with the last element to the left of the
-      // visible region, and end with the first element beyond the
-      // right of it
-
-      let cx0 = renderingContext.timeToPixel.invert(minX);
-      let i0 = this._findInData(data, cx0);
-
-      let nextX = renderingContext.timeToPixel(this.cx(data[i0]));
+    // We want to start with the last element to the left of the
+    // visible region, and end with the first element beyond the right
+    // of it
     
-      for (let i = i0; i < n; ++i) {
-
-        const x = nextX;
-
-        if (i + 1 < n) {
-          nextX = renderingContext.timeToPixel(this.cx(data[i+1]));
-        }
-
-        const y = renderingContext.valueToPixel(this.cy(data[i])) - 0.5;
-
-        instructions.push(`${x},${y}`);
-        
-        if (x > maxX) {
-          break;
-        }
+    let cx0 = renderingContext.timeToPixel.invert(minX);
+    let i0 = this._findInData(data, cx0);
+    
+    let nextX = renderingContext.timeToPixel(this.cx(data[i0]));
+    
+    for (let i = i0; i < n; ++i) {
+      
+      const x = nextX;
+      
+      if (i + 1 < n) {
+        nextX = renderingContext.timeToPixel(this.cx(data[i+1]));
+      }
+      
+      const y = renderingContext.valueToPixel(this.cy(data[i])) - 0.5;
+      
+      instructions.push(`${x},${y}`);
+      
+      if (x > maxX) {
+        break;
       }
     }          
-
-    console.log("line instructions have " + instructions.length + " elements");
 
     const instructionStr = 'M' + instructions.join('L');
     this.$el.setAttributeNS(null, 'd', instructionStr);
