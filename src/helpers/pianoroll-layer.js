@@ -1,6 +1,7 @@
 import Layer from '../core/layer';
 import Segment from '../shapes/segment';
 import SegmentBehavior from '../behaviors/segment-behavior';
+import { findWithin } from '../utils/find';
 
 /**
  * Helper to create a MIDI-style piano roll layer. Data must have
@@ -11,6 +12,7 @@ import SegmentBehavior from '../behaviors/segment-behavior';
  * [example usage](./examples/layer-pianoroll.html)
  */
 export default class PianoRollLayer extends Layer {
+
   /**
    * @param {Array} data - The data to render.
    * @param {Object} options - An object to configure the layer.
@@ -38,12 +40,28 @@ export default class PianoRollLayer extends Layer {
         y: datum.pitch,
         width: datum.duration,
         height: noteHeight,
-        color: `rgb(${level},${level},${level})`,
+        color: `rgb(${level},${level},${level})`
       };
+    });
+
+    const describer = (x => {
+      if (!data.length) return [];
+      const i = findWithin(data, x, d => { return d.time; });
+      if (data[i].time < x &&
+          data[i].time + data[i].duration > x) {
+        return [{
+          cx: data[i].time,
+          cy: data[i].pitch
+        }];
+      } else {
+        return [];
+      }
     });
 
     super('collection', rects, options);
 
+    this.describer = describer;
+    
     this.configureShape(Segment, accessors, {
       displayHandlers: options.displayHandlers,
       opacity: options.opacity,
