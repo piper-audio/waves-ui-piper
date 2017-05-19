@@ -69,6 +69,7 @@ export default class Layer extends events.EventEmitter {
       hittable: true, // when false the layer is not returned by `BaseState.getHitLayers`
       id: '', // used ?
       overflow: 'hidden', // usefull ?
+      describer: null
     };
 
     /**
@@ -898,12 +899,26 @@ export default class Layer extends events.EventEmitter {
   }
 
   describe(x) {
+    const before = performance.now();
+
+    if (typeof(this.describer) !== 'undefined' &&
+        this.describer !== null) {
+      return this.describer(x - this.start);
+    }
+    
+    let description = null;
+    let n = 0;
     for (let [$item, datum] of this._$itemDataMap.entries()) {
       const shape = this._$itemShapeMap.get($item);
-      const description = shape.describe(datum, x - this.start);
-      if (description !== null) {
-        return description;
+      description = shape.describe(datum, x - this.start);
+      n++;
+      if (description !== null && description.length > 0) {
+        break;
       }
     }
+    console.log("layer describe: inspected " + n + " of " + this._$itemDataMap.size + " shape(s)");
+    const after = performance.now();
+    console.log("layer describe time = " + Math.round(after - before));
+    return description;
   }
 }
