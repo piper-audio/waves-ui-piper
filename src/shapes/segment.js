@@ -74,7 +74,8 @@ export default class Segment extends BaseShape {
     const width = renderingContext.timeToPixel(this.x(datum) +
                                                this.width(datum)) - x;
 
-    const height = renderingContext.valueToPixel(this.height(datum));
+    const height = renderingContext.valueToPixel(this.y(datum) +
+                                                 this.height(datum)) - y;
 
     this.$segment.setAttributeNS(null, 'x', x);
     this.$segment.setAttributeNS(null, 'y', y);
