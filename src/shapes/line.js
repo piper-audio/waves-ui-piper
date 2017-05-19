@@ -94,7 +94,7 @@ export default class Line extends BaseShape {
 
   describe(data, t) {
     if (!data.length) return [];
-    const i = this._findInData(data, t);
+    const i = findWithin(data, t, this.cx);
     const cx = this.cx(data[i]);
     const cy = this.cy(data[i]);
     let unit = "";
