@@ -1,6 +1,6 @@
 import BaseShape from './base-shape';
 import ns from '../core/namespace';
-import ScaleTickIntervals from '../utils/scale-tick-intervals';
+import {linear as calculateLinearTicks} from '../utils/scale-tick-intervals';
 
 
 /**
@@ -73,7 +73,7 @@ export default class Scale extends BaseShape {
     }
     this.$labels = [];
 
-    const ticks = (new ScaleTickIntervals()).linear(cy0, cy1, 10);
+    const ticks = calculateLinearTicks(cy0, cy1, 10);
 
     let maxLength = ticks.reduce((acc, t) => Math.max(acc, t.label.length), 0);
     
