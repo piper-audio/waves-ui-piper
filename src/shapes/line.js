@@ -1,4 +1,5 @@
 import BaseShape from './base-shape';
+import { findWithin } from '../utils/find';
 
 /**
  * A shape to display a line. Its main use is as common shape to create a
@@ -32,40 +33,6 @@ export default class Line extends BaseShape {
 
     return data;
   }
-
-  _findInData(data, x) {
-
-    // Binary search, demands that data has been encached
-    // (i.e. sorted). Returns index of value that matches x. If there
-    // is no exact match, returns the index just before where x would
-    // appear, unless x would appear as the first element in which
-    // case 0 is returned. (So the returned index is always in range
-    // for the input array, unless the input array is empty.)
-
-    // Note that x must be in model coordinates (e.g. time), not pixel
-    // coords.
-
-    let low = 0;
-    let high = data.length - 1;
-
-    while (low <= high) {
-      let mid = low + ((high - low) >> 1);
-      let value = this.cx(data[mid]);
-      if (value < x) {
-        low = mid + 1;
-      } else if (value > x) {
-        high = mid - 1;
-      } else {
-        return mid;
-      }
-    }
-
-    if (high < 0) {
-      return 0;
-    } else {
-      return high;
-    }
-  }
   
   update(renderingContext, data) { // data array is sorted already
     
@@ -90,8 +57,8 @@ export default class Line extends BaseShape {
     // visible region, and end with the first element beyond the right
     // of it
     
-    let cx0 = renderingContext.timeToPixel.invert(minX);
-    let i0 = this._findInData(data, cx0);
+    const cx0 = renderingContext.timeToPixel.invert(minX);
+    const i0 = findWithin(data, cx0, this.cx);
     
     let nextX = renderingContext.timeToPixel(this.cx(data[i0]));
     
@@ -126,8 +93,8 @@ export default class Line extends BaseShape {
   }
 
   describe(data, t) {
-    if (!data.length) return 0;
-    let i = this._findInData(data, t);
+    if (!data.length) return [];
+    const i = this._findInData(data, t);
     const cx = this.cx(data[i]);
     const cy = this.cy(data[i]);
     let unit = "";
