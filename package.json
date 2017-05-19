@@ -1,6 +1,6 @@
 {
   "name": "waves-ui-piper",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "A library to display and edit audio data and timeseries data in the browser.",
   "authors": [
     "Victor Saiz",
