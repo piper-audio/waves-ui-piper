@@ -78,7 +78,7 @@ export default class Segment extends BaseShape {
                                                  this.height(datum)) - y;
 
     this.$segment.setAttributeNS(null, 'x', x);
-    this.$segment.setAttributeNS(null, 'y', y);
+    this.$segment.setAttributeNS(null, 'y', y - height/2);
     this.$segment.setAttributeNS(null, 'width', Math.max(width, 0));
     this.$segment.setAttributeNS(null, 'height', height);
 
