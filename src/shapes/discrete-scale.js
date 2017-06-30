@@ -109,13 +109,15 @@ export default class DiscreteScale extends BaseShape {
     for (let i = 0; i < n; ++i) {
 
       let y = (i * h) / n;
-      let ly = h - (y + (h/n) / 2) + 3;
-      
-      let showText = true;
-      if (ly > h - 4 || ly < 6 || ly > prevy - 15) {
+      let ly = h - y - 3;
+
+      let showText = (binNames[i] !== "");
+      if (showText && (ly < 6 || ly > prevy - 12)) {
 	// not enough space
 	showText = false;
       }
+
+//      console.log("ly = " + ly + ", prevy = " + prevy + ", h = " + h + ", label = " + binNames[i] + ", showText = " + showText);      
 
       if (y > 0) {
       	path = path + `M${scaleWidth-5},${y}L${scaleWidth},${y}`;
