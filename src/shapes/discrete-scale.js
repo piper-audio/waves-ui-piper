@@ -104,7 +104,9 @@ export default class DiscreteScale extends BaseShape {
     });
 
     const lx = 3;
-    let prevy = h + 12;
+
+    let prevy = 0;
+    let prevly = h + 12;
     
     for (let i = 0; i < n; ++i) {
 
@@ -112,20 +114,21 @@ export default class DiscreteScale extends BaseShape {
       let ly = h - y - 3;
 
       let showText = (binNames[i] !== "");
-      if (showText && (ly < 6 || ly > prevy - 12)) {
+      if (showText && (ly < 6 || ly > prevly - 12)) {
 	// not enough space
 	showText = false;
       }
 
-//      console.log("ly = " + ly + ", prevy = " + prevy + ", h = " + h + ", label = " + binNames[i] + ", showText = " + showText);      
+//      console.log("ly = " + ly + ", prevly = " + prevly + ", h = " + h + ", label = " + binNames[i] + ", showText = " + showText);      
 
-      if (y > 0) {
+      if (y > prevy + 1) {
       	path = path + `M${scaleWidth-5},${y}L${scaleWidth},${y}`;
+        prevy = y;
       }
 
       if (showText) {
-	prevy = ly;
 	addLabel(binNames[i], lx, ly);
+	prevly = ly;
       }
     }
 
