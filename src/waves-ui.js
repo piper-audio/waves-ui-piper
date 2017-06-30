@@ -13,6 +13,7 @@ import AnnotatedSegment from './shapes/annotated-segment';
 import BaseShape from './shapes/base-shape';
 import Crosshairs from './shapes/crosshairs';
 import Cursor from './shapes/cursor';
+import DiscreteScale from './shapes/discrete-scale';
 import Dot from './shapes/dot';
 import Line from './shapes/line';
 import Marker from './shapes/marker';
@@ -53,6 +54,7 @@ import AnnotatedMarkerLayer from './helpers/annotated-marker-layer';
 import AnnotatedSegmentLayer from './helpers/annotated-segment-layer';
 import BreakpointLayer from './helpers/breakpoint-layer';
 import CursorLayer from './helpers/cursor-layer';
+import DiscreteScaleLayer from './helpers/discrete-scale-layer';
 import GridAxisLayer from './helpers/grid-axis-layer';
 import HighlightLayer from './helpers/highlight-layer';
 import LineLayer from './helpers/line-layer';
@@ -84,7 +86,7 @@ export default {
     TimelineTimeContext, Timeline, TrackCollection, Track
   },
   shapes: {
-    AnnotatedMarker, AnnotatedSegment, BaseShape, Crosshairs, Cursor,
+    AnnotatedMarker, AnnotatedSegment, BaseShape, Crosshairs, Cursor, DiscreteScale,
     Dot, Line, Marker, Matrix, Scale, Segment, Ticks, TracePath, TraceDots, Waveform
   },
   behaviors: {
@@ -97,8 +99,8 @@ export default {
     ContextEditionState, EditionState, SelectionState, SimpleEditionState
   },
   helpers: {
-    AnnotatedMarkerLayer, AnnotatedSegmentLayer, BreakpointLayer,
-    CursorLayer, GridAxisLayer, HighlightLayer, LineLayer, MarkerLayer, MatrixLayer, PianoRollLayer,
+    AnnotatedMarkerLayer, AnnotatedSegmentLayer, BreakpointLayer, CursorLayer,
+    DiscreteScaleLayer, GridAxisLayer, HighlightLayer, LineLayer, MarkerLayer, MatrixLayer, PianoRollLayer,
     ScaleLayer, SegmentLayer, TickLayer, TimeAxisLayer, TraceLayer, WaveformLayer
   },
   axis: {

@@ -14,7 +14,7 @@
 </head>
 <body>
 
-  <h1>Matrix Layer</h1>
+  <h1>Matrix Layer with Discrete Scale</h1>
 
   <div class="track" id="track-1"></div>
   <div class="track" id="track-2"></div>
@@ -57,7 +57,17 @@
         // as the matrix is an `entity` layer, we have to edit the context directly
         matrixLayer.setContextEditable(true);
 
+        // and a scale
+        var scaleLayer = new wavesUI.helpers.DiscreteScaleLayer({
+           height: height,
+           textColor: 'blue',
+           tickColor: 'blue',
+           binNames: ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B']
+        });
+        scaleLayer.setTimeContext(timeContext);
+  
         track1.add(matrixLayer);
+        track1.add(scaleLayer);
         timeline.add(track1);
 
         // and a waveform for contrast

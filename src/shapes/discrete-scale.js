@@ -1,7 +1,5 @@
 import BaseShape from './base-shape';
 import ns from '../core/namespace';
-import {linear as calculateLinearTicks} from '../utils/scale-tick-intervals';
-
 
 /**
  * A shape to display a vertical scale at the left edge of the visible
@@ -10,7 +8,7 @@ import {linear as calculateLinearTicks} from '../utils/scale-tick-intervals';
  *
  * [example usage](./examples/layer-scale.html)
  */
-export default class Scale extends BaseShape {
+export default class DiscreteScale extends BaseShape {
   getClassName() { return 'scale'; }
 
   _getDefaults() {
@@ -18,7 +16,8 @@ export default class Scale extends BaseShape {
       background: '#ffffff',
       tickColor: '#000000',
       textColor: '#000000',
-      opacity: 1
+      opacity: 1,
+      binNames: []
     };
   }
 
@@ -47,34 +46,30 @@ export default class Scale extends BaseShape {
 
   update(renderingContext, datum) {
 
-    console.log("scale update");
+    console.log("discrete scale update");
 
     const h = renderingContext.height;
-    const cy0 = renderingContext.valueToPixel.domain()[0];
-    const cy1 = renderingContext.valueToPixel.domain()[1];
 
-    if (typeof(this.lastCy0) !== 'undefined') {
-      if (this.lastCy0 === cy0 &&
-	  this.lastCy1 === cy1 &&
-	  this.lastH === h) {
+    if (typeof(this.lastH) !== 'undefined') {
+      if (this.lastH === h) {
 	return;
       }
     }
-    this.lastCy0 = cy0;
-    this.lastCy1 = cy1;
     this.lastH = h;
-    
-    console.log("cy0 = " + cy0);
-    console.log("cy1 = " + cy1);
 
+    const binNames = this.params.binNames;
+    if (!binNames || binNames.length === 0) {
+      console.log("no bin names provided!");
+      return;
+    }
+    
     for (let i = 0; i < this.$labels.length; ++i) {
       this.$el.removeChild(this.$labels[i]);
     }
     this.$labels = [];
 
-    const ticks = calculateLinearTicks(cy0, cy1, 10);
-
-    let maxLength = ticks.reduce((acc, t) => Math.max(acc, t.label.length), 0);
+    const n = binNames.length;
+    const maxLength = binNames.reduce((acc, t) => Math.max(acc, t.length), 0);
     
     let scaleWidth = maxLength * 6.5 + 12;
 
@@ -108,31 +103,27 @@ export default class Scale extends BaseShape {
       this.$el.appendChild($label);
     });
 
-    const lx = 2;
+    const lx = 3;
+    let prevy = h + 12;
     
-    let prevy = h + 14;
-    
-    for (let i = 0; i < ticks.length; ++i) {
+    for (let i = 0; i < n; ++i) {
 
-      let y = renderingContext.valueToPixel(ticks[i].value);
-
-      let ly = h - y + 3;
-
+      let y = (i * h) / n;
+      let ly = h - (y + (h/n) / 2) + 3;
+      
       let showText = true;
-      if (ly > h - 8 || ly < 8 || ly > prevy - 20) {
+      if (ly > h - 4 || ly < 6 || ly > prevy - 15) {
 	// not enough space
 	showText = false;
       }
 
-      if (!showText) {
-	
-	path = path + `M${scaleWidth-5},${y}L${scaleWidth},${y}`;
+      if (y > 0) {
+      	path = path + `M${scaleWidth-5},${y}L${scaleWidth},${y}`;
+      }
 
-      } else {
-
-	path = path + `M${scaleWidth-8},${y}L${scaleWidth},${y}`;
+      if (showText) {
 	prevy = ly;
-	addLabel(ticks[i].label, lx, ly);
+	addLabel(binNames[i], lx, ly);
       }
     }
 
