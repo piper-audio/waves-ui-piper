@@ -61,6 +61,7 @@ import LineLayer from './helpers/line-layer';
 import MarkerLayer from './helpers/marker-layer';
 import MatrixLayer from './helpers/matrix-layer';
 import PianoRollLayer from './helpers/pianoroll-layer';
+import RegionLayer from './helpers/region-layer';
 import ScaleLayer from './helpers/scale-layer';
 import SegmentLayer from './helpers/segment-layer';
 import TickLayer from './helpers/tick-layer';
@@ -100,7 +101,7 @@ export default {
   },
   helpers: {
     AnnotatedMarkerLayer, AnnotatedSegmentLayer, BreakpointLayer, CursorLayer,
-    DiscreteScaleLayer, GridAxisLayer, HighlightLayer, LineLayer, MarkerLayer, MatrixLayer, PianoRollLayer,
+    DiscreteScaleLayer, GridAxisLayer, HighlightLayer, LineLayer, MarkerLayer, MatrixLayer, PianoRollLayer, RegionLayer,
     ScaleLayer, SegmentLayer, TickLayer, TimeAxisLayer, TraceLayer, WaveformLayer
   },
   axis: {

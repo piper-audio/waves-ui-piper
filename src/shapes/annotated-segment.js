@@ -15,6 +15,12 @@ export default class AnnotatedSegment extends Segment {
     return list;
   }
 
+  _getDefaults() {
+    let list = super._getDefaults();
+    list.attachAnnotations = false;
+    return list;
+  }
+
   render(renderingContext) {
     this.$el = super.render(renderingContext);
     const height = renderingContext.height;
@@ -39,6 +45,13 @@ export default class AnnotatedSegment extends Segment {
         
     const x = renderingContext.timeToPixel(this.x(datum));
     this.$label.setAttributeNS(null, 'x', x + 3);
+
+    if (this.params.attachAnnotations) {
+      let y = renderingContext.valueToPixel(this.y(datum)) + 4;
+      if (y > renderingContext.height - 15) y = y - 14;
+      y = renderingContext.height - y;
+      this.$label.setAttributeNS(null, 'y', y);
+    }
 
     const visible = (x >= renderingContext.minX && x <= renderingContext.maxX);
 
